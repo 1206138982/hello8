@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8"/>
+    <title>QWebChannel测试</title>
+    <!--引入交互js-->
+    <script type="text/javascript" src="qwebchannel.js"></script>
+    <style type="text/css">
+        html {
+            height: 100%;
+            width: 100%;
+        }
+ 
+        #send {
+            width: 90px;
+            margin: 0;
+        }
+ 
+        #output {
+            width: 100%;
+            height: 500px;
+        }
+    </style>
+    <!--业务js-->
+    <script type="text/javascript">
+        window.onload = function () {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                // 获取qt中绑定的交互对象
+                window.pyjs = channel.objects.interact_obj
+ 
+                // js 绑定qt中的信号
+                pyjs.sig_send_to_js.connect(function (str) {
+                    
+                    document.getElementById("output").value = str;
+                });
+ 
+                // 按钮点击事件
+                document.getElementById("send").onclick = function () {
+                    var text_area = document.getElementById("output");
+                    if (!text_area.value) {
+                        return;
+                    }
+                    // js调用qt中的方法
+                    pyjs.receive_str_from_js(text_area.value)
+                    text_area.value = "";
+                }
+            });
+        }
+    </script>
+</head>
+ 
+<body>
+<textarea id="output">web控件内容!</textarea>
+<input type="submit" id="send" value="同步到Qt" onclick="javascript:click();"/>
+</body>
+</html>
