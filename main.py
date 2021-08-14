@@ -1,12 +1,11 @@
 import os
 import sys
  
-from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal
+from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWidgets import QMainWindow, QApplication
  
 from ui import Ui_MainWindow
- 
  
 class TInteractObj(QObject):
     """
@@ -29,7 +28,6 @@ class TInteractObj(QObject):
         print('接受消息str is ',str)
         self.receive_str_from_js_callback(str)
  
- 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -37,8 +35,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
  
         # self.index = (os.path.split(os.path.realpath(__file__))[0]) + "/demo14.html"
         # self.webview.load(QUrl.fromLocalFile(self.index))
-        self.webview.load(QUrl("file:/home/embed/ebf_dir/pyqt/hello8/c.html"))
+        # self.webview.load(QUrl("file:/home/embed/ebf_dir/pyqt/hello8/c.html"))
+        # self.webview.load(QUrl("file:/home/embed/ebf_dir/pyqt/hello8/blockly/apps/mixly/index.html"))
+        # self.webview.load(QUrl("file://"+QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))    # for ubuntu
+        self.webview.load(QUrl(QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))   # for windows
         self.init_channel()
+        self.showMaximized()    #窗口最大化
  
     def init_channel(self):
         """
@@ -55,6 +57,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
  
     def receive_data(self, data):
         self.textBrowser.setText(data)
+        with open("test.txt","w") as f:
+            f.write(data)  # 自带文件关闭功能，不需要再写f.close()
  
     @pyqtSlot()
     def on_pushButton_clicked(self):
@@ -65,13 +69,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.interact_obj.sig_send_to_js.emit(self.textBrowser.toPlainText())
         self.textBrowser.clear()
  
- 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ui = MainWindow()
     ui.show()
     sys.exit(app.exec_())
-
 
 #########################################
 ## https://blog.csdn.net/qq_37193537/article/details/90904331?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162886055316780357279334%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162886055316780357279334&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-90904331.first_rank_v2_pc_rank_v29&utm_term=pyqt%E4%B8%8Ehtml%E9%80%9A%E8%AE%AF&spm=1018.2226.3001.4187

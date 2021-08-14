@@ -19,7 +19,8 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.pushButton, 1, 0, 1, 1)
         self.webview = QWebEngineView(self.centralwidget)
         self.webview.setObjectName("webview")
-        self.webview.setMinimumWidth(400)
+        # self.webview.setMinimumWidth(400)
+        self.webview.setMinimumWidth(1600)
         self.gridLayout.addWidget(self.webview, 0, 1, 2, 1)
         MainWindow.setCentralWidget(self.centralwidget)
  
