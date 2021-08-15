@@ -1,13 +1,22 @@
 import os
 import sys
 import paramiko
+import time
 
 from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWidgets import QMainWindow, QApplication
  
 from ui import Ui_MainWindow
- 
+
+host = "192.168.0.103"
+port = 22
+username = "embed"
+password = "123456"
+timeout = 10
+fromPath = os.path.join(os.getcwd(), "test.txt")
+# fromPath = 'D:\\Program Files\\Oracle\\sharedir\\pyqt\\hello8\\test.txt'
+toPath = "/home/embed/test/test.txt"
 class TInteractObj(QObject):
     """
     一个槽函数供js调用(内部最终将js的调用转化为了信号),
@@ -70,16 +79,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print('pyqt发送消息')
         self.interact_obj.sig_send_to_js.emit(self.textBrowser.toPlainText())
         self.textBrowser.clear()
+        getfromPath = "/home/embed/test/make103.hex"
+        gettoPath = os.path.join(os.getcwd(), "make103.hex")
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
+        sftp_client = paramiko.SFTPClient.from_transport(client.get_transport())
+        sftp_client.get(getfromPath,gettoPath)
+        os.system('.\download.bat')
 
     def upload_code(self):
-        host = "192.168.0.103"
-        port = 22
-        username = "embed"
-        password = "123456"
-        timeout = 10
-        fromPath = os.path.join(os.getcwd(), "test.txt")
-        # fromPath = 'D:\\Program Files\\Oracle\\sharedir\\pyqt\\hello8\\test.txt'
-        toPath = "/home/embed/test.txt"
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
