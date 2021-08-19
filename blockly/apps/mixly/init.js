@@ -113,7 +113,7 @@ if(clickedName=="arduino"){
       editor.redo();
    });
   //  pyjs.receive_str_from_js("test arduino");
-   send2pyqt();
+  //  send2pyqt();
  }
  Blockly.fireUiEvent(window, 'resize');
 }
@@ -343,7 +343,11 @@ var resetACEFontSize = function(){
 
     // js 绑定qt中的信号
     pyjs.sig_send_to_js.connect(function (str) {
-        alert(str);
+        // alert(str);
+        if(str.indexOf('compile') != -1){
+          send2pyqt();
+          alert('it is compailing');
+        }
         // document.getElementById("output").value = str;
     });
 

@@ -7,16 +7,17 @@ from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWidgets import QMainWindow, QApplication
  
-from ui import Ui_MainWindow
+# from ui import Ui_MainWindow
+from ui_new import Ui_MainWindow
 
-host = "192.168.0.103"
+host = "110.40.246.189"
 port = 22
-username = "embed"
+username = "user000"
 password = "123456"
 timeout = 10
 fromPath = os.path.join(os.getcwd(), "test.txt")
 # fromPath = 'D:\\Program Files\\Oracle\\sharedir\\pyqt\\hello8\\test.txt'
-toPath = "/home/embed/test/test.txt"
+toPath = "/home/user000/upload/test.txt"
 class TInteractObj(QObject):
     """
     一个槽函数供js调用(内部最终将js的调用转化为了信号),
@@ -66,20 +67,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.webview.page().setWebChannel(channel)
  
     def receive_data(self, data):
-        self.textBrowser.setText(data)
         with open("test.txt","w") as f:
             f.write(data)  # 自带文件关闭功能，不需要再写f.close()
+        print('receive data from html')
         self.upload_code()
  
     @pyqtSlot()
     def on_pushButton_clicked(self):
-        if not self.textBrowser.toPlainText():
-            return
+        print('pyqt send message')
         # 这个信号是在js中和一个js方法绑定的,所以发射这个信号时会执行对应的js方法.
-        print('pyqt发送消息')
-        self.interact_obj.sig_send_to_js.emit(self.textBrowser.toPlainText())
-        self.textBrowser.clear()
-        getfromPath = "/home/embed/test/make103.hex"
+        self.interact_obj.sig_send_to_js.emit('compile')
+    @pyqtSlot()
+    def on_pushButton_2_clicked(self):
+        print("download")
+        getfromPath = "/home/user000/upload/make103.hex"
         gettoPath = os.path.join(os.getcwd(), "make103.hex")
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
