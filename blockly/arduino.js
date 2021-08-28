@@ -339,6 +339,7 @@ profile['Generic STM32F103C series']=profile['Generic STM32F103C6/fake STM32F103
  * @param {!Blockly.Workspace} workspace Workspace to generate code from.
  */
  Blockly.Arduino.init = function (workspace) {
+	//  console.log('enter Blockly.Arduino.init');
 	// Create a dictionary of definitions to be printed before setups.
 	Blockly.Arduino.definitions_ = Object.create(null);
 	// Create a dictionary of setups to be printed before the code.
@@ -368,6 +369,7 @@ profile['Generic STM32F103C series']=profile['Generic STM32F103C6/fake STM32F103
  * @return {string} Completed code.
  */
  Blockly.Arduino.finish = function (code) {
+	//  console.log('enter Blockly.Arduino.finish');
 	// Indent every line.
 	code = '  ' + code.replace(/\n/g, '\n  ');
 	var positions = new Array();
@@ -481,5 +483,7 @@ profile['Generic STM32F103C series']=profile['Generic STM32F103C6/fake STM32F103
 	}
 	var nextBlock = block.nextConnection && block.nextConnection.targetBlock();
 	var nextCode = Blockly.Arduino.blockToCode(nextBlock);
+	// console.log('enter Blockly.Arduino.scrub_');
+	// console.log(commentCode + code + nextCode);
 	return commentCode + code + nextCode;
 };

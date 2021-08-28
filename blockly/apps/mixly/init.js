@@ -30,6 +30,7 @@
  * Switch the visible pane when a tab is clicked.
  * @param {string} clickedName Name of tab clicked.
  */
+//第一次打开必进，当点击 “模块” 或者 “代码” 时也会进入到该函数，对应clickedName为 blocks arduino
  function tabClick(clickedName) {
   // If the XML tab was open, save and render the content.
   if (document.getElementById('tab_xml').className == 'tabon') {
@@ -118,6 +119,7 @@ if(clickedName=="arduino"){
  Blockly.fireUiEvent(window, 'resize');
 }
 
+//发送code到pyqt
 function send2pyqt(){
   // pyjs.receive_str_from_js("test arduino");
   var code = Blockly.Arduino.workspaceToCode(Blockly.mainWorkspace) || '';
@@ -126,6 +128,7 @@ function send2pyqt(){
 /**
  * Populate the currently selected pane with content generated from the blocks.
  */
+//在tabClick()中被调用
  function renderContent() {
   var content = document.getElementById('content_' + selected);
   // Initialize the pane.
@@ -182,6 +185,7 @@ function send2pyqt(){
  * Initialize Blockly.  Called on page load.
  */
  var editor;
+ //右侧代码变量
  var editor_side_code;
 /*
   添加ACE放大缩小事件
@@ -312,6 +316,7 @@ var resetACEFontSize = function(){
             wheel: true}
           });
       onresize();
+// 更改代码块内容时，会进入到rightCodeEvent中，达到实时更新右侧代码的效果
 	//实时更新右侧对比代码
   masterWorkspace.addChangeListener(rightCodeEvent);
   function rightCodeEvent(masterEvent) {
