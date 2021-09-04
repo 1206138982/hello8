@@ -65,6 +65,14 @@ class Ui_MainWindow(object):
         self.comboBox_2.activated.connect(self.selectionChange)
         self.horizontalLayout_2.addWidget(self.comboBox_2)
 
+        self.comboBox_3 = QtWidgets.QComboBox(self.widget1)
+        self.comboBox_3.setObjectName("comboBox_3")
+        self.comboBox_3.addItem("f103c8")
+        self.comboBox_3.addItem("f103ze")
+        # self.comboBox_2.currentIndexChanged.connect(self.selectionChange3)
+        self.comboBox_3.activated.connect(self.selectionChange3)
+        self.horizontalLayout_2.addWidget(self.comboBox_3)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1160, 26))
@@ -76,6 +84,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        saveBoard('f103c8')
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -105,8 +114,7 @@ class Ui_MainWindow(object):
         self.save_comMessage(self.comboBox_2.itemText(0)[3])
 
     def selectionChange(self,i):
-        print('get changed')
-        print('index', i, 'value', self.comboBox_2.itemText(i))
+        print('comboBox_2,index', i, 'value', self.comboBox_2.itemText(i))
         self.save_comMessage(self.comboBox_2.itemText(i)[3])
 
     def save_comMessage(self,str):
@@ -115,3 +123,12 @@ class Ui_MainWindow(object):
         print(str2write)
         with open("download.bat","w") as f:
             f.write(str2write)  # 自带文件关闭功能，不需要再写f.close()
+
+    def selectionChange3(self,i):
+        print('comboBox_3,index', i, 'value', self.comboBox_3.itemText(i))
+        saveBoard(self.comboBox_3.itemText(i))
+
+def saveBoard(str):
+    # print('in saveBoard:'+str)
+    with open("board.txt","w") as f:
+        f.write(str)  # 自带文件关闭功能，不需要再写f.close()

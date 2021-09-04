@@ -15,9 +15,12 @@ port = 22
 username = "user000"
 password = "123456"
 timeout = 10
-fromPath = os.path.join(os.getcwd(), "test.txt")
+fromPath_code = os.path.join(os.getcwd(), "code.txt")
+fromPath_board = os.path.join(os.getcwd(), "board.txt")
 # fromPath = 'D:\\Program Files\\Oracle\\sharedir\\pyqt\\hello8\\test.txt'
-toPath = "/home/user000/upload/test.txt"
+toPath_code = "/home/user000/upload/code.txt"
+toPath_board = "/home/user000/upload/board.txt"
+
 class TInteractObj(QObject):
     """
     一个槽函数供js调用(内部最终将js的调用转化为了信号),
@@ -67,7 +70,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.webview.page().setWebChannel(channel)
  
     def receive_data(self, data):
-        with open("test.txt","w") as f:
+        with open("code.txt","w") as f:
             f.write(data)  # 自带文件关闭功能，不需要再写f.close()
         print('receive data from html')
         self.upload_code()
@@ -95,7 +98,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
 
         sftp_client = paramiko.SFTPClient.from_transport(client.get_transport())
-        sftp_client.put(fromPath, toPath)
+        sftp_client.put(fromPath_board, toPath_board)
+        sftp_client.put(fromPath_code, toPath_code)
         sftp_client.close()
         client.close()
  
