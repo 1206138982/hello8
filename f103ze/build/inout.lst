@@ -1,0 +1,310 @@
+ARM GAS  /tmp/cc9nLZkm.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"inout.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.global	KEY0_PUSH
+  16              		.section	.bss.KEY0_PUSH,"aw",%nobits
+  19              	KEY0_PUSH:
+  20 0000 00       		.space	1
+  21              		.global	KEY1_PUSH
+  22              		.section	.bss.KEY1_PUSH,"aw",%nobits
+  25              	KEY1_PUSH:
+  26 0000 00       		.space	1
+  27              		.section	.text.pinMode,"ax",%progbits
+  28              		.align	1
+  29              		.global	pinMode
+  30              		.arch armv7-m
+  31              		.syntax unified
+  32              		.thumb
+  33              		.thumb_func
+  34              		.fpu softvfp
+  36              	pinMode:
+  37              	.LFB63:
+  38              		.file 1 "hardware/src/inout.c"
+   1:hardware/src/inout.c **** #include "inout.h"
+   2:hardware/src/inout.c **** #include "stm32f10x.h"
+   3:hardware/src/inout.c **** #include "led.h"
+   4:hardware/src/inout.c **** #include "key.h"
+   5:hardware/src/inout.c **** 
+   6:hardware/src/inout.c **** char KEY0_PUSH = 0;
+   7:hardware/src/inout.c **** char KEY1_PUSH = 0;
+   8:hardware/src/inout.c **** 
+   9:hardware/src/inout.c **** void pinMode(char pin_n,char is_out)
+  10:hardware/src/inout.c **** {
+  39              		.loc 1 10 1
+  40              		.cfi_startproc
+  41              		@ args = 0, pretend = 0, frame = 8
+  42              		@ frame_needed = 1, uses_anonymous_args = 0
+  43 0000 80B5     		push	{r7, lr}
+  44              	.LCFI0:
+  45              		.cfi_def_cfa_offset 8
+  46              		.cfi_offset 7, -8
+  47              		.cfi_offset 14, -4
+  48 0002 82B0     		sub	sp, sp, #8
+  49              	.LCFI1:
+  50              		.cfi_def_cfa_offset 16
+  51 0004 00AF     		add	r7, sp, #0
+  52              	.LCFI2:
+ARM GAS  /tmp/cc9nLZkm.s 			page 2
+
+
+  53              		.cfi_def_cfa_register 7
+  54 0006 0346     		mov	r3, r0
+  55 0008 0A46     		mov	r2, r1
+  56 000a FB71     		strb	r3, [r7, #7]
+  57 000c 1346     		mov	r3, r2
+  58 000e BB71     		strb	r3, [r7, #6]
+  11:hardware/src/inout.c ****     if(is_out){
+  59              		.loc 1 11 7
+  60 0010 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+  61 0012 002B     		cmp	r3, #0
+  62 0014 04D0     		beq	.L2
+  12:hardware/src/inout.c ****         leds_init(pin_n);
+  63              		.loc 1 12 9
+  64 0016 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  65 0018 1846     		mov	r0, r3
+  66 001a FFF7FEFF 		bl	leds_init
+  13:hardware/src/inout.c ****     }
+  14:hardware/src/inout.c ****     else{
+  15:hardware/src/inout.c ****         keys_init(pin_n);
+  16:hardware/src/inout.c ****     }
+  17:hardware/src/inout.c **** }
+  67              		.loc 1 17 1
+  68 001e 03E0     		b	.L4
+  69              	.L2:
+  15:hardware/src/inout.c ****     }
+  70              		.loc 1 15 9
+  71 0020 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+  72 0022 1846     		mov	r0, r3
+  73 0024 FFF7FEFF 		bl	keys_init
+  74              	.L4:
+  75              		.loc 1 17 1
+  76 0028 00BF     		nop
+  77 002a 0837     		adds	r7, r7, #8
+  78              	.LCFI3:
+  79              		.cfi_def_cfa_offset 8
+  80 002c BD46     		mov	sp, r7
+  81              	.LCFI4:
+  82              		.cfi_def_cfa_register 13
+  83              		@ sp needed
+  84 002e 80BD     		pop	{r7, pc}
+  85              		.cfi_endproc
+  86              	.LFE63:
+  88              		.section	.text.digitalWrite,"ax",%progbits
+  89              		.align	1
+  90              		.global	digitalWrite
+  91              		.syntax unified
+  92              		.thumb
+  93              		.thumb_func
+  94              		.fpu softvfp
+  96              	digitalWrite:
+  97              	.LFB64:
+  18:hardware/src/inout.c **** 
+  19:hardware/src/inout.c **** void digitalWrite(char led_n,char status)
+  20:hardware/src/inout.c **** {
+  98              		.loc 1 20 1
+  99              		.cfi_startproc
+ 100              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /tmp/cc9nLZkm.s 			page 3
+
+
+ 101              		@ frame_needed = 1, uses_anonymous_args = 0
+ 102 0000 80B5     		push	{r7, lr}
+ 103              	.LCFI5:
+ 104              		.cfi_def_cfa_offset 8
+ 105              		.cfi_offset 7, -8
+ 106              		.cfi_offset 14, -4
+ 107 0002 82B0     		sub	sp, sp, #8
+ 108              	.LCFI6:
+ 109              		.cfi_def_cfa_offset 16
+ 110 0004 00AF     		add	r7, sp, #0
+ 111              	.LCFI7:
+ 112              		.cfi_def_cfa_register 7
+ 113 0006 0346     		mov	r3, r0
+ 114 0008 0A46     		mov	r2, r1
+ 115 000a FB71     		strb	r3, [r7, #7]
+ 116 000c 1346     		mov	r3, r2
+ 117 000e BB71     		strb	r3, [r7, #6]
+  21:hardware/src/inout.c ****     led_set_status(led_n,status);
+ 118              		.loc 1 21 5
+ 119 0010 BA79     		ldrb	r2, [r7, #6]	@ zero_extendqisi2
+ 120 0012 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 121 0014 1146     		mov	r1, r2
+ 122 0016 1846     		mov	r0, r3
+ 123 0018 FFF7FEFF 		bl	led_set_status
+  22:hardware/src/inout.c **** }
+ 124              		.loc 1 22 1
+ 125 001c 00BF     		nop
+ 126 001e 0837     		adds	r7, r7, #8
+ 127              	.LCFI8:
+ 128              		.cfi_def_cfa_offset 8
+ 129 0020 BD46     		mov	sp, r7
+ 130              	.LCFI9:
+ 131              		.cfi_def_cfa_register 13
+ 132              		@ sp needed
+ 133 0022 80BD     		pop	{r7, pc}
+ 134              		.cfi_endproc
+ 135              	.LFE64:
+ 137              		.section	.text.digitalRead,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	digitalRead
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.fpu softvfp
+ 145              	digitalRead:
+ 146              	.LFB65:
+  23:hardware/src/inout.c **** 
+  24:hardware/src/inout.c **** char digitalRead(char key_n)
+  25:hardware/src/inout.c **** {
+ 147              		.loc 1 25 1
+ 148              		.cfi_startproc
+ 149              		@ args = 0, pretend = 0, frame = 8
+ 150              		@ frame_needed = 1, uses_anonymous_args = 0
+ 151              		@ link register save eliminated.
+ 152 0000 80B4     		push	{r7}
+ 153              	.LCFI10:
+ 154              		.cfi_def_cfa_offset 4
+ARM GAS  /tmp/cc9nLZkm.s 			page 4
+
+
+ 155              		.cfi_offset 7, -4
+ 156 0002 83B0     		sub	sp, sp, #12
+ 157              	.LCFI11:
+ 158              		.cfi_def_cfa_offset 16
+ 159 0004 00AF     		add	r7, sp, #0
+ 160              	.LCFI12:
+ 161              		.cfi_def_cfa_register 7
+ 162 0006 0346     		mov	r3, r0
+ 163 0008 FB71     		strb	r3, [r7, #7]
+  26:hardware/src/inout.c ****     switch(key_n){
+ 164              		.loc 1 26 5
+ 165 000a FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 166 000c 0A2B     		cmp	r3, #10
+ 167 000e 02D0     		beq	.L7
+ 168 0010 0B2B     		cmp	r3, #11
+ 169 0012 0BD0     		beq	.L8
+ 170 0014 15E0     		b	.L13
+ 171              	.L7:
+  27:hardware/src/inout.c **** 
+  28:hardware/src/inout.c ****         case 10:
+  29:hardware/src/inout.c ****             if(KEY0_PUSH){
+ 172              		.loc 1 29 16
+ 173 0016 0E4B     		ldr	r3, .L14
+ 174 0018 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 175              		.loc 1 29 15
+ 176 001a 002B     		cmp	r3, #0
+ 177 001c 04D0     		beq	.L10
+  30:hardware/src/inout.c ****                 KEY0_PUSH = 0;
+ 178              		.loc 1 30 27
+ 179 001e 0C4B     		ldr	r3, .L14
+ 180 0020 0022     		movs	r2, #0
+ 181 0022 1A70     		strb	r2, [r3]
+  31:hardware/src/inout.c ****                 return 1;
+ 182              		.loc 1 31 24
+ 183 0024 0123     		movs	r3, #1
+ 184 0026 0DE0     		b	.L11
+ 185              	.L10:
+  32:hardware/src/inout.c ****             }
+  33:hardware/src/inout.c ****             else{
+  34:hardware/src/inout.c ****                 return 0;
+ 186              		.loc 1 34 24
+ 187 0028 0023     		movs	r3, #0
+ 188 002a 0BE0     		b	.L11
+ 189              	.L8:
+  35:hardware/src/inout.c ****             }
+  36:hardware/src/inout.c **** 
+  37:hardware/src/inout.c ****         case 11:
+  38:hardware/src/inout.c ****             if(KEY1_PUSH){
+ 190              		.loc 1 38 16
+ 191 002c 094B     		ldr	r3, .L14+4
+ 192 002e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 193              		.loc 1 38 15
+ 194 0030 002B     		cmp	r3, #0
+ 195 0032 04D0     		beq	.L12
+  39:hardware/src/inout.c ****                 KEY1_PUSH = 0;
+ 196              		.loc 1 39 27
+ 197 0034 074B     		ldr	r3, .L14+4
+ARM GAS  /tmp/cc9nLZkm.s 			page 5
+
+
+ 198 0036 0022     		movs	r2, #0
+ 199 0038 1A70     		strb	r2, [r3]
+  40:hardware/src/inout.c ****                 return 1;
+ 200              		.loc 1 40 24
+ 201 003a 0123     		movs	r3, #1
+ 202 003c 02E0     		b	.L11
+ 203              	.L12:
+  41:hardware/src/inout.c ****             }
+  42:hardware/src/inout.c ****             else{
+  43:hardware/src/inout.c ****                 return 0;
+ 204              		.loc 1 43 24
+ 205 003e 0023     		movs	r3, #0
+ 206 0040 00E0     		b	.L11
+ 207              	.L13:
+  44:hardware/src/inout.c ****             }
+  45:hardware/src/inout.c **** 
+  46:hardware/src/inout.c ****         default:
+  47:hardware/src/inout.c ****             return 0;
+ 208              		.loc 1 47 20
+ 209 0042 0023     		movs	r3, #0
+ 210              	.L11:
+  48:hardware/src/inout.c ****     }
+  49:hardware/src/inout.c **** }
+ 211              		.loc 1 49 1
+ 212 0044 1846     		mov	r0, r3
+ 213 0046 0C37     		adds	r7, r7, #12
+ 214              	.LCFI13:
+ 215              		.cfi_def_cfa_offset 4
+ 216 0048 BD46     		mov	sp, r7
+ 217              	.LCFI14:
+ 218              		.cfi_def_cfa_register 13
+ 219              		@ sp needed
+ 220 004a 80BC     		pop	{r7}
+ 221              	.LCFI15:
+ 222              		.cfi_restore 7
+ 223              		.cfi_def_cfa_offset 0
+ 224 004c 7047     		bx	lr
+ 225              	.L15:
+ 226 004e 00BF     		.align	2
+ 227              	.L14:
+ 228 0050 00000000 		.word	KEY0_PUSH
+ 229 0054 00000000 		.word	KEY1_PUSH
+ 230              		.cfi_endproc
+ 231              	.LFE65:
+ 233              		.text
+ 234              	.Letext0:
+ARM GAS  /tmp/cc9nLZkm.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 inout.c
+     /tmp/cc9nLZkm.s:19     .bss.KEY0_PUSH:0000000000000000 KEY0_PUSH
+     /tmp/cc9nLZkm.s:20     .bss.KEY0_PUSH:0000000000000000 $d
+     /tmp/cc9nLZkm.s:25     .bss.KEY1_PUSH:0000000000000000 KEY1_PUSH
+     /tmp/cc9nLZkm.s:26     .bss.KEY1_PUSH:0000000000000000 $d
+     /tmp/cc9nLZkm.s:28     .text.pinMode:0000000000000000 $t
+     /tmp/cc9nLZkm.s:36     .text.pinMode:0000000000000000 pinMode
+     /tmp/cc9nLZkm.s:89     .text.digitalWrite:0000000000000000 $t
+     /tmp/cc9nLZkm.s:96     .text.digitalWrite:0000000000000000 digitalWrite
+     /tmp/cc9nLZkm.s:138    .text.digitalRead:0000000000000000 $t
+     /tmp/cc9nLZkm.s:145    .text.digitalRead:0000000000000000 digitalRead
+     /tmp/cc9nLZkm.s:228    .text.digitalRead:0000000000000050 $d
+
+UNDEFINED SYMBOLS
+leds_init
+keys_init
+led_set_status

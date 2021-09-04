@@ -1,0 +1,776 @@
+ARM GAS  /tmp/ccqgEZLN.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"a4950.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.rodata
+  16              		.align	2
+  17              	.LC0:
+  18 0000 73657420 		.ascii	"set speed error!\015\000"
+  18      73706565 
+  18      64206572 
+  18      726F7221 
+  18      0D00
+  19              		.global	__aeabi_i2d
+  20              		.global	__aeabi_ddiv
+  21              		.global	__aeabi_dsub
+  22              		.global	__aeabi_dmul
+  23              		.global	__aeabi_d2iz
+  24              		.global	__aeabi_dadd
+  25              		.section	.text.set_speed,"ax",%progbits
+  26              		.align	1
+  27              		.global	set_speed
+  28              		.arch armv7-m
+  29              		.syntax unified
+  30              		.thumb
+  31              		.thumb_func
+  32              		.fpu softvfp
+  34              	set_speed:
+  35              	.LFB66:
+  36              		.file 1 "hardware/src/a4950.c"
+   1:hardware/src/a4950.c **** #include "a4950.h"
+   2:hardware/src/a4950.c **** #include "timer.h"
+   3:hardware/src/a4950.c **** 
+   4:hardware/src/a4950.c **** /*  tim3 for left motor
+   5:hardware/src/a4950.c ****     forward moving when tim3 ch1 > tim3 ch2
+   6:hardware/src/a4950.c ****     tim4 for right motor
+   7:hardware/src/a4950.c ****     forward moving when tim4 ch1 > tim4 ch2    */
+   8:hardware/src/a4950.c **** 
+   9:hardware/src/a4950.c **** #define SPEED_MIN   40  // last 30
+  10:hardware/src/a4950.c **** #define MAX_ARR_A     900
+  11:hardware/src/a4950.c **** extern u8 RUNNING;
+  12:hardware/src/a4950.c **** 
+  13:hardware/src/a4950.c **** void set_speed(int speed_L,int speed_R)
+  14:hardware/src/a4950.c **** {
+  37              		.loc 1 14 1
+  38              		.cfi_startproc
+  39              		@ args = 0, pretend = 0, frame = 8
+  40              		@ frame_needed = 1, uses_anonymous_args = 0
+ARM GAS  /tmp/ccqgEZLN.s 			page 2
+
+
+  41 0000 80B5     		push	{r7, lr}
+  42              	.LCFI0:
+  43              		.cfi_def_cfa_offset 8
+  44              		.cfi_offset 7, -8
+  45              		.cfi_offset 14, -4
+  46 0002 82B0     		sub	sp, sp, #8
+  47              	.LCFI1:
+  48              		.cfi_def_cfa_offset 16
+  49 0004 00AF     		add	r7, sp, #0
+  50              	.LCFI2:
+  51              		.cfi_def_cfa_register 7
+  52 0006 7860     		str	r0, [r7, #4]
+  53 0008 3960     		str	r1, [r7]
+  15:hardware/src/a4950.c ****     // if(RUNNING == 0)
+  16:hardware/src/a4950.c ****     //     return ;
+  17:hardware/src/a4950.c ****     if(speed_L>100 || speed_L<-100 || speed_R>100 || speed_R<-100){
+  54              		.loc 1 17 7
+  55 000a 7B68     		ldr	r3, [r7, #4]
+  56 000c 642B     		cmp	r3, #100
+  57 000e 0ADC     		bgt	.L2
+  58              		.loc 1 17 20 discriminator 1
+  59 0010 7B68     		ldr	r3, [r7, #4]
+  60 0012 13F1640F 		cmn	r3, #100
+  61 0016 06DB     		blt	.L2
+  62              		.loc 1 17 36 discriminator 2
+  63 0018 3B68     		ldr	r3, [r7]
+  64 001a 642B     		cmp	r3, #100
+  65 001c 03DC     		bgt	.L2
+  66              		.loc 1 17 51 discriminator 3
+  67 001e 3B68     		ldr	r3, [r7]
+  68 0020 13F1640F 		cmn	r3, #100
+  69 0024 03DA     		bge	.L3
+  70              	.L2:
+  18:hardware/src/a4950.c ****         printf("set speed error!\r\n");
+  71              		.loc 1 18 9
+  72 0026 5E48     		ldr	r0, .L8
+  73 0028 FFF7FEFF 		bl	puts
+  19:hardware/src/a4950.c ****         return ;
+  74              		.loc 1 19 9
+  75 002c B5E0     		b	.L1
+  76              	.L3:
+  20:hardware/src/a4950.c ****     }
+  21:hardware/src/a4950.c ****     if(speed_L >= 0){
+  77              		.loc 1 21 7
+  78 002e 7B68     		ldr	r3, [r7, #4]
+  79 0030 002B     		cmp	r3, #0
+  80 0032 29DB     		blt	.L5
+  22:hardware/src/a4950.c ****         TIM_SetCompare1(TIM3,(int)(MAX_ARR_A*(1-speed_L/100.0)));
+  81              		.loc 1 22 56
+  82 0034 7868     		ldr	r0, [r7, #4]
+  83 0036 FFF7FEFF 		bl	__aeabi_i2d
+  84 003a 4FF00002 		mov	r2, #0
+  85 003e 594B     		ldr	r3, .L8+4
+  86 0040 FFF7FEFF 		bl	__aeabi_ddiv
+  87 0044 0246     		mov	r2, r0
+  88 0046 0B46     		mov	r3, r1
+  89              		.loc 1 22 48
+ARM GAS  /tmp/ccqgEZLN.s 			page 3
+
+
+  90 0048 4FF00000 		mov	r0, #0
+  91 004c 5649     		ldr	r1, .L8+8
+  92 004e FFF7FEFF 		bl	__aeabi_dsub
+  93 0052 0246     		mov	r2, r0
+  94 0054 0B46     		mov	r3, r1
+  95 0056 1046     		mov	r0, r2
+  96 0058 1946     		mov	r1, r3
+  97              		.loc 1 22 45
+  98 005a 4FF00002 		mov	r2, #0
+  99 005e 534B     		ldr	r3, .L8+12
+ 100 0060 FFF7FEFF 		bl	__aeabi_dmul
+ 101 0064 0246     		mov	r2, r0
+ 102 0066 0B46     		mov	r3, r1
+ 103              		.loc 1 22 30
+ 104 0068 1046     		mov	r0, r2
+ 105 006a 1946     		mov	r1, r3
+ 106 006c FFF7FEFF 		bl	__aeabi_d2iz
+ 107 0070 0346     		mov	r3, r0
+ 108              		.loc 1 22 9
+ 109 0072 9BB2     		uxth	r3, r3
+ 110 0074 1946     		mov	r1, r3
+ 111 0076 4E48     		ldr	r0, .L8+16
+ 112 0078 FFF7FEFF 		bl	TIM_SetCompare1
+  23:hardware/src/a4950.c ****         TIM_SetCompare2(TIM3,MAX_ARR_A);
+ 113              		.loc 1 23 9
+ 114 007c 4FF46171 		mov	r1, #900
+ 115 0080 4B48     		ldr	r0, .L8+16
+ 116 0082 FFF7FEFF 		bl	TIM_SetCompare2
+ 117 0086 2DE0     		b	.L6
+ 118              	.L5:
+  24:hardware/src/a4950.c ****     }
+  25:hardware/src/a4950.c ****     else if(speed_L < 0){
+ 119              		.loc 1 25 12
+ 120 0088 7B68     		ldr	r3, [r7, #4]
+ 121 008a 002B     		cmp	r3, #0
+ 122 008c 2ADA     		bge	.L6
+  26:hardware/src/a4950.c ****         TIM_SetCompare1(TIM3,MAX_ARR_A);
+ 123              		.loc 1 26 9
+ 124 008e 4FF46171 		mov	r1, #900
+ 125 0092 4748     		ldr	r0, .L8+16
+ 126 0094 FFF7FEFF 		bl	TIM_SetCompare1
+  27:hardware/src/a4950.c ****         TIM_SetCompare2(TIM3,(int)(MAX_ARR_A*(1+speed_L/100.0)));
+ 127              		.loc 1 27 56
+ 128 0098 7868     		ldr	r0, [r7, #4]
+ 129 009a FFF7FEFF 		bl	__aeabi_i2d
+ 130 009e 4FF00002 		mov	r2, #0
+ 131 00a2 404B     		ldr	r3, .L8+4
+ 132 00a4 FFF7FEFF 		bl	__aeabi_ddiv
+ 133 00a8 0246     		mov	r2, r0
+ 134 00aa 0B46     		mov	r3, r1
+ 135 00ac 1046     		mov	r0, r2
+ 136 00ae 1946     		mov	r1, r3
+ 137              		.loc 1 27 48
+ 138 00b0 4FF00002 		mov	r2, #0
+ 139 00b4 3C4B     		ldr	r3, .L8+8
+ 140 00b6 FFF7FEFF 		bl	__aeabi_dadd
+ 141 00ba 0246     		mov	r2, r0
+ARM GAS  /tmp/ccqgEZLN.s 			page 4
+
+
+ 142 00bc 0B46     		mov	r3, r1
+ 143 00be 1046     		mov	r0, r2
+ 144 00c0 1946     		mov	r1, r3
+ 145              		.loc 1 27 45
+ 146 00c2 4FF00002 		mov	r2, #0
+ 147 00c6 394B     		ldr	r3, .L8+12
+ 148 00c8 FFF7FEFF 		bl	__aeabi_dmul
+ 149 00cc 0246     		mov	r2, r0
+ 150 00ce 0B46     		mov	r3, r1
+ 151              		.loc 1 27 30
+ 152 00d0 1046     		mov	r0, r2
+ 153 00d2 1946     		mov	r1, r3
+ 154 00d4 FFF7FEFF 		bl	__aeabi_d2iz
+ 155 00d8 0346     		mov	r3, r0
+ 156              		.loc 1 27 9
+ 157 00da 9BB2     		uxth	r3, r3
+ 158 00dc 1946     		mov	r1, r3
+ 159 00de 3448     		ldr	r0, .L8+16
+ 160 00e0 FFF7FEFF 		bl	TIM_SetCompare2
+ 161              	.L6:
+  28:hardware/src/a4950.c ****     }
+  29:hardware/src/a4950.c ****     if(speed_R >= 0){
+ 162              		.loc 1 29 7
+ 163 00e4 3B68     		ldr	r3, [r7]
+ 164 00e6 002B     		cmp	r3, #0
+ 165 00e8 29DB     		blt	.L7
+  30:hardware/src/a4950.c ****         TIM_SetCompare3(TIM4,MAX_ARR_A);
+ 166              		.loc 1 30 9
+ 167 00ea 4FF46171 		mov	r1, #900
+ 168 00ee 3148     		ldr	r0, .L8+20
+ 169 00f0 FFF7FEFF 		bl	TIM_SetCompare3
+  31:hardware/src/a4950.c ****         TIM_SetCompare4(TIM4,(int)(MAX_ARR_A*(1-speed_R/100.0)));
+ 170              		.loc 1 31 56
+ 171 00f4 3868     		ldr	r0, [r7]
+ 172 00f6 FFF7FEFF 		bl	__aeabi_i2d
+ 173 00fa 4FF00002 		mov	r2, #0
+ 174 00fe 294B     		ldr	r3, .L8+4
+ 175 0100 FFF7FEFF 		bl	__aeabi_ddiv
+ 176 0104 0246     		mov	r2, r0
+ 177 0106 0B46     		mov	r3, r1
+ 178              		.loc 1 31 48
+ 179 0108 4FF00000 		mov	r0, #0
+ 180 010c 2649     		ldr	r1, .L8+8
+ 181 010e FFF7FEFF 		bl	__aeabi_dsub
+ 182 0112 0246     		mov	r2, r0
+ 183 0114 0B46     		mov	r3, r1
+ 184 0116 1046     		mov	r0, r2
+ 185 0118 1946     		mov	r1, r3
+ 186              		.loc 1 31 45
+ 187 011a 4FF00002 		mov	r2, #0
+ 188 011e 234B     		ldr	r3, .L8+12
+ 189 0120 FFF7FEFF 		bl	__aeabi_dmul
+ 190 0124 0246     		mov	r2, r0
+ 191 0126 0B46     		mov	r3, r1
+ 192              		.loc 1 31 30
+ 193 0128 1046     		mov	r0, r2
+ 194 012a 1946     		mov	r1, r3
+ARM GAS  /tmp/ccqgEZLN.s 			page 5
+
+
+ 195 012c FFF7FEFF 		bl	__aeabi_d2iz
+ 196 0130 0346     		mov	r3, r0
+ 197              		.loc 1 31 9
+ 198 0132 9BB2     		uxth	r3, r3
+ 199 0134 1946     		mov	r1, r3
+ 200 0136 1F48     		ldr	r0, .L8+20
+ 201 0138 FFF7FEFF 		bl	TIM_SetCompare4
+ 202 013c 2DE0     		b	.L1
+ 203              	.L7:
+  32:hardware/src/a4950.c ****     }
+  33:hardware/src/a4950.c ****     else if(speed_R < 0){
+ 204              		.loc 1 33 12
+ 205 013e 3B68     		ldr	r3, [r7]
+ 206 0140 002B     		cmp	r3, #0
+ 207 0142 2ADA     		bge	.L1
+  34:hardware/src/a4950.c ****         TIM_SetCompare3(TIM4,(int)(MAX_ARR_A*(1+speed_R/100.0)));
+ 208              		.loc 1 34 56
+ 209 0144 3868     		ldr	r0, [r7]
+ 210 0146 FFF7FEFF 		bl	__aeabi_i2d
+ 211 014a 4FF00002 		mov	r2, #0
+ 212 014e 154B     		ldr	r3, .L8+4
+ 213 0150 FFF7FEFF 		bl	__aeabi_ddiv
+ 214 0154 0246     		mov	r2, r0
+ 215 0156 0B46     		mov	r3, r1
+ 216 0158 1046     		mov	r0, r2
+ 217 015a 1946     		mov	r1, r3
+ 218              		.loc 1 34 48
+ 219 015c 4FF00002 		mov	r2, #0
+ 220 0160 114B     		ldr	r3, .L8+8
+ 221 0162 FFF7FEFF 		bl	__aeabi_dadd
+ 222 0166 0246     		mov	r2, r0
+ 223 0168 0B46     		mov	r3, r1
+ 224 016a 1046     		mov	r0, r2
+ 225 016c 1946     		mov	r1, r3
+ 226              		.loc 1 34 45
+ 227 016e 4FF00002 		mov	r2, #0
+ 228 0172 0E4B     		ldr	r3, .L8+12
+ 229 0174 FFF7FEFF 		bl	__aeabi_dmul
+ 230 0178 0246     		mov	r2, r0
+ 231 017a 0B46     		mov	r3, r1
+ 232              		.loc 1 34 30
+ 233 017c 1046     		mov	r0, r2
+ 234 017e 1946     		mov	r1, r3
+ 235 0180 FFF7FEFF 		bl	__aeabi_d2iz
+ 236 0184 0346     		mov	r3, r0
+ 237              		.loc 1 34 9
+ 238 0186 9BB2     		uxth	r3, r3
+ 239 0188 1946     		mov	r1, r3
+ 240 018a 0A48     		ldr	r0, .L8+20
+ 241 018c FFF7FEFF 		bl	TIM_SetCompare3
+  35:hardware/src/a4950.c ****         TIM_SetCompare4(TIM4,MAX_ARR_A);
+ 242              		.loc 1 35 9
+ 243 0190 4FF46171 		mov	r1, #900
+ 244 0194 0748     		ldr	r0, .L8+20
+ 245 0196 FFF7FEFF 		bl	TIM_SetCompare4
+ 246              	.L1:
+  36:hardware/src/a4950.c ****     }
+ARM GAS  /tmp/ccqgEZLN.s 			page 6
+
+
+  37:hardware/src/a4950.c **** }
+ 247              		.loc 1 37 1
+ 248 019a 0837     		adds	r7, r7, #8
+ 249              	.LCFI3:
+ 250              		.cfi_def_cfa_offset 8
+ 251 019c BD46     		mov	sp, r7
+ 252              	.LCFI4:
+ 253              		.cfi_def_cfa_register 13
+ 254              		@ sp needed
+ 255 019e 80BD     		pop	{r7, pc}
+ 256              	.L9:
+ 257              		.align	2
+ 258              	.L8:
+ 259 01a0 00000000 		.word	.LC0
+ 260 01a4 00005940 		.word	1079574528
+ 261 01a8 0000F03F 		.word	1072693248
+ 262 01ac 00208C40 		.word	1082925056
+ 263 01b0 00040040 		.word	1073742848
+ 264 01b4 00080040 		.word	1073743872
+ 265              		.cfi_endproc
+ 266              	.LFE66:
+ 268              		.section	.text.add_speed,"ax",%progbits
+ 269              		.align	1
+ 270              		.global	add_speed
+ 271              		.syntax unified
+ 272              		.thumb
+ 273              		.thumb_func
+ 274              		.fpu softvfp
+ 276              	add_speed:
+ 277              	.LFB67:
+  38:hardware/src/a4950.c **** 
+  39:hardware/src/a4950.c **** void add_speed(uint8_t L_add,uint8_t R_add)
+  40:hardware/src/a4950.c **** {
+ 278              		.loc 1 40 1
+ 279              		.cfi_startproc
+ 280              		@ args = 0, pretend = 0, frame = 16
+ 281              		@ frame_needed = 1, uses_anonymous_args = 0
+ 282 0000 80B5     		push	{r7, lr}
+ 283              	.LCFI5:
+ 284              		.cfi_def_cfa_offset 8
+ 285              		.cfi_offset 7, -8
+ 286              		.cfi_offset 14, -4
+ 287 0002 84B0     		sub	sp, sp, #16
+ 288              	.LCFI6:
+ 289              		.cfi_def_cfa_offset 24
+ 290 0004 00AF     		add	r7, sp, #0
+ 291              	.LCFI7:
+ 292              		.cfi_def_cfa_register 7
+ 293 0006 0346     		mov	r3, r0
+ 294 0008 0A46     		mov	r2, r1
+ 295 000a FB71     		strb	r3, [r7, #7]
+ 296 000c 1346     		mov	r3, r2
+ 297 000e BB71     		strb	r3, [r7, #6]
+  41:hardware/src/a4950.c ****     int L_speed,R_speed;
+  42:hardware/src/a4950.c ****     if(L_add>100-SPEED_MIN){
+ 298              		.loc 1 42 7
+ 299 0010 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ARM GAS  /tmp/ccqgEZLN.s 			page 7
+
+
+ 300 0012 3C2B     		cmp	r3, #60
+ 301 0014 01D9     		bls	.L11
+  43:hardware/src/a4950.c ****         L_add = 100-SPEED_MIN;
+ 302              		.loc 1 43 15
+ 303 0016 3C23     		movs	r3, #60
+ 304 0018 FB71     		strb	r3, [r7, #7]
+ 305              	.L11:
+  44:hardware/src/a4950.c ****     }
+  45:hardware/src/a4950.c ****     if(R_add>100-SPEED_MIN){
+ 306              		.loc 1 45 7
+ 307 001a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 308 001c 3C2B     		cmp	r3, #60
+ 309 001e 01D9     		bls	.L12
+  46:hardware/src/a4950.c ****         R_add = 100-SPEED_MIN;
+ 310              		.loc 1 46 15
+ 311 0020 3C23     		movs	r3, #60
+ 312 0022 BB71     		strb	r3, [r7, #6]
+ 313              	.L12:
+  47:hardware/src/a4950.c ****     }
+  48:hardware/src/a4950.c ****     L_speed = SPEED_MIN+L_add;
+ 314              		.loc 1 48 24
+ 315 0024 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 316              		.loc 1 48 13
+ 317 0026 2833     		adds	r3, r3, #40
+ 318 0028 FB60     		str	r3, [r7, #12]
+  49:hardware/src/a4950.c ****     R_speed = SPEED_MIN+R_add;
+ 319              		.loc 1 49 24
+ 320 002a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 321              		.loc 1 49 13
+ 322 002c 2833     		adds	r3, r3, #40
+ 323 002e BB60     		str	r3, [r7, #8]
+  50:hardware/src/a4950.c ****     set_speed(L_speed,R_speed);
+ 324              		.loc 1 50 5
+ 325 0030 B968     		ldr	r1, [r7, #8]
+ 326 0032 F868     		ldr	r0, [r7, #12]
+ 327 0034 FFF7FEFF 		bl	set_speed
+  51:hardware/src/a4950.c **** }
+ 328              		.loc 1 51 1
+ 329 0038 00BF     		nop
+ 330 003a 1037     		adds	r7, r7, #16
+ 331              	.LCFI8:
+ 332              		.cfi_def_cfa_offset 8
+ 333 003c BD46     		mov	sp, r7
+ 334              	.LCFI9:
+ 335              		.cfi_def_cfa_register 13
+ 336              		@ sp needed
+ 337 003e 80BD     		pop	{r7, pc}
+ 338              		.cfi_endproc
+ 339              	.LFE67:
+ 341              		.section	.text.start_forward,"ax",%progbits
+ 342              		.align	1
+ 343              		.global	start_forward
+ 344              		.syntax unified
+ 345              		.thumb
+ 346              		.thumb_func
+ 347              		.fpu softvfp
+ 349              	start_forward:
+ARM GAS  /tmp/ccqgEZLN.s 			page 8
+
+
+ 350              	.LFB68:
+  52:hardware/src/a4950.c **** 
+  53:hardware/src/a4950.c **** void start_forward(void)
+  54:hardware/src/a4950.c **** {
+ 351              		.loc 1 54 1
+ 352              		.cfi_startproc
+ 353              		@ args = 0, pretend = 0, frame = 0
+ 354              		@ frame_needed = 1, uses_anonymous_args = 0
+ 355 0000 80B5     		push	{r7, lr}
+ 356              	.LCFI10:
+ 357              		.cfi_def_cfa_offset 8
+ 358              		.cfi_offset 7, -8
+ 359              		.cfi_offset 14, -4
+ 360 0002 00AF     		add	r7, sp, #0
+ 361              	.LCFI11:
+ 362              		.cfi_def_cfa_register 7
+  55:hardware/src/a4950.c ****     set_speed(SPEED_MIN,SPEED_MIN);
+ 363              		.loc 1 55 5
+ 364 0004 2821     		movs	r1, #40
+ 365 0006 2820     		movs	r0, #40
+ 366 0008 FFF7FEFF 		bl	set_speed
+  56:hardware/src/a4950.c **** }
+ 367              		.loc 1 56 1
+ 368 000c 00BF     		nop
+ 369 000e 80BD     		pop	{r7, pc}
+ 370              		.cfi_endproc
+ 371              	.LFE68:
+ 373              		.section	.text.stop_forward,"ax",%progbits
+ 374              		.align	1
+ 375              		.global	stop_forward
+ 376              		.syntax unified
+ 377              		.thumb
+ 378              		.thumb_func
+ 379              		.fpu softvfp
+ 381              	stop_forward:
+ 382              	.LFB69:
+  57:hardware/src/a4950.c **** 
+  58:hardware/src/a4950.c **** void stop_forward(void)
+  59:hardware/src/a4950.c **** {
+ 383              		.loc 1 59 1
+ 384              		.cfi_startproc
+ 385              		@ args = 0, pretend = 0, frame = 0
+ 386              		@ frame_needed = 1, uses_anonymous_args = 0
+ 387 0000 80B5     		push	{r7, lr}
+ 388              	.LCFI12:
+ 389              		.cfi_def_cfa_offset 8
+ 390              		.cfi_offset 7, -8
+ 391              		.cfi_offset 14, -4
+ 392 0002 00AF     		add	r7, sp, #0
+ 393              	.LCFI13:
+ 394              		.cfi_def_cfa_register 7
+  60:hardware/src/a4950.c ****     set_speed(0,0);
+ 395              		.loc 1 60 5
+ 396 0004 0021     		movs	r1, #0
+ 397 0006 0020     		movs	r0, #0
+ 398 0008 FFF7FEFF 		bl	set_speed
+  61:hardware/src/a4950.c **** }
+ARM GAS  /tmp/ccqgEZLN.s 			page 9
+
+
+ 399              		.loc 1 61 1
+ 400 000c 00BF     		nop
+ 401 000e 80BD     		pop	{r7, pc}
+ 402              		.cfi_endproc
+ 403              	.LFE69:
+ 405              		.section	.text.turn_left_A,"ax",%progbits
+ 406              		.align	1
+ 407              		.global	turn_left_A
+ 408              		.syntax unified
+ 409              		.thumb
+ 410              		.thumb_func
+ 411              		.fpu softvfp
+ 413              	turn_left_A:
+ 414              	.LFB70:
+  62:hardware/src/a4950.c **** 
+  63:hardware/src/a4950.c **** void turn_left_A(void)
+  64:hardware/src/a4950.c **** {
+ 415              		.loc 1 64 1
+ 416              		.cfi_startproc
+ 417              		@ args = 0, pretend = 0, frame = 0
+ 418              		@ frame_needed = 1, uses_anonymous_args = 0
+ 419 0000 80B5     		push	{r7, lr}
+ 420              	.LCFI14:
+ 421              		.cfi_def_cfa_offset 8
+ 422              		.cfi_offset 7, -8
+ 423              		.cfi_offset 14, -4
+ 424 0002 00AF     		add	r7, sp, #0
+ 425              	.LCFI15:
+ 426              		.cfi_def_cfa_register 7
+  65:hardware/src/a4950.c ****     set_speed(0,SPEED_MIN);
+ 427              		.loc 1 65 5
+ 428 0004 2821     		movs	r1, #40
+ 429 0006 0020     		movs	r0, #0
+ 430 0008 FFF7FEFF 		bl	set_speed
+  66:hardware/src/a4950.c **** }
+ 431              		.loc 1 66 1
+ 432 000c 00BF     		nop
+ 433 000e 80BD     		pop	{r7, pc}
+ 434              		.cfi_endproc
+ 435              	.LFE70:
+ 437              		.section	.text.turn_right_A,"ax",%progbits
+ 438              		.align	1
+ 439              		.global	turn_right_A
+ 440              		.syntax unified
+ 441              		.thumb
+ 442              		.thumb_func
+ 443              		.fpu softvfp
+ 445              	turn_right_A:
+ 446              	.LFB71:
+  67:hardware/src/a4950.c **** 
+  68:hardware/src/a4950.c **** void turn_right_A(void)
+  69:hardware/src/a4950.c **** {
+ 447              		.loc 1 69 1
+ 448              		.cfi_startproc
+ 449              		@ args = 0, pretend = 0, frame = 0
+ 450              		@ frame_needed = 1, uses_anonymous_args = 0
+ 451 0000 80B5     		push	{r7, lr}
+ARM GAS  /tmp/ccqgEZLN.s 			page 10
+
+
+ 452              	.LCFI16:
+ 453              		.cfi_def_cfa_offset 8
+ 454              		.cfi_offset 7, -8
+ 455              		.cfi_offset 14, -4
+ 456 0002 00AF     		add	r7, sp, #0
+ 457              	.LCFI17:
+ 458              		.cfi_def_cfa_register 7
+  70:hardware/src/a4950.c ****     set_speed(SPEED_MIN,0);
+ 459              		.loc 1 70 5
+ 460 0004 0021     		movs	r1, #0
+ 461 0006 2820     		movs	r0, #40
+ 462 0008 FFF7FEFF 		bl	set_speed
+  71:hardware/src/a4950.c **** }
+ 463              		.loc 1 71 1
+ 464 000c 00BF     		nop
+ 465 000e 80BD     		pop	{r7, pc}
+ 466              		.cfi_endproc
+ 467              	.LFE71:
+ 469              		.section	.text.MotorA_start,"ax",%progbits
+ 470              		.align	1
+ 471              		.global	MotorA_start
+ 472              		.syntax unified
+ 473              		.thumb
+ 474              		.thumb_func
+ 475              		.fpu softvfp
+ 477              	MotorA_start:
+ 478              	.LFB72:
+  72:hardware/src/a4950.c **** 
+  73:hardware/src/a4950.c **** void MotorA_start(void)
+  74:hardware/src/a4950.c **** {
+ 479              		.loc 1 74 1
+ 480              		.cfi_startproc
+ 481              		@ args = 0, pretend = 0, frame = 0
+ 482              		@ frame_needed = 1, uses_anonymous_args = 0
+ 483 0000 80B5     		push	{r7, lr}
+ 484              	.LCFI18:
+ 485              		.cfi_def_cfa_offset 8
+ 486              		.cfi_offset 7, -8
+ 487              		.cfi_offset 14, -4
+ 488 0002 00AF     		add	r7, sp, #0
+ 489              	.LCFI19:
+ 490              		.cfi_def_cfa_register 7
+  75:hardware/src/a4950.c **** 	motorA_PWM_Init(MAX_ARR_A-1,0);
+ 491              		.loc 1 75 2
+ 492 0004 0021     		movs	r1, #0
+ 493 0006 40F28330 		movw	r0, #899
+ 494 000a FFF7FEFF 		bl	motorA_PWM_Init
+  76:hardware/src/a4950.c ****     // set_speed(SPEED_MIN+20,SPEED_MIN+20);
+  77:hardware/src/a4950.c ****     // delay_ms(20);
+  78:hardware/src/a4950.c ****     // set_speed(SPEED_MIN,SPEED_MIN);
+  79:hardware/src/a4950.c **** }
+ 495              		.loc 1 79 1
+ 496 000e 00BF     		nop
+ 497 0010 80BD     		pop	{r7, pc}
+ 498              		.cfi_endproc
+ 499              	.LFE72:
+ 501              		.section	.text.motorA_test,"ax",%progbits
+ARM GAS  /tmp/ccqgEZLN.s 			page 11
+
+
+ 502              		.align	1
+ 503              		.global	motorA_test
+ 504              		.syntax unified
+ 505              		.thumb
+ 506              		.thumb_func
+ 507              		.fpu softvfp
+ 509              	motorA_test:
+ 510              	.LFB73:
+  80:hardware/src/a4950.c **** 
+  81:hardware/src/a4950.c **** void motorA_test(void)
+  82:hardware/src/a4950.c **** {
+ 511              		.loc 1 82 1
+ 512              		.cfi_startproc
+ 513              		@ args = 0, pretend = 0, frame = 0
+ 514              		@ frame_needed = 1, uses_anonymous_args = 0
+ 515 0000 80B5     		push	{r7, lr}
+ 516              	.LCFI20:
+ 517              		.cfi_def_cfa_offset 8
+ 518              		.cfi_offset 7, -8
+ 519              		.cfi_offset 14, -4
+ 520 0002 00AF     		add	r7, sp, #0
+ 521              	.LCFI21:
+ 522              		.cfi_def_cfa_register 7
+  83:hardware/src/a4950.c ****     // turn_left_A();
+  84:hardware/src/a4950.c ****     // delay_ms(1000);
+  85:hardware/src/a4950.c ****     // turn_right_A();
+  86:hardware/src/a4950.c ****     // delay_ms(1000);
+  87:hardware/src/a4950.c ****     // stop_forward();
+  88:hardware/src/a4950.c ****     // return ;
+  89:hardware/src/a4950.c **** 
+  90:hardware/src/a4950.c ****     // start_forward();
+  91:hardware/src/a4950.c ****     // delay_ms(1500);
+  92:hardware/src/a4950.c ****     // delay_ms(1500);
+  93:hardware/src/a4950.c ****     // stop_forward();
+  94:hardware/src/a4950.c ****     // // return ;
+  95:hardware/src/a4950.c **** 
+  96:hardware/src/a4950.c ****     set_speed(0,0);
+ 523              		.loc 1 96 5
+ 524 0004 0021     		movs	r1, #0
+ 525 0006 0020     		movs	r0, #0
+ 526 0008 FFF7FEFF 		bl	set_speed
+  97:hardware/src/a4950.c ****     delay_ms(500);
+ 527              		.loc 1 97 5
+ 528 000c 4FF4FA70 		mov	r0, #500
+ 529 0010 FFF7FEFF 		bl	delay_ms
+  98:hardware/src/a4950.c **** 
+  99:hardware/src/a4950.c ****     set_speed(SPEED_MIN,SPEED_MIN);
+ 530              		.loc 1 99 5
+ 531 0014 2821     		movs	r1, #40
+ 532 0016 2820     		movs	r0, #40
+ 533 0018 FFF7FEFF 		bl	set_speed
+ 100:hardware/src/a4950.c ****     delay_ms(1000);
+ 534              		.loc 1 100 5
+ 535 001c 4FF47A70 		mov	r0, #1000
+ 536 0020 FFF7FEFF 		bl	delay_ms
+ 101:hardware/src/a4950.c ****     set_speed(0,0);
+ 537              		.loc 1 101 5
+ARM GAS  /tmp/ccqgEZLN.s 			page 12
+
+
+ 538 0024 0021     		movs	r1, #0
+ 539 0026 0020     		movs	r0, #0
+ 540 0028 FFF7FEFF 		bl	set_speed
+ 102:hardware/src/a4950.c ****     delay_ms(500);
+ 541              		.loc 1 102 5
+ 542 002c 4FF4FA70 		mov	r0, #500
+ 543 0030 FFF7FEFF 		bl	delay_ms
+ 103:hardware/src/a4950.c **** 
+ 104:hardware/src/a4950.c ****     set_speed(-SPEED_MIN,0);
+ 544              		.loc 1 104 5
+ 545 0034 0021     		movs	r1, #0
+ 546 0036 6FF02700 		mvn	r0, #39
+ 547 003a FFF7FEFF 		bl	set_speed
+ 105:hardware/src/a4950.c ****     delay_ms(1000);
+ 548              		.loc 1 105 5
+ 549 003e 4FF47A70 		mov	r0, #1000
+ 550 0042 FFF7FEFF 		bl	delay_ms
+ 106:hardware/src/a4950.c ****     set_speed(0,0);
+ 551              		.loc 1 106 5
+ 552 0046 0021     		movs	r1, #0
+ 553 0048 0020     		movs	r0, #0
+ 554 004a FFF7FEFF 		bl	set_speed
+ 107:hardware/src/a4950.c ****     delay_ms(500);
+ 555              		.loc 1 107 5
+ 556 004e 4FF4FA70 		mov	r0, #500
+ 557 0052 FFF7FEFF 		bl	delay_ms
+ 108:hardware/src/a4950.c **** 
+ 109:hardware/src/a4950.c ****     set_speed(0,-SPEED_MIN);
+ 558              		.loc 1 109 5
+ 559 0056 6FF02701 		mvn	r1, #39
+ 560 005a 0020     		movs	r0, #0
+ 561 005c FFF7FEFF 		bl	set_speed
+ 110:hardware/src/a4950.c ****     delay_ms(1000);
+ 562              		.loc 1 110 5
+ 563 0060 4FF47A70 		mov	r0, #1000
+ 564 0064 FFF7FEFF 		bl	delay_ms
+ 111:hardware/src/a4950.c ****     set_speed(0,0);
+ 565              		.loc 1 111 5
+ 566 0068 0021     		movs	r1, #0
+ 567 006a 0020     		movs	r0, #0
+ 568 006c FFF7FEFF 		bl	set_speed
+ 112:hardware/src/a4950.c ****     delay_ms(500);
+ 569              		.loc 1 112 5
+ 570 0070 4FF4FA70 		mov	r0, #500
+ 571 0074 FFF7FEFF 		bl	delay_ms
+ 113:hardware/src/a4950.c **** 
+ 114:hardware/src/a4950.c ****     stop_forward();
+ 572              		.loc 1 114 5
+ 573 0078 FFF7FEFF 		bl	stop_forward
+ 115:hardware/src/a4950.c ****     return ;
+ 574              		.loc 1 115 5
+ 575 007c 00BF     		nop
+ 116:hardware/src/a4950.c **** 
+ 117:hardware/src/a4950.c ****     set_speed(40,0);
+ 118:hardware/src/a4950.c ****     delay_ms(1000);
+ 119:hardware/src/a4950.c ****     stop_forward();
+ 120:hardware/src/a4950.c **** 
+ARM GAS  /tmp/ccqgEZLN.s 			page 13
+
+
+ 121:hardware/src/a4950.c ****     set_speed(0,40);
+ 122:hardware/src/a4950.c ****     delay_ms(1000);
+ 123:hardware/src/a4950.c ****     stop_forward();
+ 124:hardware/src/a4950.c **** 	return ;
+ 125:hardware/src/a4950.c **** 
+ 126:hardware/src/a4950.c **** }
+ 576              		.loc 1 126 1
+ 577 007e 80BD     		pop	{r7, pc}
+ 578              		.cfi_endproc
+ 579              	.LFE73:
+ 581              		.text
+ 582              	.Letext0:
+ 583              		.file 2 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/machine/_defa
+ 584              		.file 3 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/_stdint.h
+ 585              		.file 4 "Inc/stm32f10x.h"
+ARM GAS  /tmp/ccqgEZLN.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 a4950.c
+     /tmp/ccqgEZLN.s:16     .rodata:0000000000000000 $d
+     /tmp/ccqgEZLN.s:26     .text.set_speed:0000000000000000 $t
+     /tmp/ccqgEZLN.s:34     .text.set_speed:0000000000000000 set_speed
+     /tmp/ccqgEZLN.s:259    .text.set_speed:00000000000001a0 $d
+     /tmp/ccqgEZLN.s:269    .text.add_speed:0000000000000000 $t
+     /tmp/ccqgEZLN.s:276    .text.add_speed:0000000000000000 add_speed
+     /tmp/ccqgEZLN.s:342    .text.start_forward:0000000000000000 $t
+     /tmp/ccqgEZLN.s:349    .text.start_forward:0000000000000000 start_forward
+     /tmp/ccqgEZLN.s:374    .text.stop_forward:0000000000000000 $t
+     /tmp/ccqgEZLN.s:381    .text.stop_forward:0000000000000000 stop_forward
+     /tmp/ccqgEZLN.s:406    .text.turn_left_A:0000000000000000 $t
+     /tmp/ccqgEZLN.s:413    .text.turn_left_A:0000000000000000 turn_left_A
+     /tmp/ccqgEZLN.s:438    .text.turn_right_A:0000000000000000 $t
+     /tmp/ccqgEZLN.s:445    .text.turn_right_A:0000000000000000 turn_right_A
+     /tmp/ccqgEZLN.s:470    .text.MotorA_start:0000000000000000 $t
+     /tmp/ccqgEZLN.s:477    .text.MotorA_start:0000000000000000 MotorA_start
+     /tmp/ccqgEZLN.s:502    .text.motorA_test:0000000000000000 $t
+     /tmp/ccqgEZLN.s:509    .text.motorA_test:0000000000000000 motorA_test
+
+UNDEFINED SYMBOLS
+__aeabi_i2d
+__aeabi_ddiv
+__aeabi_dsub
+__aeabi_dmul
+__aeabi_d2iz
+__aeabi_dadd
+puts
+TIM_SetCompare1
+TIM_SetCompare2
+TIM_SetCompare3
+TIM_SetCompare4
+motorA_PWM_Init
+delay_ms

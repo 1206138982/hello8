@@ -1,0 +1,1109 @@
+ARM GAS  /tmp/ccjDazwS.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"move.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.rodata
+  16              		.align	2
+  17              	.LC0:
+  18 0000 426F7468 		.ascii	"Both lost\000"
+  18      206C6F73 
+  18      7400
+  19 000a 0000     		.align	2
+  20              	.LC1:
+  21 000c 544F4F20 		.ascii	"TOO LEFT,Loc:%d\000"
+  21      4C454654 
+  21      2C4C6F63 
+  21      3A256400 
+  22              		.align	2
+  23              	.LC2:
+  24 001c 544F4F20 		.ascii	"TOO RIGHT,Loc:%d\000"
+  24      52494748 
+  24      542C4C6F 
+  24      633A2564 
+  24      00
+  25 002d 000000   		.align	2
+  26              	.LC3:
+  27 0030 6E6F6D69 		.ascii	"nomid,Loc:%d\000"
+  27      642C4C6F 
+  27      633A2564 
+  27      00
+  28 003d 000000   		.align	2
+  29              	.LC4:
+  30 0040 4E4F204C 		.ascii	"NO LINE WIDTH\000"
+  30      494E4520 
+  30      57494454 
+  30      4800
+  31 004e 0000     		.align	2
+  32              	.LC5:
+  33 0050 6C696E65 		.ascii	"lineDeviaLoc:%d\000"
+  33      44657669 
+  33      614C6F63 
+  33      3A256400 
+  34              		.global	__aeabi_dmul
+  35              		.global	__aeabi_d2iz
+  36              		.align	2
+  37              	.LC6:
+  38 0060 6F4B3A25 		.ascii	"oK:%d oB:%d BORDER:%d\000"
+  38      64206F42 
+ARM GAS  /tmp/ccjDazwS.s 			page 2
+
+
+  38      3A256420 
+  38      424F5244 
+  38      45523A25 
+  39              		.section	.text.print2lcd,"ax",%progbits
+  40              		.align	1
+  41              		.global	print2lcd
+  42              		.arch armv7-m
+  43              		.syntax unified
+  44              		.thumb
+  45              		.thumb_func
+  46              		.fpu softvfp
+  48              	print2lcd:
+  49              	.LFB66:
+  50              		.file 1 "hardware/src/move.c"
+   1:hardware/src/move.c **** #include "move.h"
+   2:hardware/src/move.c **** #include "string.h"
+   3:hardware/src/move.c **** #include "grey.h"
+   4:hardware/src/move.c **** #include "stdio.h"
+   5:hardware/src/move.c **** 
+   6:hardware/src/move.c **** #define MAX_LENGTH2LCD	25
+   7:hardware/src/move.c **** extern double overK;
+   8:hardware/src/move.c **** extern int b;
+   9:hardware/src/move.c **** extern int  lineDeviationLoc;
+  10:hardware/src/move.c **** extern u8 leftBlackLoc[(NEEDHEIGHT)/(SKIPLINE)];
+  11:hardware/src/move.c **** extern u8 rightBlackLoc[(NEEDHEIGHT)/(SKIPLINE)];
+  12:hardware/src/move.c **** extern u8 devLocRes;
+  13:hardware/src/move.c **** extern u8 FLAG_BORDER;
+  14:hardware/src/move.c **** 
+  15:hardware/src/move.c **** #if defined(DEBUG_CAMERA) && DEBUG_CAMERA
+  16:hardware/src/move.c **** extern u8 maxUsefulLineLen;
+  17:hardware/src/move.c **** extern u8 maxUsefulBlackLine[(NEEDHEIGHT)/(SKIPLINE)];
+  18:hardware/src/move.c **** extern u8 maxUsefulBlackHeight[(NEEDHEIGHT)/(SKIPLINE)];
+  19:hardware/src/move.c **** #endif
+  20:hardware/src/move.c **** 
+  21:hardware/src/move.c **** #if defined(BIKING) && BIKING
+  22:hardware/src/move.c **** extern u8 RUNNING;
+  23:hardware/src/move.c **** #if defined(PID_METHOD) && PID_METHOD
+  24:hardware/src/move.c **** extern pid_struct	line_pid;
+  25:hardware/src/move.c **** extern pid_struct	oK_pid;
+  26:hardware/src/move.c **** int speed_change = 0;
+  27:hardware/src/move.c **** #endif
+  28:hardware/src/move.c **** #endif
+  29:hardware/src/move.c **** 
+  30:hardware/src/move.c **** #if defined(FENCHA_TEST) && FENCHA_TEST
+  31:hardware/src/move.c **** extern u8 max_black_fencha;
+  32:hardware/src/move.c **** #if defined(MAP_TESTA) && MAP_TESTA
+  33:hardware/src/move.c **** u8 fencha_times = 0;
+  34:hardware/src/move.c **** #endif
+  35:hardware/src/move.c **** #if defined(MAP_TESTB) && MAP_TESTB
+  36:hardware/src/move.c **** u8 fencha_number = 0;
+  37:hardware/src/move.c **** #endif
+  38:hardware/src/move.c **** #endif
+  39:hardware/src/move.c **** 
+  40:hardware/src/move.c **** void print2lcd(void)
+  41:hardware/src/move.c **** {
+  51              		.loc 1 41 1
+  52              		.cfi_startproc
+ARM GAS  /tmp/ccjDazwS.s 			page 3
+
+
+  53              		@ args = 0, pretend = 0, frame = 72
+  54              		@ frame_needed = 1, uses_anonymous_args = 0
+  55 0000 90B5     		push	{r4, r7, lr}
+  56              	.LCFI0:
+  57              		.cfi_def_cfa_offset 12
+  58              		.cfi_offset 4, -12
+  59              		.cfi_offset 7, -8
+  60              		.cfi_offset 14, -4
+  61 0002 95B0     		sub	sp, sp, #84
+  62              	.LCFI1:
+  63              		.cfi_def_cfa_offset 96
+  64 0004 02AF     		add	r7, sp, #8
+  65              	.LCFI2:
+  66              		.cfi_def_cfa 7, 88
+  42:hardware/src/move.c **** #if defined(LCD_ON_OFF) && LCD_ON_OFF
+  43:hardware/src/move.c ****     u8 str_info2lcd[MAX_LENGTH2LCD] = {0};
+  67              		.loc 1 43 8
+  68 0006 0023     		movs	r3, #0
+  69 0008 3B62     		str	r3, [r7, #32]
+  70 000a 07F12403 		add	r3, r7, #36
+  71 000e 0022     		movs	r2, #0
+  72 0010 1A60     		str	r2, [r3]
+  73 0012 5A60     		str	r2, [r3, #4]
+  74 0014 9A60     		str	r2, [r3, #8]
+  75 0016 DA60     		str	r2, [r3, #12]
+  76 0018 1A61     		str	r2, [r3, #16]
+  77 001a 1A75     		strb	r2, [r3, #20]
+  44:hardware/src/move.c ****     u8 temp_str[MAX_LENGTH2LCD] = {0};
+  78              		.loc 1 44 8
+  79 001c 0023     		movs	r3, #0
+  80 001e 7B60     		str	r3, [r7, #4]
+  81 0020 07F10803 		add	r3, r7, #8
+  82 0024 0022     		movs	r2, #0
+  83 0026 1A60     		str	r2, [r3]
+  84 0028 5A60     		str	r2, [r3, #4]
+  85 002a 9A60     		str	r2, [r3, #8]
+  86 002c DA60     		str	r2, [r3, #12]
+  87 002e 1A61     		str	r2, [r3, #16]
+  88 0030 1A75     		strb	r2, [r3, #20]
+  45:hardware/src/move.c **** 	int i,k_x,k_y;
+  46:hardware/src/move.c **** 
+  47:hardware/src/move.c **** 	k_x = 20;
+  89              		.loc 1 47 6
+  90 0032 1423     		movs	r3, #20
+  91 0034 3B64     		str	r3, [r7, #64]
+  48:hardware/src/move.c **** 	k_y = 160;
+  92              		.loc 1 48 6
+  93 0036 A023     		movs	r3, #160
+  94 0038 FB63     		str	r3, [r7, #60]
+  49:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+  95              		.loc 1 49 10
+  96 003a 0023     		movs	r3, #0
+  97 003c 7B64     		str	r3, [r7, #68]
+  98              		.loc 1 49 5
+  99 003e 08E0     		b	.L2
+ 100              	.L3:
+  50:hardware/src/move.c ****         str_info2lcd[i] = 32;
+ARM GAS  /tmp/ccjDazwS.s 			page 4
+
+
+ 101              		.loc 1 50 25 discriminator 3
+ 102 0040 07F12002 		add	r2, r7, #32
+ 103 0044 7B6C     		ldr	r3, [r7, #68]
+ 104 0046 1344     		add	r3, r3, r2
+ 105 0048 2022     		movs	r2, #32
+ 106 004a 1A70     		strb	r2, [r3]
+  49:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 107              		.loc 1 49 31 discriminator 3
+ 108 004c 7B6C     		ldr	r3, [r7, #68]
+ 109 004e 0133     		adds	r3, r3, #1
+ 110 0050 7B64     		str	r3, [r7, #68]
+ 111              	.L2:
+  49:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 112              		.loc 1 49 5 discriminator 1
+ 113 0052 7B6C     		ldr	r3, [r7, #68]
+ 114 0054 182B     		cmp	r3, #24
+ 115 0056 F3DD     		ble	.L3
+  51:hardware/src/move.c ****     switch (devLocRes)
+ 116              		.loc 1 51 5
+ 117 0058 734B     		ldr	r3, .L16
+ 118 005a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 119 005c 0A3B     		subs	r3, r3, #10
+ 120 005e 1B2B     		cmp	r3, #27
+ 121 0060 00F29880 		bhi	.L15
+ 122 0064 01A2     		adr	r2, .L6
+ 123 0066 52F823F0 		ldr	pc, [r2, r3, lsl #2]
+ 124 006a 00BF     		.p2align 2
+ 125              	.L6:
+ 126 006c DD000000 		.word	.L11+1
+ 127 0070 95010000 		.word	.L15+1
+ 128 0074 95010000 		.word	.L15+1
+ 129 0078 95010000 		.word	.L15+1
+ 130 007c 95010000 		.word	.L15+1
+ 131 0080 95010000 		.word	.L15+1
+ 132 0084 95010000 		.word	.L15+1
+ 133 0088 95010000 		.word	.L15+1
+ 134 008c 95010000 		.word	.L15+1
+ 135 0090 95010000 		.word	.L15+1
+ 136 0094 95010000 		.word	.L15+1
+ 137 0098 95010000 		.word	.L15+1
+ 138 009c EB000000 		.word	.L10+1
+ 139 00a0 11010000 		.word	.L9+1
+ 140 00a4 6F010000 		.word	.L8+1
+ 141 00a8 37010000 		.word	.L7+1
+ 142 00ac 95010000 		.word	.L15+1
+ 143 00b0 95010000 		.word	.L15+1
+ 144 00b4 95010000 		.word	.L15+1
+ 145 00b8 95010000 		.word	.L15+1
+ 146 00bc 95010000 		.word	.L15+1
+ 147 00c0 95010000 		.word	.L15+1
+ 148 00c4 95010000 		.word	.L15+1
+ 149 00c8 95010000 		.word	.L15+1
+ 150 00cc 95010000 		.word	.L15+1
+ 151 00d0 95010000 		.word	.L15+1
+ 152 00d4 95010000 		.word	.L15+1
+ 153 00d8 5D010000 		.word	.L5+1
+ 154              		.p2align 1
+ARM GAS  /tmp/ccjDazwS.s 			page 5
+
+
+ 155              	.L11:
+  52:hardware/src/move.c ****     {
+  53:hardware/src/move.c ****         case BOTHLOST:{
+  54:hardware/src/move.c ****             strncpy(str_info2lcd,"Both lost",strlen("Both lost"));
+ 156              		.loc 1 54 13
+ 157 00dc 07F12003 		add	r3, r7, #32
+ 158 00e0 524A     		ldr	r2, .L16+4
+ 159 00e2 07CA     		ldm	r2, {r0, r1, r2}
+ 160 00e4 03C3     		stmia	r3!, {r0, r1}
+ 161 00e6 1A70     		strb	r2, [r3]
+  55:hardware/src/move.c **** 			break;
+ 162              		.loc 1 55 4
+ 163 00e8 55E0     		b	.L12
+ 164              	.L10:
+  56:hardware/src/move.c **** 		}
+  57:hardware/src/move.c **** 		case TOOLEFT:{
+  58:hardware/src/move.c ****             sprintf(temp_str,"TOO LEFT,Loc:%d",lineDeviationLoc);
+ 165              		.loc 1 58 13
+ 166 00ea 514B     		ldr	r3, .L16+8
+ 167 00ec 1A68     		ldr	r2, [r3]
+ 168 00ee 3B1D     		adds	r3, r7, #4
+ 169 00f0 5049     		ldr	r1, .L16+12
+ 170 00f2 1846     		mov	r0, r3
+ 171 00f4 FFF7FEFF 		bl	sprintf
+  59:hardware/src/move.c ****             strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 172              		.loc 1 59 13
+ 173 00f8 3B1D     		adds	r3, r7, #4
+ 174 00fa 1846     		mov	r0, r3
+ 175 00fc FFF7FEFF 		bl	strlen
+ 176 0100 0246     		mov	r2, r0
+ 177 0102 391D     		adds	r1, r7, #4
+ 178 0104 07F12003 		add	r3, r7, #32
+ 179 0108 1846     		mov	r0, r3
+ 180 010a FFF7FEFF 		bl	strncpy
+  60:hardware/src/move.c **** 			break;
+ 181              		.loc 1 60 4
+ 182 010e 42E0     		b	.L12
+ 183              	.L9:
+  61:hardware/src/move.c **** 		}
+  62:hardware/src/move.c **** 		case TOORIGHT:{
+  63:hardware/src/move.c ****             sprintf(temp_str,"TOO RIGHT,Loc:%d",lineDeviationLoc);
+ 184              		.loc 1 63 13
+ 185 0110 474B     		ldr	r3, .L16+8
+ 186 0112 1A68     		ldr	r2, [r3]
+ 187 0114 3B1D     		adds	r3, r7, #4
+ 188 0116 4849     		ldr	r1, .L16+16
+ 189 0118 1846     		mov	r0, r3
+ 190 011a FFF7FEFF 		bl	sprintf
+  64:hardware/src/move.c ****             strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 191              		.loc 1 64 13
+ 192 011e 3B1D     		adds	r3, r7, #4
+ 193 0120 1846     		mov	r0, r3
+ 194 0122 FFF7FEFF 		bl	strlen
+ 195 0126 0246     		mov	r2, r0
+ 196 0128 391D     		adds	r1, r7, #4
+ 197 012a 07F12003 		add	r3, r7, #32
+ 198 012e 1846     		mov	r0, r3
+ARM GAS  /tmp/ccjDazwS.s 			page 6
+
+
+ 199 0130 FFF7FEFF 		bl	strncpy
+  65:hardware/src/move.c **** 			break;
+ 200              		.loc 1 65 4
+ 201 0134 2FE0     		b	.L12
+ 202              	.L7:
+  66:hardware/src/move.c **** 		}
+  67:hardware/src/move.c **** 		case NOMIDLOC:{
+  68:hardware/src/move.c ****             sprintf(temp_str,"nomid,Loc:%d",lineDeviationLoc);
+ 203              		.loc 1 68 13
+ 204 0136 3E4B     		ldr	r3, .L16+8
+ 205 0138 1A68     		ldr	r2, [r3]
+ 206 013a 3B1D     		adds	r3, r7, #4
+ 207 013c 3F49     		ldr	r1, .L16+20
+ 208 013e 1846     		mov	r0, r3
+ 209 0140 FFF7FEFF 		bl	sprintf
+  69:hardware/src/move.c ****             strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 210              		.loc 1 69 13
+ 211 0144 3B1D     		adds	r3, r7, #4
+ 212 0146 1846     		mov	r0, r3
+ 213 0148 FFF7FEFF 		bl	strlen
+ 214 014c 0246     		mov	r2, r0
+ 215 014e 391D     		adds	r1, r7, #4
+ 216 0150 07F12003 		add	r3, r7, #32
+ 217 0154 1846     		mov	r0, r3
+ 218 0156 FFF7FEFF 		bl	strncpy
+  70:hardware/src/move.c **** 			break;
+ 219              		.loc 1 70 4
+ 220 015a 1CE0     		b	.L12
+ 221              	.L5:
+  71:hardware/src/move.c **** 		}
+  72:hardware/src/move.c **** 		case NOLINEWIDTH:{
+  73:hardware/src/move.c ****             strncpy(str_info2lcd,"NO LINE WIDTH",strlen("NO LINE WIDTH"));
+ 222              		.loc 1 73 13
+ 223 015c 07F12003 		add	r3, r7, #32
+ 224 0160 374A     		ldr	r2, .L16+24
+ 225 0162 1C46     		mov	r4, r3
+ 226 0164 1346     		mov	r3, r2
+ 227 0166 0FCB     		ldm	r3, {r0, r1, r2, r3}
+ 228 0168 07C4     		stmia	r4!, {r0, r1, r2}
+ 229 016a 2370     		strb	r3, [r4]
+  74:hardware/src/move.c **** 			break;
+ 230              		.loc 1 74 4
+ 231 016c 13E0     		b	.L12
+ 232              	.L8:
+  75:hardware/src/move.c **** 		}
+  76:hardware/src/move.c **** 		case GETMIDLOC:{
+  77:hardware/src/move.c ****             sprintf(temp_str,"lineDeviaLoc:%d",lineDeviationLoc);
+ 233              		.loc 1 77 13
+ 234 016e 304B     		ldr	r3, .L16+8
+ 235 0170 1A68     		ldr	r2, [r3]
+ 236 0172 3B1D     		adds	r3, r7, #4
+ 237 0174 3349     		ldr	r1, .L16+28
+ 238 0176 1846     		mov	r0, r3
+ 239 0178 FFF7FEFF 		bl	sprintf
+  78:hardware/src/move.c ****             strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 240              		.loc 1 78 13
+ 241 017c 3B1D     		adds	r3, r7, #4
+ARM GAS  /tmp/ccjDazwS.s 			page 7
+
+
+ 242 017e 1846     		mov	r0, r3
+ 243 0180 FFF7FEFF 		bl	strlen
+ 244 0184 0246     		mov	r2, r0
+ 245 0186 391D     		adds	r1, r7, #4
+ 246 0188 07F12003 		add	r3, r7, #32
+ 247 018c 1846     		mov	r0, r3
+ 248 018e FFF7FEFF 		bl	strncpy
+  79:hardware/src/move.c ****             break;
+ 249              		.loc 1 79 13
+ 250 0192 00E0     		b	.L12
+ 251              	.L15:
+  80:hardware/src/move.c ****         default:
+  81:hardware/src/move.c ****             break;
+ 252              		.loc 1 81 13
+ 253 0194 00BF     		nop
+ 254              	.L12:
+  82:hardware/src/move.c ****         }
+  83:hardware/src/move.c ****     }
+  84:hardware/src/move.c ****     LCD_SimpleString(k_x,k_y,str_info2lcd,MAX_LENGTH2LCD);
+ 255              		.loc 1 84 5
+ 256 0196 07F12002 		add	r2, r7, #32
+ 257 019a 1923     		movs	r3, #25
+ 258 019c F96B     		ldr	r1, [r7, #60]
+ 259 019e 386C     		ldr	r0, [r7, #64]
+ 260 01a0 FFF7FEFF 		bl	LCD_SimpleString
+  85:hardware/src/move.c **** 
+  86:hardware/src/move.c **** 	k_x = 20;
+ 261              		.loc 1 86 6
+ 262 01a4 1423     		movs	r3, #20
+ 263 01a6 3B64     		str	r3, [r7, #64]
+  87:hardware/src/move.c **** 	k_y = 190;
+ 264              		.loc 1 87 6
+ 265 01a8 BE23     		movs	r3, #190
+ 266 01aa FB63     		str	r3, [r7, #60]
+  88:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 267              		.loc 1 88 10
+ 268 01ac 0023     		movs	r3, #0
+ 269 01ae 7B64     		str	r3, [r7, #68]
+ 270              		.loc 1 88 5
+ 271 01b0 08E0     		b	.L13
+ 272              	.L14:
+  89:hardware/src/move.c ****         str_info2lcd[i] = 32;
+ 273              		.loc 1 89 25 discriminator 3
+ 274 01b2 07F12002 		add	r2, r7, #32
+ 275 01b6 7B6C     		ldr	r3, [r7, #68]
+ 276 01b8 1344     		add	r3, r3, r2
+ 277 01ba 2022     		movs	r2, #32
+ 278 01bc 1A70     		strb	r2, [r3]
+  88:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 279              		.loc 1 88 31 discriminator 3
+ 280 01be 7B6C     		ldr	r3, [r7, #68]
+ 281 01c0 0133     		adds	r3, r3, #1
+ 282 01c2 7B64     		str	r3, [r7, #68]
+ 283              	.L13:
+  88:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 284              		.loc 1 88 5 discriminator 1
+ 285 01c4 7B6C     		ldr	r3, [r7, #68]
+ARM GAS  /tmp/ccjDazwS.s 			page 8
+
+
+ 286 01c6 182B     		cmp	r3, #24
+ 287 01c8 F3DD     		ble	.L14
+  90:hardware/src/move.c ****     // sprintf(temp_str,"oK:%.3f oB:%d",overK,b);
+  91:hardware/src/move.c ****     sprintf(temp_str,"oK:%d oB:%d BORDER:%d",(int)(1000*overK),b,FLAG_BORDER);
+ 288              		.loc 1 91 56
+ 289 01ca 1F4B     		ldr	r3, .L16+32
+ 290 01cc D3E90001 		ldrd	r0, [r3]
+ 291 01d0 4FF00002 		mov	r2, #0
+ 292 01d4 1D4B     		ldr	r3, .L16+36
+ 293 01d6 FFF7FEFF 		bl	__aeabi_dmul
+ 294 01da 0246     		mov	r2, r0
+ 295 01dc 0B46     		mov	r3, r1
+ 296              		.loc 1 91 5
+ 297 01de 1046     		mov	r0, r2
+ 298 01e0 1946     		mov	r1, r3
+ 299 01e2 FFF7FEFF 		bl	__aeabi_d2iz
+ 300 01e6 0246     		mov	r2, r0
+ 301 01e8 194B     		ldr	r3, .L16+40
+ 302 01ea 1B68     		ldr	r3, [r3]
+ 303 01ec 1949     		ldr	r1, .L16+44
+ 304 01ee 0978     		ldrb	r1, [r1]	@ zero_extendqisi2
+ 305 01f0 381D     		adds	r0, r7, #4
+ 306 01f2 0091     		str	r1, [sp]
+ 307 01f4 1849     		ldr	r1, .L16+48
+ 308 01f6 FFF7FEFF 		bl	sprintf
+  92:hardware/src/move.c ****     strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 309              		.loc 1 92 5
+ 310 01fa 3B1D     		adds	r3, r7, #4
+ 311 01fc 1846     		mov	r0, r3
+ 312 01fe FFF7FEFF 		bl	strlen
+ 313 0202 0246     		mov	r2, r0
+ 314 0204 391D     		adds	r1, r7, #4
+ 315 0206 07F12003 		add	r3, r7, #32
+ 316 020a 1846     		mov	r0, r3
+ 317 020c FFF7FEFF 		bl	strncpy
+  93:hardware/src/move.c **** 	LCD_SimpleString(k_x,k_y,str_info2lcd,MAX_LENGTH2LCD);
+ 318              		.loc 1 93 2
+ 319 0210 07F12002 		add	r2, r7, #32
+ 320 0214 1923     		movs	r3, #25
+ 321 0216 F96B     		ldr	r1, [r7, #60]
+ 322 0218 386C     		ldr	r0, [r7, #64]
+ 323 021a FFF7FEFF 		bl	LCD_SimpleString
+  94:hardware/src/move.c **** #if defined(DEBUG_CAMERA) && DEBUG_CAMERA
+  95:hardware/src/move.c ****     if(overK > 1.0){
+  96:hardware/src/move.c ****         for(i=0;i<maxUsefulLineLen;i++){
+  97:hardware/src/move.c ****             printf("%d_%d ",maxUsefulBlackLine[i],maxUsefulBlackHeight[i]);
+  98:hardware/src/move.c ****         }
+  99:hardware/src/move.c ****         printf("\r\n\r\n");
+ 100:hardware/src/move.c ****     }
+ 101:hardware/src/move.c **** #endif
+ 102:hardware/src/move.c **** 
+ 103:hardware/src/move.c **** #if defined(PID_METHOD) && PID_METHOD
+ 104:hardware/src/move.c **** 	k_x = 20;
+ 105:hardware/src/move.c **** 	k_y = 220;
+ 106:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 107:hardware/src/move.c ****         str_info2lcd[i] = 32;
+ 108:hardware/src/move.c ****     sprintf(temp_str,"speed change:%d",speed_change);
+ARM GAS  /tmp/ccjDazwS.s 			page 9
+
+
+ 109:hardware/src/move.c ****     strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 110:hardware/src/move.c **** 	LCD_SimpleString(k_x,k_y,str_info2lcd,MAX_LENGTH2LCD);
+ 111:hardware/src/move.c **** #endif
+ 112:hardware/src/move.c **** #endif
+ 113:hardware/src/move.c **** }
+ 324              		.loc 1 113 1
+ 325 021e 00BF     		nop
+ 326 0220 4C37     		adds	r7, r7, #76
+ 327              	.LCFI3:
+ 328              		.cfi_def_cfa_offset 12
+ 329 0222 BD46     		mov	sp, r7
+ 330              	.LCFI4:
+ 331              		.cfi_def_cfa_register 13
+ 332              		@ sp needed
+ 333 0224 90BD     		pop	{r4, r7, pc}
+ 334              	.L17:
+ 335 0226 00BF     		.align	2
+ 336              	.L16:
+ 337 0228 00000000 		.word	devLocRes
+ 338 022c 00000000 		.word	.LC0
+ 339 0230 00000000 		.word	lineDeviationLoc
+ 340 0234 0C000000 		.word	.LC1
+ 341 0238 1C000000 		.word	.LC2
+ 342 023c 30000000 		.word	.LC3
+ 343 0240 40000000 		.word	.LC4
+ 344 0244 50000000 		.word	.LC5
+ 345 0248 00000000 		.word	overK
+ 346 024c 00408F40 		.word	1083129856
+ 347 0250 00000000 		.word	b
+ 348 0254 00000000 		.word	FLAG_BORDER
+ 349 0258 60000000 		.word	.LC6
+ 350              		.cfi_endproc
+ 351              	.LFE66:
+ 353              		.section	.rodata
+ 354 0076 0000     		.align	2
+ 355              	.LC7:
+ 356 0078 73746F70 		.ascii	"stop bike,reason:%d\000"
+ 356      2062696B 
+ 356      652C7265 
+ 356      61736F6E 
+ 356      3A256400 
+ 357              		.section	.text.printStopMess,"ax",%progbits
+ 358              		.align	1
+ 359              		.global	printStopMess
+ 360              		.syntax unified
+ 361              		.thumb
+ 362              		.thumb_func
+ 363              		.fpu softvfp
+ 365              	printStopMess:
+ 366              	.LFB67:
+ 114:hardware/src/move.c **** 
+ 115:hardware/src/move.c **** /*
+ 116:hardware/src/move.c ****     0:the line is too left or right
+ 117:hardware/src/move.c ****     1:not get the useful line in getUsefulLine()
+ 118:hardware/src/move.c ****     2:not get the slope in regression()
+ 119:hardware/src/move.c ****     3:extern the left add in left_add()
+ 120:hardware/src/move.c ****     4:extern the right add in right_add()
+ARM GAS  /tmp/ccjDazwS.s 			page 10
+
+
+ 121:hardware/src/move.c ****     5:left fencha
+ 122:hardware/src/move.c ****     6:right fencha
+ 123:hardware/src/move.c ****     7:left fencha new
+ 124:hardware/src/move.c ****     8:right fencha new
+ 125:hardware/src/move.c ****     9:for test
+ 126:hardware/src/move.c **** */
+ 127:hardware/src/move.c **** void printStopMess(int reason)
+ 128:hardware/src/move.c **** {
+ 367              		.loc 1 128 1
+ 368              		.cfi_startproc
+ 369              		@ args = 0, pretend = 0, frame = 80
+ 370              		@ frame_needed = 1, uses_anonymous_args = 0
+ 371 0000 80B5     		push	{r7, lr}
+ 372              	.LCFI5:
+ 373              		.cfi_def_cfa_offset 8
+ 374              		.cfi_offset 7, -8
+ 375              		.cfi_offset 14, -4
+ 376 0002 94B0     		sub	sp, sp, #80
+ 377              	.LCFI6:
+ 378              		.cfi_def_cfa_offset 88
+ 379 0004 00AF     		add	r7, sp, #0
+ 380              	.LCFI7:
+ 381              		.cfi_def_cfa_register 7
+ 382 0006 7860     		str	r0, [r7, #4]
+ 129:hardware/src/move.c **** #if defined(LCD_ON_OFF) && LCD_ON_OFF
+ 130:hardware/src/move.c ****     u8 str_info2lcd[MAX_LENGTH2LCD] = {0};
+ 383              		.loc 1 130 8
+ 384 0008 0023     		movs	r3, #0
+ 385 000a BB62     		str	r3, [r7, #40]
+ 386 000c 07F12C03 		add	r3, r7, #44
+ 387 0010 0022     		movs	r2, #0
+ 388 0012 1A60     		str	r2, [r3]
+ 389 0014 5A60     		str	r2, [r3, #4]
+ 390 0016 9A60     		str	r2, [r3, #8]
+ 391 0018 DA60     		str	r2, [r3, #12]
+ 392 001a 1A61     		str	r2, [r3, #16]
+ 393 001c 1A75     		strb	r2, [r3, #20]
+ 131:hardware/src/move.c ****     u8 temp_str[MAX_LENGTH2LCD] = {0};
+ 394              		.loc 1 131 8
+ 395 001e 0023     		movs	r3, #0
+ 396 0020 FB60     		str	r3, [r7, #12]
+ 397 0022 07F11003 		add	r3, r7, #16
+ 398 0026 0022     		movs	r2, #0
+ 399 0028 1A60     		str	r2, [r3]
+ 400 002a 5A60     		str	r2, [r3, #4]
+ 401 002c 9A60     		str	r2, [r3, #8]
+ 402 002e DA60     		str	r2, [r3, #12]
+ 403 0030 1A61     		str	r2, [r3, #16]
+ 404 0032 1A75     		strb	r2, [r3, #20]
+ 132:hardware/src/move.c **** 	int i,k_x,k_y;
+ 133:hardware/src/move.c **** 
+ 134:hardware/src/move.c **** 	k_x = 30;
+ 405              		.loc 1 134 6
+ 406 0034 1E23     		movs	r3, #30
+ 407 0036 BB64     		str	r3, [r7, #72]
+ 135:hardware/src/move.c **** 	k_y = 250;
+ 408              		.loc 1 135 6
+ARM GAS  /tmp/ccjDazwS.s 			page 11
+
+
+ 409 0038 FA23     		movs	r3, #250
+ 410 003a 7B64     		str	r3, [r7, #68]
+ 136:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 411              		.loc 1 136 10
+ 412 003c 0023     		movs	r3, #0
+ 413 003e FB64     		str	r3, [r7, #76]
+ 414              		.loc 1 136 5
+ 415 0040 08E0     		b	.L19
+ 416              	.L20:
+ 137:hardware/src/move.c ****         str_info2lcd[i] = 32;
+ 417              		.loc 1 137 25 discriminator 3
+ 418 0042 07F12802 		add	r2, r7, #40
+ 419 0046 FB6C     		ldr	r3, [r7, #76]
+ 420 0048 1344     		add	r3, r3, r2
+ 421 004a 2022     		movs	r2, #32
+ 422 004c 1A70     		strb	r2, [r3]
+ 136:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 423              		.loc 1 136 31 discriminator 3
+ 424 004e FB6C     		ldr	r3, [r7, #76]
+ 425 0050 0133     		adds	r3, r3, #1
+ 426 0052 FB64     		str	r3, [r7, #76]
+ 427              	.L19:
+ 136:hardware/src/move.c ****     for(i=0;i<MAX_LENGTH2LCD;i++)
+ 428              		.loc 1 136 5 discriminator 1
+ 429 0054 FB6C     		ldr	r3, [r7, #76]
+ 430 0056 182B     		cmp	r3, #24
+ 431 0058 F3DD     		ble	.L20
+ 138:hardware/src/move.c ****     sprintf(temp_str,"stop bike,reason:%d",reason);
+ 432              		.loc 1 138 5
+ 433 005a 07F10C03 		add	r3, r7, #12
+ 434 005e 7A68     		ldr	r2, [r7, #4]
+ 435 0060 0D49     		ldr	r1, .L21
+ 436 0062 1846     		mov	r0, r3
+ 437 0064 FFF7FEFF 		bl	sprintf
+ 139:hardware/src/move.c ****     strncpy(str_info2lcd,temp_str,strlen(temp_str));
+ 438              		.loc 1 139 5
+ 439 0068 07F10C03 		add	r3, r7, #12
+ 440 006c 1846     		mov	r0, r3
+ 441 006e FFF7FEFF 		bl	strlen
+ 442 0072 0246     		mov	r2, r0
+ 443 0074 07F10C01 		add	r1, r7, #12
+ 444 0078 07F12803 		add	r3, r7, #40
+ 445 007c 1846     		mov	r0, r3
+ 446 007e FFF7FEFF 		bl	strncpy
+ 140:hardware/src/move.c **** 	LCD_SimpleString(k_x,k_y,str_info2lcd,MAX_LENGTH2LCD);
+ 447              		.loc 1 140 2
+ 448 0082 07F12802 		add	r2, r7, #40
+ 449 0086 1923     		movs	r3, #25
+ 450 0088 796C     		ldr	r1, [r7, #68]
+ 451 008a B86C     		ldr	r0, [r7, #72]
+ 452 008c FFF7FEFF 		bl	LCD_SimpleString
+ 141:hardware/src/move.c **** #endif
+ 142:hardware/src/move.c **** }
+ 453              		.loc 1 142 1
+ 454 0090 00BF     		nop
+ 455 0092 5037     		adds	r7, r7, #80
+ 456              	.LCFI8:
+ARM GAS  /tmp/ccjDazwS.s 			page 12
+
+
+ 457              		.cfi_def_cfa_offset 8
+ 458 0094 BD46     		mov	sp, r7
+ 459              	.LCFI9:
+ 460              		.cfi_def_cfa_register 13
+ 461              		@ sp needed
+ 462 0096 80BD     		pop	{r7, pc}
+ 463              	.L22:
+ 464              		.align	2
+ 465              	.L21:
+ 466 0098 78000000 		.word	.LC7
+ 467              		.cfi_endproc
+ 468              	.LFE67:
+ 470              		.section	.text.motation,"ax",%progbits
+ 471              		.align	1
+ 472              		.global	motation
+ 473              		.syntax unified
+ 474              		.thumb
+ 475              		.thumb_func
+ 476              		.fpu softvfp
+ 478              	motation:
+ 479              	.LFB68:
+ 143:hardware/src/move.c **** 
+ 144:hardware/src/move.c **** void motation(void)
+ 145:hardware/src/move.c **** {
+ 480              		.loc 1 145 1
+ 481              		.cfi_startproc
+ 482              		@ args = 0, pretend = 0, frame = 0
+ 483              		@ frame_needed = 1, uses_anonymous_args = 0
+ 484              		@ link register save eliminated.
+ 485 0000 80B4     		push	{r7}
+ 486              	.LCFI10:
+ 487              		.cfi_def_cfa_offset 4
+ 488              		.cfi_offset 7, -4
+ 489 0002 00AF     		add	r7, sp, #0
+ 490              	.LCFI11:
+ 491              		.cfi_def_cfa_register 7
+ 146:hardware/src/move.c **** #if defined(SIMPLE_METHOD) && SIMPLE_METHOD
+ 147:hardware/src/move.c **** #if defined(SIMPLE_METHODNEW) && SIMPLE_METHODNEW
+ 148:hardware/src/move.c ****     u8 str_delaynew = 90;
+ 149:hardware/src/move.c ****     int turn_delay = 0;
+ 150:hardware/src/move.c ****     turn_delay = (int)(30*overK) + (int)(1*lineDeviationLoc);
+ 151:hardware/src/move.c ****     printStopMess(turn_delay);
+ 152:hardware/src/move.c ****     if(turn_delay > 80){
+ 153:hardware/src/move.c ****         turn_delay = 80;
+ 154:hardware/src/move.c ****         // RUNNING = 0;
+ 155:hardware/src/move.c ****     }
+ 156:hardware/src/move.c ****     if(turn_delay < -80){
+ 157:hardware/src/move.c ****         turn_delay = -80;
+ 158:hardware/src/move.c ****         // RUNNING = 0;
+ 159:hardware/src/move.c ****     }
+ 160:hardware/src/move.c ****     if(turn_delay<32 && turn_delay>-32){
+ 161:hardware/src/move.c ****         Motor_Forward();
+ 162:hardware/src/move.c ****         delay_ms(str_delaynew);
+ 163:hardware/src/move.c ****         Motor_Stop();
+ 164:hardware/src/move.c ****     }
+ 165:hardware/src/move.c ****     else{
+ 166:hardware/src/move.c ****         if(turn_delay > 0){
+ARM GAS  /tmp/ccjDazwS.s 			page 13
+
+
+ 167:hardware/src/move.c ****             Motor_Turnright();
+ 168:hardware/src/move.c ****             delay_ms(turn_delay);
+ 169:hardware/src/move.c ****             Motor_Stop();
+ 170:hardware/src/move.c ****         }
+ 171:hardware/src/move.c ****         else{
+ 172:hardware/src/move.c ****             Motor_Turnleft();
+ 173:hardware/src/move.c ****             delay_ms(-turn_delay);
+ 174:hardware/src/move.c ****             // delay_ms(30);
+ 175:hardware/src/move.c ****             Motor_Stop();
+ 176:hardware/src/move.c ****         }
+ 177:hardware/src/move.c ****     }
+ 178:hardware/src/move.c **** #else
+ 179:hardware/src/move.c ****     u8 loc2turn,turn_step_delay,str_delay,ok_delay;
+ 180:hardware/src/move.c ****     float oK2turn;
+ 181:hardware/src/move.c ****     loc2turn = 20;  //default 20
+ 182:hardware/src/move.c ****     turn_step_delay = 80;   //default 35
+ 183:hardware/src/move.c ****     str_delay = 100;    //last  150
+ 184:hardware/src/move.c ****     oK2turn = 0.3;
+ 185:hardware/src/move.c ****     ok_delay = 50;
+ 186:hardware/src/move.c ****     if(lineDeviationLoc > loc2turn){
+ 187:hardware/src/move.c ****         turn_right_A();
+ 188:hardware/src/move.c ****         delay_ms(turn_step_delay);
+ 189:hardware/src/move.c ****         stop_forward();
+ 190:hardware/src/move.c ****     }
+ 191:hardware/src/move.c ****     else if(lineDeviationLoc < -loc2turn){
+ 192:hardware/src/move.c ****         turn_left_A();
+ 193:hardware/src/move.c ****         delay_ms(turn_step_delay);
+ 194:hardware/src/move.c ****         stop_forward();
+ 195:hardware/src/move.c ****     }
+ 196:hardware/src/move.c ****     else{
+ 197:hardware/src/move.c ****         start_forward();
+ 198:hardware/src/move.c ****         delay_ms(str_delay);
+ 199:hardware/src/move.c ****         stop_forward();
+ 200:hardware/src/move.c ****     }
+ 201:hardware/src/move.c ****     if(overK > oK2turn){
+ 202:hardware/src/move.c ****         turn_right_A();
+ 203:hardware/src/move.c ****         delay_ms(ok_delay);
+ 204:hardware/src/move.c ****         stop_forward();
+ 205:hardware/src/move.c ****     }
+ 206:hardware/src/move.c ****     else if(overK < -oK2turn){
+ 207:hardware/src/move.c ****         turn_left_A();
+ 208:hardware/src/move.c ****         delay_ms(ok_delay);
+ 209:hardware/src/move.c ****         stop_forward();
+ 210:hardware/src/move.c ****     }
+ 211:hardware/src/move.c **** #endif
+ 212:hardware/src/move.c **** #endif
+ 213:hardware/src/move.c **** #if defined(PID_METHOD) && PID_METHOD
+ 214:hardware/src/move.c ****     int speed_line = 0;
+ 215:hardware/src/move.c ****     int speed_oK = 0;
+ 216:hardware/src/move.c ****     // if(overK>1 && FLAG_BORDER==2){
+ 217:hardware/src/move.c ****     //     lineDeviationLoc = 60;
+ 218:hardware/src/move.c ****     // }
+ 219:hardware/src/move.c ****     // if(overK<-1 && FLAG_BORDER==1){
+ 220:hardware/src/move.c ****     //     lineDeviationLoc = -60;
+ 221:hardware/src/move.c ****     // }
+ 222:hardware/src/move.c ****     // if(abs(lineDeviationLoc) > 50){
+ 223:hardware/src/move.c ****     //     RUNNING = 0;
+ARM GAS  /tmp/ccjDazwS.s 			page 14
+
+
+ 224:hardware/src/move.c ****     //     printStopMess(0);
+ 225:hardware/src/move.c ****     // }
+ 226:hardware/src/move.c ****     // else
+ 227:hardware/src/move.c ****     {
+ 228:hardware/src/move.c ****         speed_line = (int)PID_realize(&line_pid,lineDeviationLoc);
+ 229:hardware/src/move.c ****     }
+ 230:hardware/src/move.c ****     if(overK<0.06 && overK>-0.06){
+ 231:hardware/src/move.c ****         overK = 0;
+ 232:hardware/src/move.c ****     }
+ 233:hardware/src/move.c ****     else
+ 234:hardware/src/move.c ****     {
+ 235:hardware/src/move.c ****         speed_oK = (int)PID_realize(&oK_pid,overK);
+ 236:hardware/src/move.c ****     }
+ 237:hardware/src/move.c ****     speed_change = speed_line+speed_oK;
+ 238:hardware/src/move.c ****     printf("speed line:%d\tspeed ok:%d\t\tspeed change:%d\r\n",speed_line,speed_oK,speed_change);
+ 239:hardware/src/move.c ****     Motor_Forward();
+ 240:hardware/src/move.c ****     if(speed_change > 0){
+ 241:hardware/src/move.c ****         //turn right;
+ 242:hardware/src/move.c ****         left_add(speed_change);
+ 243:hardware/src/move.c ****         right_add(0);
+ 244:hardware/src/move.c ****     }
+ 245:hardware/src/move.c ****     else{
+ 246:hardware/src/move.c ****         //turn left
+ 247:hardware/src/move.c ****         left_add(0);
+ 248:hardware/src/move.c ****         right_add(-speed_change);
+ 249:hardware/src/move.c ****     }
+ 250:hardware/src/move.c **** #endif
+ 251:hardware/src/move.c **** }
+ 492              		.loc 1 251 1
+ 493 0004 00BF     		nop
+ 494 0006 BD46     		mov	sp, r7
+ 495              	.LCFI12:
+ 496              		.cfi_def_cfa_register 13
+ 497              		@ sp needed
+ 498 0008 80BC     		pop	{r7}
+ 499              	.LCFI13:
+ 500              		.cfi_restore 7
+ 501              		.cfi_def_cfa_offset 0
+ 502 000a 7047     		bx	lr
+ 503              		.cfi_endproc
+ 504              	.LFE68:
+ 506              		.section	.text.turn2L,"ax",%progbits
+ 507              		.align	1
+ 508              		.global	turn2L
+ 509              		.syntax unified
+ 510              		.thumb
+ 511              		.thumb_func
+ 512              		.fpu softvfp
+ 514              	turn2L:
+ 515              	.LFB69:
+ 252:hardware/src/move.c **** 
+ 253:hardware/src/move.c **** #if defined(MAP_TESTA) && MAP_TESTA
+ 254:hardware/src/move.c **** void move_for_fencha(u8 times)
+ 255:hardware/src/move.c **** {
+ 256:hardware/src/move.c ****     switch(times){
+ 257:hardware/src/move.c ****         case 1:
+ 258:hardware/src/move.c ****             turn2L();
+ARM GAS  /tmp/ccjDazwS.s 			page 15
+
+
+ 259:hardware/src/move.c ****             break;
+ 260:hardware/src/move.c ****         case 2:
+ 261:hardware/src/move.c ****             turn2R();
+ 262:hardware/src/move.c ****             break;
+ 263:hardware/src/move.c ****         case 3:
+ 264:hardware/src/move.c ****             turn2L();
+ 265:hardware/src/move.c ****             break;
+ 266:hardware/src/move.c ****         case 4:
+ 267:hardware/src/move.c ****             turn2L();
+ 268:hardware/src/move.c ****             break;
+ 269:hardware/src/move.c ****         case 5:
+ 270:hardware/src/move.c ****             forward_ten(400);
+ 271:hardware/src/move.c ****             break;
+ 272:hardware/src/move.c ****         default:
+ 273:hardware/src/move.c ****             break;
+ 274:hardware/src/move.c ****     }
+ 275:hardware/src/move.c **** }
+ 276:hardware/src/move.c **** #endif
+ 277:hardware/src/move.c **** 
+ 278:hardware/src/move.c **** void turn2L(void)
+ 279:hardware/src/move.c **** {
+ 516              		.loc 1 279 1
+ 517              		.cfi_startproc
+ 518              		@ args = 0, pretend = 0, frame = 0
+ 519              		@ frame_needed = 1, uses_anonymous_args = 0
+ 520 0000 80B5     		push	{r7, lr}
+ 521              	.LCFI14:
+ 522              		.cfi_def_cfa_offset 8
+ 523              		.cfi_offset 7, -8
+ 524              		.cfi_offset 14, -4
+ 525 0002 00AF     		add	r7, sp, #0
+ 526              	.LCFI15:
+ 527              		.cfi_def_cfa_register 7
+ 280:hardware/src/move.c ****     Motor_Forward();
+ 528              		.loc 1 280 5
+ 529 0004 FFF7FEFF 		bl	Motor_Forward
+ 281:hardware/src/move.c ****     delay_ms(800);
+ 530              		.loc 1 281 5
+ 531 0008 4FF44870 		mov	r0, #800
+ 532 000c FFF7FEFF 		bl	delay_ms
+ 282:hardware/src/move.c ****     Motor_Leftback();
+ 533              		.loc 1 282 5
+ 534 0010 FFF7FEFF 		bl	Motor_Leftback
+ 283:hardware/src/move.c ****     delay_ms(750);
+ 535              		.loc 1 283 5
+ 536 0014 40F2EE20 		movw	r0, #750
+ 537 0018 FFF7FEFF 		bl	delay_ms
+ 284:hardware/src/move.c ****     forward_ten(200);
+ 538              		.loc 1 284 5
+ 539 001c C820     		movs	r0, #200
+ 540 001e FFF7FEFF 		bl	forward_ten
+ 285:hardware/src/move.c ****     Motor_Stop();
+ 541              		.loc 1 285 5
+ 542 0022 FFF7FEFF 		bl	Motor_Stop
+ 286:hardware/src/move.c **** }
+ 543              		.loc 1 286 1
+ 544 0026 00BF     		nop
+ARM GAS  /tmp/ccjDazwS.s 			page 16
+
+
+ 545 0028 80BD     		pop	{r7, pc}
+ 546              		.cfi_endproc
+ 547              	.LFE69:
+ 549              		.section	.text.turn2R,"ax",%progbits
+ 550              		.align	1
+ 551              		.global	turn2R
+ 552              		.syntax unified
+ 553              		.thumb
+ 554              		.thumb_func
+ 555              		.fpu softvfp
+ 557              	turn2R:
+ 558              	.LFB70:
+ 287:hardware/src/move.c **** 
+ 288:hardware/src/move.c **** void turn2R(void)
+ 289:hardware/src/move.c **** {
+ 559              		.loc 1 289 1
+ 560              		.cfi_startproc
+ 561              		@ args = 0, pretend = 0, frame = 0
+ 562              		@ frame_needed = 1, uses_anonymous_args = 0
+ 563 0000 80B5     		push	{r7, lr}
+ 564              	.LCFI16:
+ 565              		.cfi_def_cfa_offset 8
+ 566              		.cfi_offset 7, -8
+ 567              		.cfi_offset 14, -4
+ 568 0002 00AF     		add	r7, sp, #0
+ 569              	.LCFI17:
+ 570              		.cfi_def_cfa_register 7
+ 290:hardware/src/move.c ****     Motor_Forward();
+ 571              		.loc 1 290 5
+ 572 0004 FFF7FEFF 		bl	Motor_Forward
+ 291:hardware/src/move.c ****     delay_ms(800);
+ 573              		.loc 1 291 5
+ 574 0008 4FF44870 		mov	r0, #800
+ 575 000c FFF7FEFF 		bl	delay_ms
+ 292:hardware/src/move.c ****     Motor_Rightback();
+ 576              		.loc 1 292 5
+ 577 0010 FFF7FEFF 		bl	Motor_Rightback
+ 293:hardware/src/move.c ****     delay_ms(750);
+ 578              		.loc 1 293 5
+ 579 0014 40F2EE20 		movw	r0, #750
+ 580 0018 FFF7FEFF 		bl	delay_ms
+ 294:hardware/src/move.c ****     forward_ten(200);
+ 581              		.loc 1 294 5
+ 582 001c C820     		movs	r0, #200
+ 583 001e FFF7FEFF 		bl	forward_ten
+ 295:hardware/src/move.c ****     Motor_Stop();
+ 584              		.loc 1 295 5
+ 585 0022 FFF7FEFF 		bl	Motor_Stop
+ 296:hardware/src/move.c **** }
+ 586              		.loc 1 296 1
+ 587 0026 00BF     		nop
+ 588 0028 80BD     		pop	{r7, pc}
+ 589              		.cfi_endproc
+ 590              	.LFE70:
+ 592              		.section	.text.forward_ten,"ax",%progbits
+ 593              		.align	1
+ 594              		.global	forward_ten
+ARM GAS  /tmp/ccjDazwS.s 			page 17
+
+
+ 595              		.syntax unified
+ 596              		.thumb
+ 597              		.thumb_func
+ 598              		.fpu softvfp
+ 600              	forward_ten:
+ 601              	.LFB71:
+ 297:hardware/src/move.c **** 
+ 298:hardware/src/move.c **** void forward_ten(u16 ms_forward)
+ 299:hardware/src/move.c **** {
+ 602              		.loc 1 299 1
+ 603              		.cfi_startproc
+ 604              		@ args = 0, pretend = 0, frame = 16
+ 605              		@ frame_needed = 1, uses_anonymous_args = 0
+ 606 0000 80B5     		push	{r7, lr}
+ 607              	.LCFI18:
+ 608              		.cfi_def_cfa_offset 8
+ 609              		.cfi_offset 7, -8
+ 610              		.cfi_offset 14, -4
+ 611 0002 84B0     		sub	sp, sp, #16
+ 612              	.LCFI19:
+ 613              		.cfi_def_cfa_offset 24
+ 614 0004 00AF     		add	r7, sp, #0
+ 615              	.LCFI20:
+ 616              		.cfi_def_cfa_register 7
+ 617 0006 0346     		mov	r3, r0
+ 618 0008 FB80     		strh	r3, [r7, #6]	@ movhi
+ 300:hardware/src/move.c ****     int i,n;
+ 301:hardware/src/move.c ****     n = ms_forward/1500;
+ 619              		.loc 1 301 19
+ 620 000a FB88     		ldrh	r3, [r7, #6]
+ 621 000c 144A     		ldr	r2, .L29
+ 622 000e A2FB0323 		umull	r2, r3, r2, r3
+ 623 0012 5B09     		lsrs	r3, r3, #5
+ 624 0014 9BB2     		uxth	r3, r3
+ 625              		.loc 1 301 7
+ 626 0016 BB60     		str	r3, [r7, #8]
+ 302:hardware/src/move.c ****     Motor_Forward();
+ 627              		.loc 1 302 5
+ 628 0018 FFF7FEFF 		bl	Motor_Forward
+ 303:hardware/src/move.c ****     for(i=0;i<n;i++)
+ 629              		.loc 1 303 10
+ 630 001c 0023     		movs	r3, #0
+ 631 001e FB60     		str	r3, [r7, #12]
+ 632              		.loc 1 303 5
+ 633 0020 06E0     		b	.L27
+ 634              	.L28:
+ 635              	.LBB2:
+ 304:hardware/src/move.c ****         delay_ms(1500);
+ 636              		.loc 1 304 9 discriminator 3
+ 637 0022 40F2DC50 		movw	r0, #1500
+ 638 0026 FFF7FEFF 		bl	delay_ms
+ 639              	.LBE2:
+ 303:hardware/src/move.c ****     for(i=0;i<n;i++)
+ 640              		.loc 1 303 18 discriminator 3
+ 641 002a FB68     		ldr	r3, [r7, #12]
+ 642 002c 0133     		adds	r3, r3, #1
+ 643 002e FB60     		str	r3, [r7, #12]
+ARM GAS  /tmp/ccjDazwS.s 			page 18
+
+
+ 644              	.L27:
+ 303:hardware/src/move.c ****     for(i=0;i<n;i++)
+ 645              		.loc 1 303 5 discriminator 1
+ 646 0030 FA68     		ldr	r2, [r7, #12]
+ 647 0032 BB68     		ldr	r3, [r7, #8]
+ 648 0034 9A42     		cmp	r2, r3
+ 649 0036 F4DB     		blt	.L28
+ 305:hardware/src/move.c ****     delay_ms(ms_forward%1500);
+ 650              		.loc 1 305 5
+ 651 0038 FB88     		ldrh	r3, [r7, #6]
+ 652 003a 094A     		ldr	r2, .L29
+ 653 003c A2FB0312 		umull	r1, r2, r2, r3
+ 654 0040 5209     		lsrs	r2, r2, #5
+ 655 0042 40F2DC51 		movw	r1, #1500
+ 656 0046 01FB02F2 		mul	r2, r1, r2
+ 657 004a 9B1A     		subs	r3, r3, r2
+ 658 004c 9BB2     		uxth	r3, r3
+ 659 004e 1846     		mov	r0, r3
+ 660 0050 FFF7FEFF 		bl	delay_ms
+ 306:hardware/src/move.c ****     Motor_Stop();
+ 661              		.loc 1 306 5
+ 662 0054 FFF7FEFF 		bl	Motor_Stop
+ 307:hardware/src/move.c **** }
+ 663              		.loc 1 307 1
+ 664 0058 00BF     		nop
+ 665 005a 1037     		adds	r7, r7, #16
+ 666              	.LCFI21:
+ 667              		.cfi_def_cfa_offset 8
+ 668 005c BD46     		mov	sp, r7
+ 669              	.LCFI22:
+ 670              		.cfi_def_cfa_register 13
+ 671              		@ sp needed
+ 672 005e 80BD     		pop	{r7, pc}
+ 673              	.L30:
+ 674              		.align	2
+ 675              	.L29:
+ 676 0060 F1197605 		.word	91625969
+ 677              		.cfi_endproc
+ 678              	.LFE71:
+ 680              		.text
+ 681              	.Letext0:
+ 682              		.file 2 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/machine/_defa
+ 683              		.file 3 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/_stdint.h
+ 684              		.file 4 "Inc/stm32f10x.h"
+ 685              		.file 5 "hardware/inc/AllHead.h"
+ARM GAS  /tmp/ccjDazwS.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 move.c
+     /tmp/ccjDazwS.s:16     .rodata:0000000000000000 $d
+     /tmp/ccjDazwS.s:40     .text.print2lcd:0000000000000000 $t
+     /tmp/ccjDazwS.s:48     .text.print2lcd:0000000000000000 print2lcd
+     /tmp/ccjDazwS.s:126    .text.print2lcd:000000000000006c $d
+     /tmp/ccjDazwS.s:154    .text.print2lcd:00000000000000dc $t
+     /tmp/ccjDazwS.s:337    .text.print2lcd:0000000000000228 $d
+     /tmp/ccjDazwS.s:358    .text.printStopMess:0000000000000000 $t
+     /tmp/ccjDazwS.s:365    .text.printStopMess:0000000000000000 printStopMess
+     /tmp/ccjDazwS.s:466    .text.printStopMess:0000000000000098 $d
+     /tmp/ccjDazwS.s:471    .text.motation:0000000000000000 $t
+     /tmp/ccjDazwS.s:478    .text.motation:0000000000000000 motation
+     /tmp/ccjDazwS.s:507    .text.turn2L:0000000000000000 $t
+     /tmp/ccjDazwS.s:514    .text.turn2L:0000000000000000 turn2L
+     /tmp/ccjDazwS.s:600    .text.forward_ten:0000000000000000 forward_ten
+     /tmp/ccjDazwS.s:550    .text.turn2R:0000000000000000 $t
+     /tmp/ccjDazwS.s:557    .text.turn2R:0000000000000000 turn2R
+     /tmp/ccjDazwS.s:593    .text.forward_ten:0000000000000000 $t
+     /tmp/ccjDazwS.s:676    .text.forward_ten:0000000000000060 $d
+
+UNDEFINED SYMBOLS
+__aeabi_dmul
+__aeabi_d2iz
+sprintf
+strlen
+strncpy
+LCD_SimpleString
+devLocRes
+lineDeviationLoc
+overK
+b
+FLAG_BORDER
+Motor_Forward
+delay_ms
+Motor_Leftback
+Motor_Stop
+Motor_Rightback

@@ -1,0 +1,9 @@
+#ifndef __KEY_H_
+#define __KEY_H_
+
+void KEY0_init(void);
+void KEY1_init(void);
+void keys_init(char key_n);
+char key_is_high(char key_n);
+
+#endif

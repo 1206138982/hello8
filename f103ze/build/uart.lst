@@ -1,0 +1,1073 @@
+ARM GAS  /tmp/ccRaUMLb.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"uart.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.global	__stdout
+  16              		.section	.bss.__stdout,"aw",%nobits
+  17              		.align	2
+  20              	__stdout:
+  21 0000 00000000 		.space	104
+  21      00000000 
+  21      00000000 
+  21      00000000 
+  21      00000000 
+  22              		.section	.text._sys_exit,"ax",%progbits
+  23              		.align	1
+  24              		.global	_sys_exit
+  25              		.arch armv7-m
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu softvfp
+  31              	_sys_exit:
+  32              	.LFB66:
+  33              		.file 1 "Src/uart.c"
+   1:Src/uart.c    **** #include "uart.h"
+   2:Src/uart.c    **** 
+   3:Src/uart.c    **** /* 使用uart1实现printf功能 */
+   4:Src/uart.c    **** #pragma import(__use_no_semihosting)
+   5:Src/uart.c    **** struct __FILE
+   6:Src/uart.c    **** {
+   7:Src/uart.c    **** 	int handle;
+   8:Src/uart.c    **** 
+   9:Src/uart.c    **** };
+  10:Src/uart.c    **** FILE __stdout;
+  11:Src/uart.c    **** void _sys_exit(int x)
+  12:Src/uart.c    **** {
+  34              		.loc 1 12 1
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 8
+  37              		@ frame_needed = 1, uses_anonymous_args = 0
+  38              		@ link register save eliminated.
+  39 0000 80B4     		push	{r7}
+  40              	.LCFI0:
+  41              		.cfi_def_cfa_offset 4
+  42              		.cfi_offset 7, -4
+  43 0002 83B0     		sub	sp, sp, #12
+  44              	.LCFI1:
+ARM GAS  /tmp/ccRaUMLb.s 			page 2
+
+
+  45              		.cfi_def_cfa_offset 16
+  46 0004 00AF     		add	r7, sp, #0
+  47              	.LCFI2:
+  48              		.cfi_def_cfa_register 7
+  49 0006 7860     		str	r0, [r7, #4]
+  13:Src/uart.c    **** 	x = x;
+  14:Src/uart.c    **** }
+  50              		.loc 1 14 1
+  51 0008 00BF     		nop
+  52 000a 0C37     		adds	r7, r7, #12
+  53              	.LCFI3:
+  54              		.cfi_def_cfa_offset 4
+  55 000c BD46     		mov	sp, r7
+  56              	.LCFI4:
+  57              		.cfi_def_cfa_register 13
+  58              		@ sp needed
+  59 000e 80BC     		pop	{r7}
+  60              	.LCFI5:
+  61              		.cfi_restore 7
+  62              		.cfi_def_cfa_offset 0
+  63 0010 7047     		bx	lr
+  64              		.cfi_endproc
+  65              	.LFE66:
+  67              		.section	.text._write,"ax",%progbits
+  68              		.align	1
+  69              		.global	_write
+  70              		.syntax unified
+  71              		.thumb
+  72              		.thumb_func
+  73              		.fpu softvfp
+  75              	_write:
+  76              	.LFB67:
+  15:Src/uart.c    **** // used for gcc compalier on linux 
+  16:Src/uart.c    **** int _write (int fd, char *pBuffer, int size)  
+  17:Src/uart.c    **** {  
+  77              		.loc 1 17 1
+  78              		.cfi_startproc
+  79              		@ args = 0, pretend = 0, frame = 24
+  80              		@ frame_needed = 1, uses_anonymous_args = 0
+  81              		@ link register save eliminated.
+  82 0000 80B4     		push	{r7}
+  83              	.LCFI6:
+  84              		.cfi_def_cfa_offset 4
+  85              		.cfi_offset 7, -4
+  86 0002 87B0     		sub	sp, sp, #28
+  87              	.LCFI7:
+  88              		.cfi_def_cfa_offset 32
+  89 0004 00AF     		add	r7, sp, #0
+  90              	.LCFI8:
+  91              		.cfi_def_cfa_register 7
+  92 0006 F860     		str	r0, [r7, #12]
+  93 0008 B960     		str	r1, [r7, #8]
+  94 000a 7A60     		str	r2, [r7, #4]
+  95              	.LBB2:
+  18:Src/uart.c    ****     for (int i = 0; i < size; i++)  
+  96              		.loc 1 18 14
+  97 000c 0023     		movs	r3, #0
+ARM GAS  /tmp/ccRaUMLb.s 			page 3
+
+
+  98 000e 7B61     		str	r3, [r7, #20]
+  99              		.loc 1 18 5
+ 100 0010 11E0     		b	.L3
+ 101              	.L5:
+  19:Src/uart.c    ****     {  
+  20:Src/uart.c    ****         while((USART1->SR&0X40)==0);//等待上一次串口数据发送完成  
+ 102              		.loc 1 20 14
+ 103 0012 00BF     		nop
+ 104              	.L4:
+ 105              		.loc 1 20 22 discriminator 1
+ 106 0014 0D4B     		ldr	r3, .L7
+ 107 0016 1B88     		ldrh	r3, [r3]	@ movhi
+ 108 0018 9BB2     		uxth	r3, r3
+ 109              		.loc 1 20 26 discriminator 1
+ 110 001a 03F04003 		and	r3, r3, #64
+ 111              		.loc 1 20 14 discriminator 1
+ 112 001e 002B     		cmp	r3, #0
+ 113 0020 F8D0     		beq	.L4
+  21:Src/uart.c    ****         USART1->DR = (uint8_t) pBuffer[i];       //写DR,串口1将发送数据
+ 114              		.loc 1 21 39 discriminator 2
+ 115 0022 7B69     		ldr	r3, [r7, #20]
+ 116 0024 BA68     		ldr	r2, [r7, #8]
+ 117 0026 1344     		add	r3, r3, r2
+ 118 0028 1A78     		ldrb	r2, [r3]	@ zero_extendqisi2
+ 119              		.loc 1 21 15 discriminator 2
+ 120 002a 084B     		ldr	r3, .L7
+ 121              		.loc 1 21 22 discriminator 2
+ 122 002c 92B2     		uxth	r2, r2
+ 123              		.loc 1 21 20 discriminator 2
+ 124 002e 9A80     		strh	r2, [r3, #4]	@ movhi
+  18:Src/uart.c    ****     for (int i = 0; i < size; i++)  
+ 125              		.loc 1 18 32 discriminator 2
+ 126 0030 7B69     		ldr	r3, [r7, #20]
+ 127 0032 0133     		adds	r3, r3, #1
+ 128 0034 7B61     		str	r3, [r7, #20]
+ 129              	.L3:
+  18:Src/uart.c    ****     for (int i = 0; i < size; i++)  
+ 130              		.loc 1 18 5 discriminator 1
+ 131 0036 7A69     		ldr	r2, [r7, #20]
+ 132 0038 7B68     		ldr	r3, [r7, #4]
+ 133 003a 9A42     		cmp	r2, r3
+ 134 003c E9DB     		blt	.L5
+ 135              	.LBE2:
+  22:Src/uart.c    ****     }  
+  23:Src/uart.c    ****     return size;  
+ 136              		.loc 1 23 12
+ 137 003e 7B68     		ldr	r3, [r7, #4]
+  24:Src/uart.c    **** }
+ 138              		.loc 1 24 1
+ 139 0040 1846     		mov	r0, r3
+ 140 0042 1C37     		adds	r7, r7, #28
+ 141              	.LCFI9:
+ 142              		.cfi_def_cfa_offset 4
+ 143 0044 BD46     		mov	sp, r7
+ 144              	.LCFI10:
+ 145              		.cfi_def_cfa_register 13
+ 146              		@ sp needed
+ARM GAS  /tmp/ccRaUMLb.s 			page 4
+
+
+ 147 0046 80BC     		pop	{r7}
+ 148              	.LCFI11:
+ 149              		.cfi_restore 7
+ 150              		.cfi_def_cfa_offset 0
+ 151 0048 7047     		bx	lr
+ 152              	.L8:
+ 153 004a 00BF     		.align	2
+ 154              	.L7:
+ 155 004c 00380140 		.word	1073821696
+ 156              		.cfi_endproc
+ 157              	.LFE67:
+ 159              		.section	.text.fputc,"ax",%progbits
+ 160              		.align	1
+ 161              		.global	fputc
+ 162              		.syntax unified
+ 163              		.thumb
+ 164              		.thumb_func
+ 165              		.fpu softvfp
+ 167              	fputc:
+ 168              	.LFB68:
+  25:Src/uart.c    **** // used for keil comalier on windows
+  26:Src/uart.c    **** //重定义fputc函数 
+  27:Src/uart.c    **** int fputc(int ch, FILE *f)
+  28:Src/uart.c    **** { 	
+ 169              		.loc 1 28 1
+ 170              		.cfi_startproc
+ 171              		@ args = 0, pretend = 0, frame = 8
+ 172              		@ frame_needed = 1, uses_anonymous_args = 0
+ 173              		@ link register save eliminated.
+ 174 0000 80B4     		push	{r7}
+ 175              	.LCFI12:
+ 176              		.cfi_def_cfa_offset 4
+ 177              		.cfi_offset 7, -4
+ 178 0002 83B0     		sub	sp, sp, #12
+ 179              	.LCFI13:
+ 180              		.cfi_def_cfa_offset 16
+ 181 0004 00AF     		add	r7, sp, #0
+ 182              	.LCFI14:
+ 183              		.cfi_def_cfa_register 7
+ 184 0006 7860     		str	r0, [r7, #4]
+ 185 0008 3960     		str	r1, [r7]
+  29:Src/uart.c    **** 	while((USART1->SR&0X40)==0);//循环发送,直到发送完毕   
+ 186              		.loc 1 29 7
+ 187 000a 00BF     		nop
+ 188              	.L10:
+ 189              		.loc 1 29 15 discriminator 1
+ 190 000c 084B     		ldr	r3, .L12
+ 191 000e 1B88     		ldrh	r3, [r3]	@ movhi
+ 192 0010 9BB2     		uxth	r3, r3
+ 193              		.loc 1 29 19 discriminator 1
+ 194 0012 03F04003 		and	r3, r3, #64
+ 195              		.loc 1 29 7 discriminator 1
+ 196 0016 002B     		cmp	r3, #0
+ 197 0018 F8D0     		beq	.L10
+  30:Src/uart.c    **** 	USART1->DR = (u8) ch;      
+ 198              		.loc 1 30 15
+ 199 001a 7B68     		ldr	r3, [r7, #4]
+ARM GAS  /tmp/ccRaUMLb.s 			page 5
+
+
+ 200 001c DAB2     		uxtb	r2, r3
+ 201              		.loc 1 30 8
+ 202 001e 044B     		ldr	r3, .L12
+ 203              		.loc 1 30 15
+ 204 0020 92B2     		uxth	r2, r2
+ 205              		.loc 1 30 13
+ 206 0022 9A80     		strh	r2, [r3, #4]	@ movhi
+  31:Src/uart.c    **** 	return ch;
+ 207              		.loc 1 31 9
+ 208 0024 7B68     		ldr	r3, [r7, #4]
+  32:Src/uart.c    **** }
+ 209              		.loc 1 32 1
+ 210 0026 1846     		mov	r0, r3
+ 211 0028 0C37     		adds	r7, r7, #12
+ 212              	.LCFI15:
+ 213              		.cfi_def_cfa_offset 4
+ 214 002a BD46     		mov	sp, r7
+ 215              	.LCFI16:
+ 216              		.cfi_def_cfa_register 13
+ 217              		@ sp needed
+ 218 002c 80BC     		pop	{r7}
+ 219              	.LCFI17:
+ 220              		.cfi_restore 7
+ 221              		.cfi_def_cfa_offset 0
+ 222 002e 7047     		bx	lr
+ 223              	.L13:
+ 224              		.align	2
+ 225              	.L12:
+ 226 0030 00380140 		.word	1073821696
+ 227              		.cfi_endproc
+ 228              	.LFE68:
+ 230              		.section	.text.uart1_init,"ax",%progbits
+ 231              		.align	1
+ 232              		.global	uart1_init
+ 233              		.syntax unified
+ 234              		.thumb
+ 235              		.thumb_func
+ 236              		.fpu softvfp
+ 238              	uart1_init:
+ 239              	.LFB69:
+  33:Src/uart.c    **** 
+  34:Src/uart.c    **** /* debug串口1初始化 */
+  35:Src/uart.c    **** void uart1_init(uint32_t bound_rate)
+  36:Src/uart.c    **** {
+ 240              		.loc 1 36 1
+ 241              		.cfi_startproc
+ 242              		@ args = 0, pretend = 0, frame = 32
+ 243              		@ frame_needed = 1, uses_anonymous_args = 0
+ 244 0000 80B5     		push	{r7, lr}
+ 245              	.LCFI18:
+ 246              		.cfi_def_cfa_offset 8
+ 247              		.cfi_offset 7, -8
+ 248              		.cfi_offset 14, -4
+ 249 0002 88B0     		sub	sp, sp, #32
+ 250              	.LCFI19:
+ 251              		.cfi_def_cfa_offset 40
+ 252 0004 00AF     		add	r7, sp, #0
+ARM GAS  /tmp/ccRaUMLb.s 			page 6
+
+
+ 253              	.LCFI20:
+ 254              		.cfi_def_cfa_register 7
+ 255 0006 7860     		str	r0, [r7, #4]
+  37:Src/uart.c    ****     GPIO_InitTypeDef GPIO_InitStructure;
+  38:Src/uart.c    ****     USART_InitTypeDef USART_InitStructure;
+  39:Src/uart.c    ****     NVIC_InitTypeDef NVIC_InitStructure;
+  40:Src/uart.c    **** 
+  41:Src/uart.c    ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1|RCC_APB2Periph_GPIOA, ENABLE);
+ 256              		.loc 1 41 5
+ 257 0008 0121     		movs	r1, #1
+ 258 000a 44F20400 		movw	r0, #16388
+ 259 000e FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  42:Src/uart.c    **** 
+  43:Src/uart.c    ****     //USART1_TX   GPIOA.9
+  44:Src/uart.c    ****     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+ 260              		.loc 1 44 33
+ 261 0012 4FF40073 		mov	r3, #512
+ 262 0016 BB83     		strh	r3, [r7, #28]	@ movhi
+  45:Src/uart.c    ****     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 263              		.loc 1 45 35
+ 264 0018 0323     		movs	r3, #3
+ 265 001a BB77     		strb	r3, [r7, #30]
+  46:Src/uart.c    ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+ 266              		.loc 1 46 34
+ 267 001c 1823     		movs	r3, #24
+ 268 001e FB77     		strb	r3, [r7, #31]
+  47:Src/uart.c    ****     GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 269              		.loc 1 47 5
+ 270 0020 07F11C03 		add	r3, r7, #28
+ 271 0024 1946     		mov	r1, r3
+ 272 0026 1D48     		ldr	r0, .L15
+ 273 0028 FFF7FEFF 		bl	GPIO_Init
+  48:Src/uart.c    **** 
+  49:Src/uart.c    ****     //USART1_RX	  GPIOA.10初始化
+  50:Src/uart.c    ****     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+ 274              		.loc 1 50 33
+ 275 002c 4FF48063 		mov	r3, #1024
+ 276 0030 BB83     		strh	r3, [r7, #28]	@ movhi
+  51:Src/uart.c    ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 277              		.loc 1 51 34
+ 278 0032 0423     		movs	r3, #4
+ 279 0034 FB77     		strb	r3, [r7, #31]
+  52:Src/uart.c    ****     GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 280              		.loc 1 52 5
+ 281 0036 07F11C03 		add	r3, r7, #28
+ 282 003a 1946     		mov	r1, r3
+ 283 003c 1748     		ldr	r0, .L15
+ 284 003e FFF7FEFF 		bl	GPIO_Init
+  53:Src/uart.c    **** 
+  54:Src/uart.c    ****     //Usart1 NVIC 配置
+  55:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+ 285              		.loc 1 55 40
+ 286 0042 2523     		movs	r3, #37
+ 287 0044 3B72     		strb	r3, [r7, #8]
+  56:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+ 288              		.loc 1 56 58
+ 289 0046 0323     		movs	r3, #3
+ARM GAS  /tmp/ccRaUMLb.s 			page 7
+
+
+ 290 0048 7B72     		strb	r3, [r7, #9]
+  57:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+ 291              		.loc 1 57 51
+ 292 004a 0323     		movs	r3, #3
+ 293 004c BB72     		strb	r3, [r7, #10]
+  58:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+ 294              		.loc 1 58 43
+ 295 004e 0123     		movs	r3, #1
+ 296 0050 FB72     		strb	r3, [r7, #11]
+  59:Src/uart.c    ****     NVIC_Init(&NVIC_InitStructure);
+ 297              		.loc 1 59 5
+ 298 0052 07F10803 		add	r3, r7, #8
+ 299 0056 1846     		mov	r0, r3
+ 300 0058 FFF7FEFF 		bl	NVIC_Init
+  60:Src/uart.c    **** 
+  61:Src/uart.c    ****     //USART 初始化设置
+  62:Src/uart.c    ****     USART_InitStructure.USART_BaudRate = bound_rate;
+ 301              		.loc 1 62 40
+ 302 005c 7B68     		ldr	r3, [r7, #4]
+ 303 005e FB60     		str	r3, [r7, #12]
+  63:Src/uart.c    ****     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+ 304              		.loc 1 63 42
+ 305 0060 0023     		movs	r3, #0
+ 306 0062 3B82     		strh	r3, [r7, #16]	@ movhi
+  64:Src/uart.c    ****     USART_InitStructure.USART_StopBits = USART_StopBits_1;
+ 307              		.loc 1 64 40
+ 308 0064 0023     		movs	r3, #0
+ 309 0066 7B82     		strh	r3, [r7, #18]	@ movhi
+  65:Src/uart.c    ****     USART_InitStructure.USART_Parity = USART_Parity_No;
+ 310              		.loc 1 65 38
+ 311 0068 0023     		movs	r3, #0
+ 312 006a BB82     		strh	r3, [r7, #20]	@ movhi
+  66:Src/uart.c    ****     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+ 313              		.loc 1 66 51
+ 314 006c 0023     		movs	r3, #0
+ 315 006e 3B83     		strh	r3, [r7, #24]	@ movhi
+  67:Src/uart.c    ****     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+ 316              		.loc 1 67 36
+ 317 0070 0C23     		movs	r3, #12
+ 318 0072 FB82     		strh	r3, [r7, #22]	@ movhi
+  68:Src/uart.c    **** 
+  69:Src/uart.c    ****     USART_Init(USART1, &USART_InitStructure);
+ 319              		.loc 1 69 5
+ 320 0074 07F10C03 		add	r3, r7, #12
+ 321 0078 1946     		mov	r1, r3
+ 322 007a 0948     		ldr	r0, .L15+4
+ 323 007c FFF7FEFF 		bl	USART_Init
+  70:Src/uart.c    ****     USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+ 324              		.loc 1 70 5
+ 325 0080 0122     		movs	r2, #1
+ 326 0082 40F22551 		movw	r1, #1317
+ 327 0086 0648     		ldr	r0, .L15+4
+ 328 0088 FFF7FEFF 		bl	USART_ITConfig
+  71:Src/uart.c    ****     USART_Cmd(USART1, ENABLE);
+ 329              		.loc 1 71 5
+ 330 008c 0121     		movs	r1, #1
+ 331 008e 0448     		ldr	r0, .L15+4
+ARM GAS  /tmp/ccRaUMLb.s 			page 8
+
+
+ 332 0090 FFF7FEFF 		bl	USART_Cmd
+  72:Src/uart.c    **** }
+ 333              		.loc 1 72 1
+ 334 0094 00BF     		nop
+ 335 0096 2037     		adds	r7, r7, #32
+ 336              	.LCFI21:
+ 337              		.cfi_def_cfa_offset 8
+ 338 0098 BD46     		mov	sp, r7
+ 339              	.LCFI22:
+ 340              		.cfi_def_cfa_register 13
+ 341              		@ sp needed
+ 342 009a 80BD     		pop	{r7, pc}
+ 343              	.L16:
+ 344              		.align	2
+ 345              	.L15:
+ 346 009c 00080140 		.word	1073809408
+ 347 00a0 00380140 		.word	1073821696
+ 348              		.cfi_endproc
+ 349              	.LFE69:
+ 351              		.section	.text.USART1_IRQHandler,"ax",%progbits
+ 352              		.align	1
+ 353              		.global	USART1_IRQHandler
+ 354              		.syntax unified
+ 355              		.thumb
+ 356              		.thumb_func
+ 357              		.fpu softvfp
+ 359              	USART1_IRQHandler:
+ 360              	.LFB70:
+  73:Src/uart.c    **** 
+  74:Src/uart.c    **** void USART1_IRQHandler(void)
+  75:Src/uart.c    **** {
+ 361              		.loc 1 75 1
+ 362              		.cfi_startproc
+ 363              		@ args = 0, pretend = 0, frame = 8
+ 364              		@ frame_needed = 1, uses_anonymous_args = 0
+ 365 0000 80B5     		push	{r7, lr}
+ 366              	.LCFI23:
+ 367              		.cfi_def_cfa_offset 8
+ 368              		.cfi_offset 7, -8
+ 369              		.cfi_offset 14, -4
+ 370 0002 82B0     		sub	sp, sp, #8
+ 371              	.LCFI24:
+ 372              		.cfi_def_cfa_offset 16
+ 373 0004 00AF     		add	r7, sp, #0
+ 374              	.LCFI25:
+ 375              		.cfi_def_cfa_register 7
+  76:Src/uart.c    ****     uint8_t Res;
+  77:Src/uart.c    ****     if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+ 376              		.loc 1 77 8
+ 377 0006 40F22551 		movw	r1, #1317
+ 378 000a 0A48     		ldr	r0, .L20
+ 379 000c FFF7FEFF 		bl	USART_GetITStatus
+ 380 0010 0346     		mov	r3, r0
+ 381              		.loc 1 77 7
+ 382 0012 002B     		cmp	r3, #0
+ 383 0014 0AD0     		beq	.L19
+  78:Src/uart.c    ****     {
+ARM GAS  /tmp/ccRaUMLb.s 			page 9
+
+
+  79:Src/uart.c    ****         Res =USART_ReceiveData(USART1);
+ 384              		.loc 1 79 14
+ 385 0016 0748     		ldr	r0, .L20
+ 386 0018 FFF7FEFF 		bl	USART_ReceiveData
+ 387 001c 0346     		mov	r3, r0
+ 388              		.loc 1 79 13
+ 389 001e FB71     		strb	r3, [r7, #7]
+  80:Src/uart.c    ****         USART_SendData(USART1, Res);
+ 390              		.loc 1 80 9
+ 391 0020 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 392 0022 9BB2     		uxth	r3, r3
+ 393 0024 1946     		mov	r1, r3
+ 394 0026 0348     		ldr	r0, .L20
+ 395 0028 FFF7FEFF 		bl	USART_SendData
+ 396              	.L19:
+  81:Src/uart.c    ****     }
+  82:Src/uart.c    **** }
+ 397              		.loc 1 82 1
+ 398 002c 00BF     		nop
+ 399 002e 0837     		adds	r7, r7, #8
+ 400              	.LCFI26:
+ 401              		.cfi_def_cfa_offset 8
+ 402 0030 BD46     		mov	sp, r7
+ 403              	.LCFI27:
+ 404              		.cfi_def_cfa_register 13
+ 405              		@ sp needed
+ 406 0032 80BD     		pop	{r7, pc}
+ 407              	.L21:
+ 408              		.align	2
+ 409              	.L20:
+ 410 0034 00380140 		.word	1073821696
+ 411              		.cfi_endproc
+ 412              	.LFE70:
+ 414              		.section	.text.uart2_init,"ax",%progbits
+ 415              		.align	1
+ 416              		.global	uart2_init
+ 417              		.syntax unified
+ 418              		.thumb
+ 419              		.thumb_func
+ 420              		.fpu softvfp
+ 422              	uart2_init:
+ 423              	.LFB71:
+  83:Src/uart.c    **** 
+  84:Src/uart.c    **** /* 串口2初始化 */
+  85:Src/uart.c    **** void uart2_init(uint32_t bound_rate)
+  86:Src/uart.c    **** {
+ 424              		.loc 1 86 1
+ 425              		.cfi_startproc
+ 426              		@ args = 0, pretend = 0, frame = 32
+ 427              		@ frame_needed = 1, uses_anonymous_args = 0
+ 428 0000 80B5     		push	{r7, lr}
+ 429              	.LCFI28:
+ 430              		.cfi_def_cfa_offset 8
+ 431              		.cfi_offset 7, -8
+ 432              		.cfi_offset 14, -4
+ 433 0002 88B0     		sub	sp, sp, #32
+ 434              	.LCFI29:
+ARM GAS  /tmp/ccRaUMLb.s 			page 10
+
+
+ 435              		.cfi_def_cfa_offset 40
+ 436 0004 00AF     		add	r7, sp, #0
+ 437              	.LCFI30:
+ 438              		.cfi_def_cfa_register 7
+ 439 0006 7860     		str	r0, [r7, #4]
+  87:Src/uart.c    ****     GPIO_InitTypeDef GPIO_InitStructure;
+  88:Src/uart.c    ****     USART_InitTypeDef USART_InitStructure;
+  89:Src/uart.c    ****     NVIC_InitTypeDef NVIC_InitStructure;
+  90:Src/uart.c    **** 
+  91:Src/uart.c    ****     /* 1、时钟使能 */
+  92:Src/uart.c    ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+ 440              		.loc 1 92 5
+ 441 0008 0121     		movs	r1, #1
+ 442 000a 0420     		movs	r0, #4
+ 443 000c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  93:Src/uart.c    ****     RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+ 444              		.loc 1 93 5
+ 445 0010 0121     		movs	r1, #1
+ 446 0012 4FF40030 		mov	r0, #131072
+ 447 0016 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  94:Src/uart.c    **** 
+  95:Src/uart.c    ****     //USART2_TX   GPIOA.2
+  96:Src/uart.c    ****     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+ 448              		.loc 1 96 33
+ 449 001a 0423     		movs	r3, #4
+ 450 001c BB83     		strh	r3, [r7, #28]	@ movhi
+  97:Src/uart.c    ****     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 451              		.loc 1 97 35
+ 452 001e 0323     		movs	r3, #3
+ 453 0020 BB77     		strb	r3, [r7, #30]
+  98:Src/uart.c    ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+ 454              		.loc 1 98 34
+ 455 0022 1823     		movs	r3, #24
+ 456 0024 FB77     		strb	r3, [r7, #31]
+  99:Src/uart.c    ****     GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 457              		.loc 1 99 5
+ 458 0026 07F11C03 		add	r3, r7, #28
+ 459 002a 1946     		mov	r1, r3
+ 460 002c 1C48     		ldr	r0, .L23
+ 461 002e FFF7FEFF 		bl	GPIO_Init
+ 100:Src/uart.c    **** 
+ 101:Src/uart.c    ****     //USART2_RX	  GPIOA.3
+ 102:Src/uart.c    ****     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+ 462              		.loc 1 102 33
+ 463 0032 0823     		movs	r3, #8
+ 464 0034 BB83     		strh	r3, [r7, #28]	@ movhi
+ 103:Src/uart.c    ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 465              		.loc 1 103 34
+ 466 0036 0423     		movs	r3, #4
+ 467 0038 FB77     		strb	r3, [r7, #31]
+ 104:Src/uart.c    ****     GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 468              		.loc 1 104 5
+ 469 003a 07F11C03 		add	r3, r7, #28
+ 470 003e 1946     		mov	r1, r3
+ 471 0040 1748     		ldr	r0, .L23
+ 472 0042 FFF7FEFF 		bl	GPIO_Init
+ 105:Src/uart.c    **** 
+ARM GAS  /tmp/ccRaUMLb.s 			page 11
+
+
+ 106:Src/uart.c    ****     //Usart1 NVIC 配置
+ 107:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+ 473              		.loc 1 107 40
+ 474 0046 2623     		movs	r3, #38
+ 475 0048 3B72     		strb	r3, [r7, #8]
+ 108:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+ 476              		.loc 1 108 58
+ 477 004a 0323     		movs	r3, #3
+ 478 004c 7B72     		strb	r3, [r7, #9]
+ 109:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+ 479              		.loc 1 109 51
+ 480 004e 0323     		movs	r3, #3
+ 481 0050 BB72     		strb	r3, [r7, #10]
+ 110:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+ 482              		.loc 1 110 43
+ 483 0052 0123     		movs	r3, #1
+ 484 0054 FB72     		strb	r3, [r7, #11]
+ 111:Src/uart.c    ****     NVIC_Init(&NVIC_InitStructure);
+ 485              		.loc 1 111 5
+ 486 0056 07F10803 		add	r3, r7, #8
+ 487 005a 1846     		mov	r0, r3
+ 488 005c FFF7FEFF 		bl	NVIC_Init
+ 112:Src/uart.c    **** 
+ 113:Src/uart.c    ****     //USART 初始化设置
+ 114:Src/uart.c    ****     USART_InitStructure.USART_BaudRate = bound_rate;
+ 489              		.loc 1 114 40
+ 490 0060 7B68     		ldr	r3, [r7, #4]
+ 491 0062 FB60     		str	r3, [r7, #12]
+ 115:Src/uart.c    ****     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+ 492              		.loc 1 115 42
+ 493 0064 0023     		movs	r3, #0
+ 494 0066 3B82     		strh	r3, [r7, #16]	@ movhi
+ 116:Src/uart.c    ****     USART_InitStructure.USART_StopBits = USART_StopBits_1;
+ 495              		.loc 1 116 40
+ 496 0068 0023     		movs	r3, #0
+ 497 006a 7B82     		strh	r3, [r7, #18]	@ movhi
+ 117:Src/uart.c    ****     USART_InitStructure.USART_Parity = USART_Parity_No;
+ 498              		.loc 1 117 38
+ 499 006c 0023     		movs	r3, #0
+ 500 006e BB82     		strh	r3, [r7, #20]	@ movhi
+ 118:Src/uart.c    ****     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+ 501              		.loc 1 118 51
+ 502 0070 0023     		movs	r3, #0
+ 503 0072 3B83     		strh	r3, [r7, #24]	@ movhi
+ 119:Src/uart.c    ****     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+ 504              		.loc 1 119 36
+ 505 0074 0C23     		movs	r3, #12
+ 506 0076 FB82     		strh	r3, [r7, #22]	@ movhi
+ 120:Src/uart.c    **** 
+ 121:Src/uart.c    ****     USART_Init(USART2, &USART_InitStructure);
+ 507              		.loc 1 121 5
+ 508 0078 07F10C03 		add	r3, r7, #12
+ 509 007c 1946     		mov	r1, r3
+ 510 007e 0948     		ldr	r0, .L23+4
+ 511 0080 FFF7FEFF 		bl	USART_Init
+ 122:Src/uart.c    ****     USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+ 512              		.loc 1 122 5
+ARM GAS  /tmp/ccRaUMLb.s 			page 12
+
+
+ 513 0084 0122     		movs	r2, #1
+ 514 0086 40F22551 		movw	r1, #1317
+ 515 008a 0648     		ldr	r0, .L23+4
+ 516 008c FFF7FEFF 		bl	USART_ITConfig
+ 123:Src/uart.c    ****     USART_Cmd(USART2, ENABLE);
+ 517              		.loc 1 123 5
+ 518 0090 0121     		movs	r1, #1
+ 519 0092 0448     		ldr	r0, .L23+4
+ 520 0094 FFF7FEFF 		bl	USART_Cmd
+ 124:Src/uart.c    **** }
+ 521              		.loc 1 124 1
+ 522 0098 00BF     		nop
+ 523 009a 2037     		adds	r7, r7, #32
+ 524              	.LCFI31:
+ 525              		.cfi_def_cfa_offset 8
+ 526 009c BD46     		mov	sp, r7
+ 527              	.LCFI32:
+ 528              		.cfi_def_cfa_register 13
+ 529              		@ sp needed
+ 530 009e 80BD     		pop	{r7, pc}
+ 531              	.L24:
+ 532              		.align	2
+ 533              	.L23:
+ 534 00a0 00080140 		.word	1073809408
+ 535 00a4 00440040 		.word	1073759232
+ 536              		.cfi_endproc
+ 537              	.LFE71:
+ 539              		.section	.text.USART2_IRQHandler,"ax",%progbits
+ 540              		.align	1
+ 541              		.global	USART2_IRQHandler
+ 542              		.syntax unified
+ 543              		.thumb
+ 544              		.thumb_func
+ 545              		.fpu softvfp
+ 547              	USART2_IRQHandler:
+ 548              	.LFB72:
+ 125:Src/uart.c    **** 
+ 126:Src/uart.c    **** void USART2_IRQHandler(void)
+ 127:Src/uart.c    **** {
+ 549              		.loc 1 127 1
+ 550              		.cfi_startproc
+ 551              		@ args = 0, pretend = 0, frame = 8
+ 552              		@ frame_needed = 1, uses_anonymous_args = 0
+ 553 0000 80B5     		push	{r7, lr}
+ 554              	.LCFI33:
+ 555              		.cfi_def_cfa_offset 8
+ 556              		.cfi_offset 7, -8
+ 557              		.cfi_offset 14, -4
+ 558 0002 82B0     		sub	sp, sp, #8
+ 559              	.LCFI34:
+ 560              		.cfi_def_cfa_offset 16
+ 561 0004 00AF     		add	r7, sp, #0
+ 562              	.LCFI35:
+ 563              		.cfi_def_cfa_register 7
+ 128:Src/uart.c    ****     uint8_t Res;
+ 129:Src/uart.c    ****     if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
+ 564              		.loc 1 129 8
+ARM GAS  /tmp/ccRaUMLb.s 			page 13
+
+
+ 565 0006 40F22551 		movw	r1, #1317
+ 566 000a 0A48     		ldr	r0, .L28
+ 567 000c FFF7FEFF 		bl	USART_GetITStatus
+ 568 0010 0346     		mov	r3, r0
+ 569              		.loc 1 129 7
+ 570 0012 002B     		cmp	r3, #0
+ 571 0014 0AD0     		beq	.L27
+ 130:Src/uart.c    ****     {
+ 131:Src/uart.c    ****         Res =USART_ReceiveData(USART2);
+ 572              		.loc 1 131 14
+ 573 0016 0748     		ldr	r0, .L28
+ 574 0018 FFF7FEFF 		bl	USART_ReceiveData
+ 575 001c 0346     		mov	r3, r0
+ 576              		.loc 1 131 13
+ 577 001e FB71     		strb	r3, [r7, #7]
+ 132:Src/uart.c    ****         USART_SendData(USART2, Res);
+ 578              		.loc 1 132 9
+ 579 0020 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 580 0022 9BB2     		uxth	r3, r3
+ 581 0024 1946     		mov	r1, r3
+ 582 0026 0348     		ldr	r0, .L28
+ 583 0028 FFF7FEFF 		bl	USART_SendData
+ 584              	.L27:
+ 133:Src/uart.c    ****     }
+ 134:Src/uart.c    **** }
+ 585              		.loc 1 134 1
+ 586 002c 00BF     		nop
+ 587 002e 0837     		adds	r7, r7, #8
+ 588              	.LCFI36:
+ 589              		.cfi_def_cfa_offset 8
+ 590 0030 BD46     		mov	sp, r7
+ 591              	.LCFI37:
+ 592              		.cfi_def_cfa_register 13
+ 593              		@ sp needed
+ 594 0032 80BD     		pop	{r7, pc}
+ 595              	.L29:
+ 596              		.align	2
+ 597              	.L28:
+ 598 0034 00440040 		.word	1073759232
+ 599              		.cfi_endproc
+ 600              	.LFE72:
+ 602              		.section	.text.uart3_init,"ax",%progbits
+ 603              		.align	1
+ 604              		.global	uart3_init
+ 605              		.syntax unified
+ 606              		.thumb
+ 607              		.thumb_func
+ 608              		.fpu softvfp
+ 610              	uart3_init:
+ 611              	.LFB73:
+ 135:Src/uart.c    **** 
+ 136:Src/uart.c    **** /* 串口3初始化 */
+ 137:Src/uart.c    **** void uart3_init(uint32_t bound_rate)
+ 138:Src/uart.c    **** {
+ 612              		.loc 1 138 1
+ 613              		.cfi_startproc
+ 614              		@ args = 0, pretend = 0, frame = 32
+ARM GAS  /tmp/ccRaUMLb.s 			page 14
+
+
+ 615              		@ frame_needed = 1, uses_anonymous_args = 0
+ 616 0000 80B5     		push	{r7, lr}
+ 617              	.LCFI38:
+ 618              		.cfi_def_cfa_offset 8
+ 619              		.cfi_offset 7, -8
+ 620              		.cfi_offset 14, -4
+ 621 0002 88B0     		sub	sp, sp, #32
+ 622              	.LCFI39:
+ 623              		.cfi_def_cfa_offset 40
+ 624 0004 00AF     		add	r7, sp, #0
+ 625              	.LCFI40:
+ 626              		.cfi_def_cfa_register 7
+ 627 0006 7860     		str	r0, [r7, #4]
+ 139:Src/uart.c    ****     GPIO_InitTypeDef GPIO_InitStructure;
+ 140:Src/uart.c    ****     USART_InitTypeDef USART_InitStructure;
+ 141:Src/uart.c    ****     NVIC_InitTypeDef NVIC_InitStructure;
+ 142:Src/uart.c    **** 
+ 143:Src/uart.c    ****     /* 1、时钟使能 */
+ 144:Src/uart.c    ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+ 628              		.loc 1 144 5
+ 629 0008 0121     		movs	r1, #1
+ 630 000a 0820     		movs	r0, #8
+ 631 000c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 145:Src/uart.c    ****     RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+ 632              		.loc 1 145 5
+ 633 0010 0121     		movs	r1, #1
+ 634 0012 4FF48020 		mov	r0, #262144
+ 635 0016 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 146:Src/uart.c    **** 
+ 147:Src/uart.c    ****     //USART3_TX   GPIOB.10
+ 148:Src/uart.c    ****     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+ 636              		.loc 1 148 33
+ 637 001a 4FF48063 		mov	r3, #1024
+ 638 001e BB83     		strh	r3, [r7, #28]	@ movhi
+ 149:Src/uart.c    ****     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 639              		.loc 1 149 35
+ 640 0020 0323     		movs	r3, #3
+ 641 0022 BB77     		strb	r3, [r7, #30]
+ 150:Src/uart.c    ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+ 642              		.loc 1 150 34
+ 643 0024 1823     		movs	r3, #24
+ 644 0026 FB77     		strb	r3, [r7, #31]
+ 151:Src/uart.c    ****     GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 645              		.loc 1 151 5
+ 646 0028 07F11C03 		add	r3, r7, #28
+ 647 002c 1946     		mov	r1, r3
+ 648 002e 1D48     		ldr	r0, .L31
+ 649 0030 FFF7FEFF 		bl	GPIO_Init
+ 152:Src/uart.c    **** 
+ 153:Src/uart.c    ****     //USART3_RX	  GPIOB.11
+ 154:Src/uart.c    ****     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+ 650              		.loc 1 154 33
+ 651 0034 4FF40063 		mov	r3, #2048
+ 652 0038 BB83     		strh	r3, [r7, #28]	@ movhi
+ 155:Src/uart.c    ****     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+ 653              		.loc 1 155 34
+ 654 003a 0423     		movs	r3, #4
+ARM GAS  /tmp/ccRaUMLb.s 			page 15
+
+
+ 655 003c FB77     		strb	r3, [r7, #31]
+ 156:Src/uart.c    ****     GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 656              		.loc 1 156 5
+ 657 003e 07F11C03 		add	r3, r7, #28
+ 658 0042 1946     		mov	r1, r3
+ 659 0044 1748     		ldr	r0, .L31
+ 660 0046 FFF7FEFF 		bl	GPIO_Init
+ 157:Src/uart.c    **** 
+ 158:Src/uart.c    ****     //Usart1 NVIC 配置
+ 159:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+ 661              		.loc 1 159 40
+ 662 004a 2723     		movs	r3, #39
+ 663 004c 3B72     		strb	r3, [r7, #8]
+ 160:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;
+ 664              		.loc 1 160 58
+ 665 004e 0323     		movs	r3, #3
+ 666 0050 7B72     		strb	r3, [r7, #9]
+ 161:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+ 667              		.loc 1 161 51
+ 668 0052 0323     		movs	r3, #3
+ 669 0054 BB72     		strb	r3, [r7, #10]
+ 162:Src/uart.c    ****     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+ 670              		.loc 1 162 43
+ 671 0056 0123     		movs	r3, #1
+ 672 0058 FB72     		strb	r3, [r7, #11]
+ 163:Src/uart.c    ****     NVIC_Init(&NVIC_InitStructure);
+ 673              		.loc 1 163 5
+ 674 005a 07F10803 		add	r3, r7, #8
+ 675 005e 1846     		mov	r0, r3
+ 676 0060 FFF7FEFF 		bl	NVIC_Init
+ 164:Src/uart.c    **** 
+ 165:Src/uart.c    ****     //USART 初始化设置
+ 166:Src/uart.c    ****     USART_InitStructure.USART_BaudRate = bound_rate;
+ 677              		.loc 1 166 40
+ 678 0064 7B68     		ldr	r3, [r7, #4]
+ 679 0066 FB60     		str	r3, [r7, #12]
+ 167:Src/uart.c    ****     USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+ 680              		.loc 1 167 42
+ 681 0068 0023     		movs	r3, #0
+ 682 006a 3B82     		strh	r3, [r7, #16]	@ movhi
+ 168:Src/uart.c    ****     USART_InitStructure.USART_StopBits = USART_StopBits_1;
+ 683              		.loc 1 168 40
+ 684 006c 0023     		movs	r3, #0
+ 685 006e 7B82     		strh	r3, [r7, #18]	@ movhi
+ 169:Src/uart.c    ****     USART_InitStructure.USART_Parity = USART_Parity_No;
+ 686              		.loc 1 169 38
+ 687 0070 0023     		movs	r3, #0
+ 688 0072 BB82     		strh	r3, [r7, #20]	@ movhi
+ 170:Src/uart.c    ****     USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+ 689              		.loc 1 170 51
+ 690 0074 0023     		movs	r3, #0
+ 691 0076 3B83     		strh	r3, [r7, #24]	@ movhi
+ 171:Src/uart.c    ****     USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+ 692              		.loc 1 171 36
+ 693 0078 0C23     		movs	r3, #12
+ 694 007a FB82     		strh	r3, [r7, #22]	@ movhi
+ 172:Src/uart.c    **** 
+ARM GAS  /tmp/ccRaUMLb.s 			page 16
+
+
+ 173:Src/uart.c    ****     USART_Init(USART3, &USART_InitStructure);
+ 695              		.loc 1 173 5
+ 696 007c 07F10C03 		add	r3, r7, #12
+ 697 0080 1946     		mov	r1, r3
+ 698 0082 0948     		ldr	r0, .L31+4
+ 699 0084 FFF7FEFF 		bl	USART_Init
+ 174:Src/uart.c    ****     USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+ 700              		.loc 1 174 5
+ 701 0088 0122     		movs	r2, #1
+ 702 008a 40F22551 		movw	r1, #1317
+ 703 008e 0648     		ldr	r0, .L31+4
+ 704 0090 FFF7FEFF 		bl	USART_ITConfig
+ 175:Src/uart.c    ****     USART_Cmd(USART3, ENABLE);
+ 705              		.loc 1 175 5
+ 706 0094 0121     		movs	r1, #1
+ 707 0096 0448     		ldr	r0, .L31+4
+ 708 0098 FFF7FEFF 		bl	USART_Cmd
+ 176:Src/uart.c    **** }
+ 709              		.loc 1 176 1
+ 710 009c 00BF     		nop
+ 711 009e 2037     		adds	r7, r7, #32
+ 712              	.LCFI41:
+ 713              		.cfi_def_cfa_offset 8
+ 714 00a0 BD46     		mov	sp, r7
+ 715              	.LCFI42:
+ 716              		.cfi_def_cfa_register 13
+ 717              		@ sp needed
+ 718 00a2 80BD     		pop	{r7, pc}
+ 719              	.L32:
+ 720              		.align	2
+ 721              	.L31:
+ 722 00a4 000C0140 		.word	1073810432
+ 723 00a8 00480040 		.word	1073760256
+ 724              		.cfi_endproc
+ 725              	.LFE73:
+ 727              		.section	.text.USART3_IRQHandler,"ax",%progbits
+ 728              		.align	1
+ 729              		.global	USART3_IRQHandler
+ 730              		.syntax unified
+ 731              		.thumb
+ 732              		.thumb_func
+ 733              		.fpu softvfp
+ 735              	USART3_IRQHandler:
+ 736              	.LFB74:
+ 177:Src/uart.c    **** 
+ 178:Src/uart.c    **** void USART3_IRQHandler(void)
+ 179:Src/uart.c    **** {
+ 737              		.loc 1 179 1
+ 738              		.cfi_startproc
+ 739              		@ args = 0, pretend = 0, frame = 8
+ 740              		@ frame_needed = 1, uses_anonymous_args = 0
+ 741 0000 80B5     		push	{r7, lr}
+ 742              	.LCFI43:
+ 743              		.cfi_def_cfa_offset 8
+ 744              		.cfi_offset 7, -8
+ 745              		.cfi_offset 14, -4
+ 746 0002 82B0     		sub	sp, sp, #8
+ARM GAS  /tmp/ccRaUMLb.s 			page 17
+
+
+ 747              	.LCFI44:
+ 748              		.cfi_def_cfa_offset 16
+ 749 0004 00AF     		add	r7, sp, #0
+ 750              	.LCFI45:
+ 751              		.cfi_def_cfa_register 7
+ 180:Src/uart.c    ****     uint8_t Res;
+ 181:Src/uart.c    ****     if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+ 752              		.loc 1 181 8
+ 753 0006 40F22551 		movw	r1, #1317
+ 754 000a 0A48     		ldr	r0, .L36
+ 755 000c FFF7FEFF 		bl	USART_GetITStatus
+ 756 0010 0346     		mov	r3, r0
+ 757              		.loc 1 181 7
+ 758 0012 002B     		cmp	r3, #0
+ 759 0014 0AD0     		beq	.L35
+ 182:Src/uart.c    ****     {
+ 183:Src/uart.c    ****         Res =USART_ReceiveData(USART3);
+ 760              		.loc 1 183 14
+ 761 0016 0748     		ldr	r0, .L36
+ 762 0018 FFF7FEFF 		bl	USART_ReceiveData
+ 763 001c 0346     		mov	r3, r0
+ 764              		.loc 1 183 13
+ 765 001e FB71     		strb	r3, [r7, #7]
+ 184:Src/uart.c    ****         USART_SendData(USART3, Res);
+ 766              		.loc 1 184 9
+ 767 0020 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 768 0022 9BB2     		uxth	r3, r3
+ 769 0024 1946     		mov	r1, r3
+ 770 0026 0348     		ldr	r0, .L36
+ 771 0028 FFF7FEFF 		bl	USART_SendData
+ 772              	.L35:
+ 185:Src/uart.c    ****     }
+ 186:Src/uart.c    **** }
+ 773              		.loc 1 186 1
+ 774 002c 00BF     		nop
+ 775 002e 0837     		adds	r7, r7, #8
+ 776              	.LCFI46:
+ 777              		.cfi_def_cfa_offset 8
+ 778 0030 BD46     		mov	sp, r7
+ 779              	.LCFI47:
+ 780              		.cfi_def_cfa_register 13
+ 781              		@ sp needed
+ 782 0032 80BD     		pop	{r7, pc}
+ 783              	.L37:
+ 784              		.align	2
+ 785              	.L36:
+ 786 0034 00480040 		.word	1073760256
+ 787              		.cfi_endproc
+ 788              	.LFE74:
+ 790              		.text
+ 791              	.Letext0:
+ 792              		.file 2 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/machine/_defa
+ 793              		.file 3 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/_stdint.h
+ 794              		.file 4 "Inc/stm32f10x.h"
+ 795              		.file 5 "Drivers/Inc/stm32f10x_gpio.h"
+ 796              		.file 6 "Drivers/Inc/stm32f10x_usart.h"
+ 797              		.file 7 "Drivers/Inc/misc.h"
+ARM GAS  /tmp/ccRaUMLb.s 			page 18
+
+
+ 798              		.file 8 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/lib/gcc/arm-none-eabi/10.2.1/includ
+ 799              		.file 9 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/_types.h"
+ 800              		.file 10 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/reent.h"
+ 801              		.file 11 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/lock.h"
+ 802              		.file 12 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/stdio.h"
+ARM GAS  /tmp/ccRaUMLb.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 uart.c
+     /tmp/ccRaUMLb.s:20     .bss.__stdout:0000000000000000 __stdout
+     /tmp/ccRaUMLb.s:17     .bss.__stdout:0000000000000000 $d
+     /tmp/ccRaUMLb.s:23     .text._sys_exit:0000000000000000 $t
+     /tmp/ccRaUMLb.s:31     .text._sys_exit:0000000000000000 _sys_exit
+     /tmp/ccRaUMLb.s:68     .text._write:0000000000000000 $t
+     /tmp/ccRaUMLb.s:75     .text._write:0000000000000000 _write
+     /tmp/ccRaUMLb.s:155    .text._write:000000000000004c $d
+     /tmp/ccRaUMLb.s:160    .text.fputc:0000000000000000 $t
+     /tmp/ccRaUMLb.s:167    .text.fputc:0000000000000000 fputc
+     /tmp/ccRaUMLb.s:226    .text.fputc:0000000000000030 $d
+     /tmp/ccRaUMLb.s:231    .text.uart1_init:0000000000000000 $t
+     /tmp/ccRaUMLb.s:238    .text.uart1_init:0000000000000000 uart1_init
+     /tmp/ccRaUMLb.s:346    .text.uart1_init:000000000000009c $d
+     /tmp/ccRaUMLb.s:352    .text.USART1_IRQHandler:0000000000000000 $t
+     /tmp/ccRaUMLb.s:359    .text.USART1_IRQHandler:0000000000000000 USART1_IRQHandler
+     /tmp/ccRaUMLb.s:410    .text.USART1_IRQHandler:0000000000000034 $d
+     /tmp/ccRaUMLb.s:415    .text.uart2_init:0000000000000000 $t
+     /tmp/ccRaUMLb.s:422    .text.uart2_init:0000000000000000 uart2_init
+     /tmp/ccRaUMLb.s:534    .text.uart2_init:00000000000000a0 $d
+     /tmp/ccRaUMLb.s:540    .text.USART2_IRQHandler:0000000000000000 $t
+     /tmp/ccRaUMLb.s:547    .text.USART2_IRQHandler:0000000000000000 USART2_IRQHandler
+     /tmp/ccRaUMLb.s:598    .text.USART2_IRQHandler:0000000000000034 $d
+     /tmp/ccRaUMLb.s:603    .text.uart3_init:0000000000000000 $t
+     /tmp/ccRaUMLb.s:610    .text.uart3_init:0000000000000000 uart3_init
+     /tmp/ccRaUMLb.s:722    .text.uart3_init:00000000000000a4 $d
+     /tmp/ccRaUMLb.s:728    .text.USART3_IRQHandler:0000000000000000 $t
+     /tmp/ccRaUMLb.s:735    .text.USART3_IRQHandler:0000000000000000 USART3_IRQHandler
+     /tmp/ccRaUMLb.s:786    .text.USART3_IRQHandler:0000000000000034 $d
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+NVIC_Init
+USART_Init
+USART_ITConfig
+USART_Cmd
+USART_GetITStatus
+USART_ReceiveData
+USART_SendData
+RCC_APB1PeriphClockCmd

@@ -1,0 +1,948 @@
+ARM GAS  /tmp/ccR0i3qD.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"sccb.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.SCCB_Init,"ax",%progbits
+  16              		.align	1
+  17              		.global	SCCB_Init
+  18              		.arch armv7-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu softvfp
+  24              	SCCB_Init:
+  25              	.LFB63:
+  26              		.file 1 "hardware/src/sccb.c"
+   1:hardware/src/sccb.c **** #include "sys.h"
+   2:hardware/src/sccb.c **** #include "sccb.h"
+   3:hardware/src/sccb.c **** #include "delay.h"
+   4:hardware/src/sccb.c **** 
+   5:hardware/src/sccb.c **** void SCCB_Init(void)
+   6:hardware/src/sccb.c **** {											   
+  27              		.loc 1 6 1
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 82B0     		sub	sp, sp, #8
+  37              	.LCFI1:
+  38              		.cfi_def_cfa_offset 16
+  39 0004 00AF     		add	r7, sp, #0
+  40              	.LCFI2:
+  41              		.cfi_def_cfa_register 7
+   7:hardware/src/sccb.c **** 	 
+   8:hardware/src/sccb.c ****  	GPIO_InitTypeDef  GPIO_InitStructure;
+   9:hardware/src/sccb.c ****  	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	 //使能PB端口时钟
+  42              		.loc 1 9 3
+  43 0006 0121     		movs	r1, #1
+  44 0008 1020     		movs	r0, #16
+  45 000a FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  10:hardware/src/sccb.c **** /*		SDA		*/
+  11:hardware/src/sccb.c ****   	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;				 // 端口配置
+  46              		.loc 1 11 32
+  47 000e 4FF40063 		mov	r3, #2048
+ARM GAS  /tmp/ccR0i3qD.s 			page 2
+
+
+  48 0012 BB80     		strh	r3, [r7, #4]	@ movhi
+  12:hardware/src/sccb.c ****  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; 		 //输入
+  49              		.loc 1 12 32
+  50 0014 4823     		movs	r3, #72
+  51 0016 FB71     		strb	r3, [r7, #7]
+  13:hardware/src/sccb.c ****  	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  52              		.loc 1 13 33
+  53 0018 0323     		movs	r3, #3
+  54 001a BB71     		strb	r3, [r7, #6]
+  14:hardware/src/sccb.c ****  	GPIO_Init(GPIOC, &GPIO_InitStructure);
+  55              		.loc 1 14 3
+  56 001c 3B1D     		adds	r3, r7, #4
+  57 001e 1946     		mov	r1, r3
+  58 0020 1348     		ldr	r0, .L2
+  59 0022 FFF7FEFF 		bl	GPIO_Init
+  15:hardware/src/sccb.c ****  	GPIO_SetBits(GPIOC,GPIO_Pin_11);						 // 输出高
+  60              		.loc 1 15 3
+  61 0026 4FF40061 		mov	r1, #2048
+  62 002a 1148     		ldr	r0, .L2
+  63 002c FFF7FEFF 		bl	GPIO_SetBits
+  16:hardware/src/sccb.c **** /*		SCL		*/
+  17:hardware/src/sccb.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;				 // 端口配置
+  64              		.loc 1 17 30
+  65 0030 4FF48063 		mov	r3, #1024
+  66 0034 BB80     		strh	r3, [r7, #4]	@ movhi
+  18:hardware/src/sccb.c ****  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //输输出
+  67              		.loc 1 18 32
+  68 0036 1023     		movs	r3, #16
+  69 0038 FB71     		strb	r3, [r7, #7]
+  19:hardware/src/sccb.c ****  	GPIO_Init(GPIOC, &GPIO_InitStructure);
+  70              		.loc 1 19 3
+  71 003a 3B1D     		adds	r3, r7, #4
+  72 003c 1946     		mov	r1, r3
+  73 003e 0C48     		ldr	r0, .L2
+  74 0040 FFF7FEFF 		bl	GPIO_Init
+  20:hardware/src/sccb.c ****  	GPIO_SetBits(GPIOC,GPIO_Pin_10);						 // 输出高
+  75              		.loc 1 20 3
+  76 0044 4FF48061 		mov	r1, #1024
+  77 0048 0948     		ldr	r0, .L2
+  78 004a FFF7FEFF 		bl	GPIO_SetBits
+  21:hardware/src/sccb.c ****  
+  22:hardware/src/sccb.c **** 	SCCB_SDA_OUT();	   
+  79              		.loc 1 22 2
+  80 004e 084B     		ldr	r3, .L2
+  81 0050 5B68     		ldr	r3, [r3, #4]
+  82 0052 074A     		ldr	r2, .L2
+  83 0054 23F47043 		bic	r3, r3, #61440
+  84 0058 5360     		str	r3, [r2, #4]
+  85 005a 054B     		ldr	r3, .L2
+  86 005c 5B68     		ldr	r3, [r3, #4]
+  87 005e 044A     		ldr	r2, .L2
+  88 0060 43F44053 		orr	r3, r3, #12288
+  89 0064 5360     		str	r3, [r2, #4]
+  23:hardware/src/sccb.c **** }			 
+  90              		.loc 1 23 1
+  91 0066 00BF     		nop
+  92 0068 0837     		adds	r7, r7, #8
+ARM GAS  /tmp/ccR0i3qD.s 			page 3
+
+
+  93              	.LCFI3:
+  94              		.cfi_def_cfa_offset 8
+  95 006a BD46     		mov	sp, r7
+  96              	.LCFI4:
+  97              		.cfi_def_cfa_register 13
+  98              		@ sp needed
+  99 006c 80BD     		pop	{r7, pc}
+ 100              	.L3:
+ 101 006e 00BF     		.align	2
+ 102              	.L2:
+ 103 0070 00100140 		.word	1073811456
+ 104              		.cfi_endproc
+ 105              	.LFE63:
+ 107              		.section	.text.SCCB_Start,"ax",%progbits
+ 108              		.align	1
+ 109              		.global	SCCB_Start
+ 110              		.syntax unified
+ 111              		.thumb
+ 112              		.thumb_func
+ 113              		.fpu softvfp
+ 115              	SCCB_Start:
+ 116              	.LFB64:
+  24:hardware/src/sccb.c **** 
+  25:hardware/src/sccb.c **** //SCCB起始信号
+  26:hardware/src/sccb.c **** //当时钟为高的时候,数据线的高到低,为SCCB起始信号
+  27:hardware/src/sccb.c **** //在激活状态下,SDA和SCL均为低电平
+  28:hardware/src/sccb.c **** void SCCB_Start(void)
+  29:hardware/src/sccb.c **** {
+ 117              		.loc 1 29 1
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 0
+ 120              		@ frame_needed = 1, uses_anonymous_args = 0
+ 121 0000 80B5     		push	{r7, lr}
+ 122              	.LCFI5:
+ 123              		.cfi_def_cfa_offset 8
+ 124              		.cfi_offset 7, -8
+ 125              		.cfi_offset 14, -4
+ 126 0002 00AF     		add	r7, sp, #0
+ 127              	.LCFI6:
+ 128              		.cfi_def_cfa_register 7
+  30:hardware/src/sccb.c ****     SCCB_SDA=1;     //数据线高电平	   
+ 129              		.loc 1 30 5
+ 130 0004 094B     		ldr	r3, .L5
+ 131              		.loc 1 30 13
+ 132 0006 0122     		movs	r2, #1
+ 133 0008 1A60     		str	r2, [r3]
+  31:hardware/src/sccb.c ****     SCCB_SCL=1;	    //在时钟线高的时候数据线由高至低
+ 134              		.loc 1 31 5
+ 135 000a 094B     		ldr	r3, .L5+4
+ 136              		.loc 1 31 13
+ 137 000c 0122     		movs	r2, #1
+ 138 000e 1A60     		str	r2, [r3]
+  32:hardware/src/sccb.c ****     delay_us(50);  
+ 139              		.loc 1 32 5
+ 140 0010 3220     		movs	r0, #50
+ 141 0012 FFF7FEFF 		bl	delay_us
+  33:hardware/src/sccb.c ****     SCCB_SDA=0;
+ARM GAS  /tmp/ccR0i3qD.s 			page 4
+
+
+ 142              		.loc 1 33 5
+ 143 0016 054B     		ldr	r3, .L5
+ 144              		.loc 1 33 13
+ 145 0018 0022     		movs	r2, #0
+ 146 001a 1A60     		str	r2, [r3]
+  34:hardware/src/sccb.c ****     delay_us(50);	 
+ 147              		.loc 1 34 5
+ 148 001c 3220     		movs	r0, #50
+ 149 001e FFF7FEFF 		bl	delay_us
+  35:hardware/src/sccb.c ****     SCCB_SCL=0;	    //数据线恢复低电平，单操作函数必要	  
+ 150              		.loc 1 35 5
+ 151 0022 034B     		ldr	r3, .L5+4
+ 152              		.loc 1 35 13
+ 153 0024 0022     		movs	r2, #0
+ 154 0026 1A60     		str	r2, [r3]
+  36:hardware/src/sccb.c **** }
+ 155              		.loc 1 36 1
+ 156 0028 00BF     		nop
+ 157 002a 80BD     		pop	{r7, pc}
+ 158              	.L6:
+ 159              		.align	2
+ 160              	.L5:
+ 161 002c AC012242 		.word	1109524908
+ 162 0030 A8012242 		.word	1109524904
+ 163              		.cfi_endproc
+ 164              	.LFE64:
+ 166              		.section	.text.SCCB_Stop,"ax",%progbits
+ 167              		.align	1
+ 168              		.global	SCCB_Stop
+ 169              		.syntax unified
+ 170              		.thumb
+ 171              		.thumb_func
+ 172              		.fpu softvfp
+ 174              	SCCB_Stop:
+ 175              	.LFB65:
+  37:hardware/src/sccb.c **** 
+  38:hardware/src/sccb.c **** //SCCB停止信号
+  39:hardware/src/sccb.c **** //当时钟为高的时候,数据线的低到高,为SCCB停止信号
+  40:hardware/src/sccb.c **** //空闲状况下,SDA,SCL均为高电平
+  41:hardware/src/sccb.c **** void SCCB_Stop(void)
+  42:hardware/src/sccb.c **** {
+ 176              		.loc 1 42 1
+ 177              		.cfi_startproc
+ 178              		@ args = 0, pretend = 0, frame = 0
+ 179              		@ frame_needed = 1, uses_anonymous_args = 0
+ 180 0000 80B5     		push	{r7, lr}
+ 181              	.LCFI7:
+ 182              		.cfi_def_cfa_offset 8
+ 183              		.cfi_offset 7, -8
+ 184              		.cfi_offset 14, -4
+ 185 0002 00AF     		add	r7, sp, #0
+ 186              	.LCFI8:
+ 187              		.cfi_def_cfa_register 7
+  43:hardware/src/sccb.c ****     SCCB_SDA=0;
+ 188              		.loc 1 43 5
+ 189 0004 094B     		ldr	r3, .L8
+ 190              		.loc 1 43 13
+ARM GAS  /tmp/ccR0i3qD.s 			page 5
+
+
+ 191 0006 0022     		movs	r2, #0
+ 192 0008 1A60     		str	r2, [r3]
+  44:hardware/src/sccb.c ****     delay_us(50);	 
+ 193              		.loc 1 44 5
+ 194 000a 3220     		movs	r0, #50
+ 195 000c FFF7FEFF 		bl	delay_us
+  45:hardware/src/sccb.c ****     SCCB_SCL=1;	
+ 196              		.loc 1 45 5
+ 197 0010 074B     		ldr	r3, .L8+4
+ 198              		.loc 1 45 13
+ 199 0012 0122     		movs	r2, #1
+ 200 0014 1A60     		str	r2, [r3]
+  46:hardware/src/sccb.c ****     delay_us(50); 
+ 201              		.loc 1 46 5
+ 202 0016 3220     		movs	r0, #50
+ 203 0018 FFF7FEFF 		bl	delay_us
+  47:hardware/src/sccb.c ****     SCCB_SDA=1;	
+ 204              		.loc 1 47 5
+ 205 001c 034B     		ldr	r3, .L8
+ 206              		.loc 1 47 13
+ 207 001e 0122     		movs	r2, #1
+ 208 0020 1A60     		str	r2, [r3]
+  48:hardware/src/sccb.c ****     delay_us(50);
+ 209              		.loc 1 48 5
+ 210 0022 3220     		movs	r0, #50
+ 211 0024 FFF7FEFF 		bl	delay_us
+  49:hardware/src/sccb.c **** }  
+ 212              		.loc 1 49 1
+ 213 0028 00BF     		nop
+ 214 002a 80BD     		pop	{r7, pc}
+ 215              	.L9:
+ 216              		.align	2
+ 217              	.L8:
+ 218 002c AC012242 		.word	1109524908
+ 219 0030 A8012242 		.word	1109524904
+ 220              		.cfi_endproc
+ 221              	.LFE65:
+ 223              		.section	.text.SCCB_No_Ack,"ax",%progbits
+ 224              		.align	1
+ 225              		.global	SCCB_No_Ack
+ 226              		.syntax unified
+ 227              		.thumb
+ 228              		.thumb_func
+ 229              		.fpu softvfp
+ 231              	SCCB_No_Ack:
+ 232              	.LFB66:
+  50:hardware/src/sccb.c **** //产生NA信号
+  51:hardware/src/sccb.c **** void SCCB_No_Ack(void)
+  52:hardware/src/sccb.c **** {
+ 233              		.loc 1 52 1
+ 234              		.cfi_startproc
+ 235              		@ args = 0, pretend = 0, frame = 0
+ 236              		@ frame_needed = 1, uses_anonymous_args = 0
+ 237 0000 80B5     		push	{r7, lr}
+ 238              	.LCFI9:
+ 239              		.cfi_def_cfa_offset 8
+ 240              		.cfi_offset 7, -8
+ARM GAS  /tmp/ccR0i3qD.s 			page 6
+
+
+ 241              		.cfi_offset 14, -4
+ 242 0002 00AF     		add	r7, sp, #0
+ 243              	.LCFI10:
+ 244              		.cfi_def_cfa_register 7
+  53:hardware/src/sccb.c **** 	delay_us(50);
+ 245              		.loc 1 53 2
+ 246 0004 3220     		movs	r0, #50
+ 247 0006 FFF7FEFF 		bl	delay_us
+  54:hardware/src/sccb.c **** 	SCCB_SDA=1;	
+ 248              		.loc 1 54 2
+ 249 000a 0B4B     		ldr	r3, .L11
+ 250              		.loc 1 54 10
+ 251 000c 0122     		movs	r2, #1
+ 252 000e 1A60     		str	r2, [r3]
+  55:hardware/src/sccb.c **** 	SCCB_SCL=1;	
+ 253              		.loc 1 55 2
+ 254 0010 0A4B     		ldr	r3, .L11+4
+ 255              		.loc 1 55 10
+ 256 0012 0122     		movs	r2, #1
+ 257 0014 1A60     		str	r2, [r3]
+  56:hardware/src/sccb.c **** 	delay_us(50);
+ 258              		.loc 1 56 2
+ 259 0016 3220     		movs	r0, #50
+ 260 0018 FFF7FEFF 		bl	delay_us
+  57:hardware/src/sccb.c **** 	SCCB_SCL=0;	
+ 261              		.loc 1 57 2
+ 262 001c 074B     		ldr	r3, .L11+4
+ 263              		.loc 1 57 10
+ 264 001e 0022     		movs	r2, #0
+ 265 0020 1A60     		str	r2, [r3]
+  58:hardware/src/sccb.c **** 	delay_us(50);
+ 266              		.loc 1 58 2
+ 267 0022 3220     		movs	r0, #50
+ 268 0024 FFF7FEFF 		bl	delay_us
+  59:hardware/src/sccb.c **** 	SCCB_SDA=0;	
+ 269              		.loc 1 59 2
+ 270 0028 034B     		ldr	r3, .L11
+ 271              		.loc 1 59 10
+ 272 002a 0022     		movs	r2, #0
+ 273 002c 1A60     		str	r2, [r3]
+  60:hardware/src/sccb.c **** 	delay_us(50);
+ 274              		.loc 1 60 2
+ 275 002e 3220     		movs	r0, #50
+ 276 0030 FFF7FEFF 		bl	delay_us
+  61:hardware/src/sccb.c **** }
+ 277              		.loc 1 61 1
+ 278 0034 00BF     		nop
+ 279 0036 80BD     		pop	{r7, pc}
+ 280              	.L12:
+ 281              		.align	2
+ 282              	.L11:
+ 283 0038 AC012242 		.word	1109524908
+ 284 003c A8012242 		.word	1109524904
+ 285              		.cfi_endproc
+ 286              	.LFE66:
+ 288              		.section	.text.SCCB_WR_Byte,"ax",%progbits
+ 289              		.align	1
+ARM GAS  /tmp/ccR0i3qD.s 			page 7
+
+
+ 290              		.global	SCCB_WR_Byte
+ 291              		.syntax unified
+ 292              		.thumb
+ 293              		.thumb_func
+ 294              		.fpu softvfp
+ 296              	SCCB_WR_Byte:
+ 297              	.LFB67:
+  62:hardware/src/sccb.c **** //SCCB,写入一个字节
+  63:hardware/src/sccb.c **** //返回值:0,成功;1,失败. 
+  64:hardware/src/sccb.c **** u8 SCCB_WR_Byte(u8 dat)
+  65:hardware/src/sccb.c **** {
+ 298              		.loc 1 65 1
+ 299              		.cfi_startproc
+ 300              		@ args = 0, pretend = 0, frame = 16
+ 301              		@ frame_needed = 1, uses_anonymous_args = 0
+ 302 0000 80B5     		push	{r7, lr}
+ 303              	.LCFI11:
+ 304              		.cfi_def_cfa_offset 8
+ 305              		.cfi_offset 7, -8
+ 306              		.cfi_offset 14, -4
+ 307 0002 84B0     		sub	sp, sp, #16
+ 308              	.LCFI12:
+ 309              		.cfi_def_cfa_offset 24
+ 310 0004 00AF     		add	r7, sp, #0
+ 311              	.LCFI13:
+ 312              		.cfi_def_cfa_register 7
+ 313 0006 0346     		mov	r3, r0
+ 314 0008 FB71     		strb	r3, [r7, #7]
+  66:hardware/src/sccb.c **** 	u8 j,res;	 
+  67:hardware/src/sccb.c **** 	for(j=0;j<8;j++) //循环8次发送数据
+ 315              		.loc 1 67 7
+ 316 000a 0023     		movs	r3, #0
+ 317 000c FB73     		strb	r3, [r7, #15]
+ 318              		.loc 1 67 2
+ 319 000e 1CE0     		b	.L14
+ 320              	.L17:
+  68:hardware/src/sccb.c **** 	{
+  69:hardware/src/sccb.c **** 		if(dat&0x80)SCCB_SDA=1;	
+ 321              		.loc 1 69 6
+ 322 0010 97F90730 		ldrsb	r3, [r7, #7]
+ 323              		.loc 1 69 5
+ 324 0014 002B     		cmp	r3, #0
+ 325 0016 03DA     		bge	.L15
+ 326              		.loc 1 69 15 discriminator 1
+ 327 0018 264B     		ldr	r3, .L21
+ 328              		.loc 1 69 23 discriminator 1
+ 329 001a 0122     		movs	r2, #1
+ 330 001c 1A60     		str	r2, [r3]
+ 331 001e 02E0     		b	.L16
+ 332              	.L15:
+  70:hardware/src/sccb.c **** 		else SCCB_SDA=0;
+ 333              		.loc 1 70 8
+ 334 0020 244B     		ldr	r3, .L21
+ 335              		.loc 1 70 16
+ 336 0022 0022     		movs	r2, #0
+ 337 0024 1A60     		str	r2, [r3]
+ 338              	.L16:
+ARM GAS  /tmp/ccR0i3qD.s 			page 8
+
+
+  71:hardware/src/sccb.c **** 		dat<<=1;
+ 339              		.loc 1 71 6 discriminator 2
+ 340 0026 FB79     		ldrb	r3, [r7, #7]
+ 341 0028 5B00     		lsls	r3, r3, #1
+ 342 002a FB71     		strb	r3, [r7, #7]
+  72:hardware/src/sccb.c **** 		delay_us(50);
+ 343              		.loc 1 72 3 discriminator 2
+ 344 002c 3220     		movs	r0, #50
+ 345 002e FFF7FEFF 		bl	delay_us
+  73:hardware/src/sccb.c **** 		SCCB_SCL=1;	
+ 346              		.loc 1 73 3 discriminator 2
+ 347 0032 214B     		ldr	r3, .L21+4
+ 348              		.loc 1 73 11 discriminator 2
+ 349 0034 0122     		movs	r2, #1
+ 350 0036 1A60     		str	r2, [r3]
+  74:hardware/src/sccb.c **** 		delay_us(50);
+ 351              		.loc 1 74 3 discriminator 2
+ 352 0038 3220     		movs	r0, #50
+ 353 003a FFF7FEFF 		bl	delay_us
+  75:hardware/src/sccb.c **** 		SCCB_SCL=0;		   
+ 354              		.loc 1 75 3 discriminator 2
+ 355 003e 1E4B     		ldr	r3, .L21+4
+ 356              		.loc 1 75 11 discriminator 2
+ 357 0040 0022     		movs	r2, #0
+ 358 0042 1A60     		str	r2, [r3]
+  67:hardware/src/sccb.c **** 	{
+ 359              		.loc 1 67 15 discriminator 2
+ 360 0044 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 361 0046 0133     		adds	r3, r3, #1
+ 362 0048 FB73     		strb	r3, [r7, #15]
+ 363              	.L14:
+  67:hardware/src/sccb.c **** 	{
+ 364              		.loc 1 67 2 discriminator 1
+ 365 004a FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 366 004c 072B     		cmp	r3, #7
+ 367 004e DFD9     		bls	.L17
+  76:hardware/src/sccb.c **** 	}			 
+  77:hardware/src/sccb.c **** 	SCCB_SDA_IN();		//设置SDA为输入 
+ 368              		.loc 1 77 2
+ 369 0050 1A4B     		ldr	r3, .L21+8
+ 370 0052 5B68     		ldr	r3, [r3, #4]
+ 371 0054 194A     		ldr	r2, .L21+8
+ 372 0056 23F47043 		bic	r3, r3, #61440
+ 373 005a 5360     		str	r3, [r2, #4]
+ 374 005c 174B     		ldr	r3, .L21+8
+ 375 005e 5B68     		ldr	r3, [r3, #4]
+ 376 0060 164A     		ldr	r2, .L21+8
+ 377 0062 43F40043 		orr	r3, r3, #32768
+ 378 0066 5360     		str	r3, [r2, #4]
+  78:hardware/src/sccb.c **** 	delay_us(50);
+ 379              		.loc 1 78 2
+ 380 0068 3220     		movs	r0, #50
+ 381 006a FFF7FEFF 		bl	delay_us
+  79:hardware/src/sccb.c **** 	SCCB_SCL=1;			//接收第九位,以判断是否发送成功
+ 382              		.loc 1 79 2
+ 383 006e 124B     		ldr	r3, .L21+4
+ 384              		.loc 1 79 10
+ARM GAS  /tmp/ccR0i3qD.s 			page 9
+
+
+ 385 0070 0122     		movs	r2, #1
+ 386 0072 1A60     		str	r2, [r3]
+  80:hardware/src/sccb.c **** 	delay_us(50);
+ 387              		.loc 1 80 2
+ 388 0074 3220     		movs	r0, #50
+ 389 0076 FFF7FEFF 		bl	delay_us
+  81:hardware/src/sccb.c **** 	if(SCCB_READ_SDA)res=1;  //SDA=1发送失败，返回1
+ 390              		.loc 1 81 5
+ 391 007a 114B     		ldr	r3, .L21+12
+ 392 007c 1B68     		ldr	r3, [r3]
+ 393              		.loc 1 81 4
+ 394 007e 002B     		cmp	r3, #0
+ 395 0080 02D0     		beq	.L18
+ 396              		.loc 1 81 22 discriminator 1
+ 397 0082 0123     		movs	r3, #1
+ 398 0084 BB73     		strb	r3, [r7, #14]
+ 399 0086 01E0     		b	.L19
+ 400              	.L18:
+  82:hardware/src/sccb.c **** 	else res=0;         //SDA=0发送成功，返回0
+ 401              		.loc 1 82 10
+ 402 0088 0023     		movs	r3, #0
+ 403 008a BB73     		strb	r3, [r7, #14]
+ 404              	.L19:
+  83:hardware/src/sccb.c **** 	SCCB_SCL=0;		 
+ 405              		.loc 1 83 2
+ 406 008c 0A4B     		ldr	r3, .L21+4
+ 407              		.loc 1 83 10
+ 408 008e 0022     		movs	r2, #0
+ 409 0090 1A60     		str	r2, [r3]
+  84:hardware/src/sccb.c **** 	SCCB_SDA_OUT();		//设置SDA为输出    
+ 410              		.loc 1 84 2
+ 411 0092 0A4B     		ldr	r3, .L21+8
+ 412 0094 5B68     		ldr	r3, [r3, #4]
+ 413 0096 094A     		ldr	r2, .L21+8
+ 414 0098 23F47043 		bic	r3, r3, #61440
+ 415 009c 5360     		str	r3, [r2, #4]
+ 416 009e 074B     		ldr	r3, .L21+8
+ 417 00a0 5B68     		ldr	r3, [r3, #4]
+ 418 00a2 064A     		ldr	r2, .L21+8
+ 419 00a4 43F44053 		orr	r3, r3, #12288
+ 420 00a8 5360     		str	r3, [r2, #4]
+  85:hardware/src/sccb.c **** 	return res;  
+ 421              		.loc 1 85 9
+ 422 00aa BB7B     		ldrb	r3, [r7, #14]	@ zero_extendqisi2
+  86:hardware/src/sccb.c **** }	 
+ 423              		.loc 1 86 1
+ 424 00ac 1846     		mov	r0, r3
+ 425 00ae 1037     		adds	r7, r7, #16
+ 426              	.LCFI14:
+ 427              		.cfi_def_cfa_offset 8
+ 428 00b0 BD46     		mov	sp, r7
+ 429              	.LCFI15:
+ 430              		.cfi_def_cfa_register 13
+ 431              		@ sp needed
+ 432 00b2 80BD     		pop	{r7, pc}
+ 433              	.L22:
+ 434              		.align	2
+ARM GAS  /tmp/ccR0i3qD.s 			page 10
+
+
+ 435              	.L21:
+ 436 00b4 AC012242 		.word	1109524908
+ 437 00b8 A8012242 		.word	1109524904
+ 438 00bc 00100140 		.word	1073811456
+ 439 00c0 2C012242 		.word	1109524780
+ 440              		.cfi_endproc
+ 441              	.LFE67:
+ 443              		.section	.text.SCCB_RD_Byte,"ax",%progbits
+ 444              		.align	1
+ 445              		.global	SCCB_RD_Byte
+ 446              		.syntax unified
+ 447              		.thumb
+ 448              		.thumb_func
+ 449              		.fpu softvfp
+ 451              	SCCB_RD_Byte:
+ 452              	.LFB68:
+  87:hardware/src/sccb.c **** //SCCB 读取一个字节
+  88:hardware/src/sccb.c **** //在SCL的上升沿,数据锁存
+  89:hardware/src/sccb.c **** //返回值:读到的数据
+  90:hardware/src/sccb.c **** u8 SCCB_RD_Byte(void)
+  91:hardware/src/sccb.c **** {
+ 453              		.loc 1 91 1
+ 454              		.cfi_startproc
+ 455              		@ args = 0, pretend = 0, frame = 8
+ 456              		@ frame_needed = 1, uses_anonymous_args = 0
+ 457 0000 80B5     		push	{r7, lr}
+ 458              	.LCFI16:
+ 459              		.cfi_def_cfa_offset 8
+ 460              		.cfi_offset 7, -8
+ 461              		.cfi_offset 14, -4
+ 462 0002 82B0     		sub	sp, sp, #8
+ 463              	.LCFI17:
+ 464              		.cfi_def_cfa_offset 16
+ 465 0004 00AF     		add	r7, sp, #0
+ 466              	.LCFI18:
+ 467              		.cfi_def_cfa_register 7
+  92:hardware/src/sccb.c **** 	u8 temp=0,j;    
+ 468              		.loc 1 92 5
+ 469 0006 0023     		movs	r3, #0
+ 470 0008 FB71     		strb	r3, [r7, #7]
+  93:hardware/src/sccb.c **** 	SCCB_SDA_IN();		//设置SDA为输入  
+ 471              		.loc 1 93 2
+ 472 000a 1E4B     		ldr	r3, .L28
+ 473 000c 5B68     		ldr	r3, [r3, #4]
+ 474 000e 1D4A     		ldr	r2, .L28
+ 475 0010 23F47043 		bic	r3, r3, #61440
+ 476 0014 5360     		str	r3, [r2, #4]
+ 477 0016 1B4B     		ldr	r3, .L28
+ 478 0018 5B68     		ldr	r3, [r3, #4]
+ 479 001a 1A4A     		ldr	r2, .L28
+ 480 001c 43F40043 		orr	r3, r3, #32768
+ 481 0020 5360     		str	r3, [r2, #4]
+  94:hardware/src/sccb.c **** 	for(j=8;j>0;j--) 	//循环8次接收数据
+ 482              		.loc 1 94 7
+ 483 0022 0823     		movs	r3, #8
+ 484 0024 BB71     		strb	r3, [r7, #6]
+ 485              		.loc 1 94 2
+ARM GAS  /tmp/ccR0i3qD.s 			page 11
+
+
+ 486 0026 18E0     		b	.L24
+ 487              	.L26:
+  95:hardware/src/sccb.c **** 	{		     	  
+  96:hardware/src/sccb.c **** 		delay_us(50);
+ 488              		.loc 1 96 3
+ 489 0028 3220     		movs	r0, #50
+ 490 002a FFF7FEFF 		bl	delay_us
+  97:hardware/src/sccb.c **** 		SCCB_SCL=1;
+ 491              		.loc 1 97 3
+ 492 002e 164B     		ldr	r3, .L28+4
+ 493              		.loc 1 97 11
+ 494 0030 0122     		movs	r2, #1
+ 495 0032 1A60     		str	r2, [r3]
+  98:hardware/src/sccb.c **** 		temp=temp<<1;
+ 496              		.loc 1 98 7
+ 497 0034 FB79     		ldrb	r3, [r7, #7]
+ 498 0036 5B00     		lsls	r3, r3, #1
+ 499 0038 FB71     		strb	r3, [r7, #7]
+  99:hardware/src/sccb.c **** 		if(SCCB_READ_SDA)temp++;   
+ 500              		.loc 1 99 6
+ 501 003a 144B     		ldr	r3, .L28+8
+ 502 003c 1B68     		ldr	r3, [r3]
+ 503              		.loc 1 99 5
+ 504 003e 002B     		cmp	r3, #0
+ 505 0040 02D0     		beq	.L25
+ 506              		.loc 1 99 24 discriminator 1
+ 507 0042 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 508 0044 0133     		adds	r3, r3, #1
+ 509 0046 FB71     		strb	r3, [r7, #7]
+ 510              	.L25:
+ 100:hardware/src/sccb.c **** 		delay_us(50);
+ 511              		.loc 1 100 3 discriminator 2
+ 512 0048 3220     		movs	r0, #50
+ 513 004a FFF7FEFF 		bl	delay_us
+ 101:hardware/src/sccb.c **** 		SCCB_SCL=0;
+ 514              		.loc 1 101 3 discriminator 2
+ 515 004e 0E4B     		ldr	r3, .L28+4
+ 516              		.loc 1 101 11 discriminator 2
+ 517 0050 0022     		movs	r2, #0
+ 518 0052 1A60     		str	r2, [r3]
+  94:hardware/src/sccb.c **** 	{		     	  
+ 519              		.loc 1 94 15 discriminator 2
+ 520 0054 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 521 0056 013B     		subs	r3, r3, #1
+ 522 0058 BB71     		strb	r3, [r7, #6]
+ 523              	.L24:
+  94:hardware/src/sccb.c **** 	{		     	  
+ 524              		.loc 1 94 2 discriminator 1
+ 525 005a BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 526 005c 002B     		cmp	r3, #0
+ 527 005e E3D1     		bne	.L26
+ 102:hardware/src/sccb.c **** 	}	
+ 103:hardware/src/sccb.c **** 	SCCB_SDA_OUT();		//设置SDA为输出    
+ 528              		.loc 1 103 2
+ 529 0060 084B     		ldr	r3, .L28
+ 530 0062 5B68     		ldr	r3, [r3, #4]
+ 531 0064 074A     		ldr	r2, .L28
+ARM GAS  /tmp/ccR0i3qD.s 			page 12
+
+
+ 532 0066 23F47043 		bic	r3, r3, #61440
+ 533 006a 5360     		str	r3, [r2, #4]
+ 534 006c 054B     		ldr	r3, .L28
+ 535 006e 5B68     		ldr	r3, [r3, #4]
+ 536 0070 044A     		ldr	r2, .L28
+ 537 0072 43F44053 		orr	r3, r3, #12288
+ 538 0076 5360     		str	r3, [r2, #4]
+ 104:hardware/src/sccb.c **** 	return temp;
+ 539              		.loc 1 104 9
+ 540 0078 FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 105:hardware/src/sccb.c **** } 							    
+ 541              		.loc 1 105 1
+ 542 007a 1846     		mov	r0, r3
+ 543 007c 0837     		adds	r7, r7, #8
+ 544              	.LCFI19:
+ 545              		.cfi_def_cfa_offset 8
+ 546 007e BD46     		mov	sp, r7
+ 547              	.LCFI20:
+ 548              		.cfi_def_cfa_register 13
+ 549              		@ sp needed
+ 550 0080 80BD     		pop	{r7, pc}
+ 551              	.L29:
+ 552 0082 00BF     		.align	2
+ 553              	.L28:
+ 554 0084 00100140 		.word	1073811456
+ 555 0088 A8012242 		.word	1109524904
+ 556 008c 2C012242 		.word	1109524780
+ 557              		.cfi_endproc
+ 558              	.LFE68:
+ 560              		.section	.text.SCCB_WR_Reg,"ax",%progbits
+ 561              		.align	1
+ 562              		.global	SCCB_WR_Reg
+ 563              		.syntax unified
+ 564              		.thumb
+ 565              		.thumb_func
+ 566              		.fpu softvfp
+ 568              	SCCB_WR_Reg:
+ 569              	.LFB69:
+ 106:hardware/src/sccb.c **** //写寄存器
+ 107:hardware/src/sccb.c **** //返回值:0,成功;1,失败.
+ 108:hardware/src/sccb.c **** u8 SCCB_WR_Reg(u8 reg,u8 data)
+ 109:hardware/src/sccb.c **** {
+ 570              		.loc 1 109 1
+ 571              		.cfi_startproc
+ 572              		@ args = 0, pretend = 0, frame = 16
+ 573              		@ frame_needed = 1, uses_anonymous_args = 0
+ 574 0000 80B5     		push	{r7, lr}
+ 575              	.LCFI21:
+ 576              		.cfi_def_cfa_offset 8
+ 577              		.cfi_offset 7, -8
+ 578              		.cfi_offset 14, -4
+ 579 0002 84B0     		sub	sp, sp, #16
+ 580              	.LCFI22:
+ 581              		.cfi_def_cfa_offset 24
+ 582 0004 00AF     		add	r7, sp, #0
+ 583              	.LCFI23:
+ 584              		.cfi_def_cfa_register 7
+ARM GAS  /tmp/ccR0i3qD.s 			page 13
+
+
+ 585 0006 0346     		mov	r3, r0
+ 586 0008 0A46     		mov	r2, r1
+ 587 000a FB71     		strb	r3, [r7, #7]
+ 588 000c 1346     		mov	r3, r2
+ 589 000e BB71     		strb	r3, [r7, #6]
+ 110:hardware/src/sccb.c **** 	u8 res=0;
+ 590              		.loc 1 110 5
+ 591 0010 0023     		movs	r3, #0
+ 592 0012 FB73     		strb	r3, [r7, #15]
+ 111:hardware/src/sccb.c **** 	SCCB_Start(); 					//启动SCCB传输
+ 593              		.loc 1 111 2
+ 594 0014 FFF7FEFF 		bl	SCCB_Start
+ 112:hardware/src/sccb.c **** 	if(SCCB_WR_Byte(SCCB_ID))res=1;	//写器件ID	  
+ 595              		.loc 1 112 5
+ 596 0018 4220     		movs	r0, #66
+ 597 001a FFF7FEFF 		bl	SCCB_WR_Byte
+ 598 001e 0346     		mov	r3, r0
+ 599              		.loc 1 112 4
+ 600 0020 002B     		cmp	r3, #0
+ 601 0022 01D0     		beq	.L31
+ 602              		.loc 1 112 30 discriminator 1
+ 603 0024 0123     		movs	r3, #1
+ 604 0026 FB73     		strb	r3, [r7, #15]
+ 605              	.L31:
+ 113:hardware/src/sccb.c **** 	delay_us(100);
+ 606              		.loc 1 113 2
+ 607 0028 6420     		movs	r0, #100
+ 608 002a FFF7FEFF 		bl	delay_us
+ 114:hardware/src/sccb.c ****   	if(SCCB_WR_Byte(reg))res=1;		//写寄存器地址	  
+ 609              		.loc 1 114 7
+ 610 002e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 611 0030 1846     		mov	r0, r3
+ 612 0032 FFF7FEFF 		bl	SCCB_WR_Byte
+ 613 0036 0346     		mov	r3, r0
+ 614              		.loc 1 114 6
+ 615 0038 002B     		cmp	r3, #0
+ 616 003a 01D0     		beq	.L32
+ 617              		.loc 1 114 28 discriminator 1
+ 618 003c 0123     		movs	r3, #1
+ 619 003e FB73     		strb	r3, [r7, #15]
+ 620              	.L32:
+ 115:hardware/src/sccb.c **** 	delay_us(100);
+ 621              		.loc 1 115 2
+ 622 0040 6420     		movs	r0, #100
+ 623 0042 FFF7FEFF 		bl	delay_us
+ 116:hardware/src/sccb.c ****   	if(SCCB_WR_Byte(data))res=1; 	//写数据	 
+ 624              		.loc 1 116 7
+ 625 0046 BB79     		ldrb	r3, [r7, #6]	@ zero_extendqisi2
+ 626 0048 1846     		mov	r0, r3
+ 627 004a FFF7FEFF 		bl	SCCB_WR_Byte
+ 628 004e 0346     		mov	r3, r0
+ 629              		.loc 1 116 6
+ 630 0050 002B     		cmp	r3, #0
+ 631 0052 01D0     		beq	.L33
+ 632              		.loc 1 116 29 discriminator 1
+ 633 0054 0123     		movs	r3, #1
+ 634 0056 FB73     		strb	r3, [r7, #15]
+ARM GAS  /tmp/ccR0i3qD.s 			page 14
+
+
+ 635              	.L33:
+ 117:hardware/src/sccb.c ****   	SCCB_Stop();	  
+ 636              		.loc 1 117 4
+ 637 0058 FFF7FEFF 		bl	SCCB_Stop
+ 118:hardware/src/sccb.c ****   	return	res;
+ 638              		.loc 1 118 11
+ 639 005c FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 119:hardware/src/sccb.c **** }		  					    
+ 640              		.loc 1 119 1
+ 641 005e 1846     		mov	r0, r3
+ 642 0060 1037     		adds	r7, r7, #16
+ 643              	.LCFI24:
+ 644              		.cfi_def_cfa_offset 8
+ 645 0062 BD46     		mov	sp, r7
+ 646              	.LCFI25:
+ 647              		.cfi_def_cfa_register 13
+ 648              		@ sp needed
+ 649 0064 80BD     		pop	{r7, pc}
+ 650              		.cfi_endproc
+ 651              	.LFE69:
+ 653              		.section	.text.SCCB_RD_Reg,"ax",%progbits
+ 654              		.align	1
+ 655              		.global	SCCB_RD_Reg
+ 656              		.syntax unified
+ 657              		.thumb
+ 658              		.thumb_func
+ 659              		.fpu softvfp
+ 661              	SCCB_RD_Reg:
+ 662              	.LFB70:
+ 120:hardware/src/sccb.c **** //读寄存器
+ 121:hardware/src/sccb.c **** //返回值:读到的寄存器值
+ 122:hardware/src/sccb.c **** u8 SCCB_RD_Reg(u8 reg)
+ 123:hardware/src/sccb.c **** {
+ 663              		.loc 1 123 1
+ 664              		.cfi_startproc
+ 665              		@ args = 0, pretend = 0, frame = 16
+ 666              		@ frame_needed = 1, uses_anonymous_args = 0
+ 667 0000 80B5     		push	{r7, lr}
+ 668              	.LCFI26:
+ 669              		.cfi_def_cfa_offset 8
+ 670              		.cfi_offset 7, -8
+ 671              		.cfi_offset 14, -4
+ 672 0002 84B0     		sub	sp, sp, #16
+ 673              	.LCFI27:
+ 674              		.cfi_def_cfa_offset 24
+ 675 0004 00AF     		add	r7, sp, #0
+ 676              	.LCFI28:
+ 677              		.cfi_def_cfa_register 7
+ 678 0006 0346     		mov	r3, r0
+ 679 0008 FB71     		strb	r3, [r7, #7]
+ 124:hardware/src/sccb.c **** 	u8 val=0;
+ 680              		.loc 1 124 5
+ 681 000a 0023     		movs	r3, #0
+ 682 000c FB73     		strb	r3, [r7, #15]
+ 125:hardware/src/sccb.c **** 	SCCB_Start(); 				//启动SCCB传输
+ 683              		.loc 1 125 2
+ 684 000e FFF7FEFF 		bl	SCCB_Start
+ARM GAS  /tmp/ccR0i3qD.s 			page 15
+
+
+ 126:hardware/src/sccb.c **** 	SCCB_WR_Byte(SCCB_ID);		//写器件ID	  
+ 685              		.loc 1 126 2
+ 686 0012 4220     		movs	r0, #66
+ 687 0014 FFF7FEFF 		bl	SCCB_WR_Byte
+ 127:hardware/src/sccb.c **** 	delay_us(100);	 
+ 688              		.loc 1 127 2
+ 689 0018 6420     		movs	r0, #100
+ 690 001a FFF7FEFF 		bl	delay_us
+ 128:hardware/src/sccb.c ****   	SCCB_WR_Byte(reg);			//写寄存器地址	  
+ 691              		.loc 1 128 4
+ 692 001e FB79     		ldrb	r3, [r7, #7]	@ zero_extendqisi2
+ 693 0020 1846     		mov	r0, r3
+ 694 0022 FFF7FEFF 		bl	SCCB_WR_Byte
+ 129:hardware/src/sccb.c **** 	delay_us(100);	  
+ 695              		.loc 1 129 2
+ 696 0026 6420     		movs	r0, #100
+ 697 0028 FFF7FEFF 		bl	delay_us
+ 130:hardware/src/sccb.c **** 	SCCB_Stop();   
+ 698              		.loc 1 130 2
+ 699 002c FFF7FEFF 		bl	SCCB_Stop
+ 131:hardware/src/sccb.c **** 	delay_us(100);	   
+ 700              		.loc 1 131 2
+ 701 0030 6420     		movs	r0, #100
+ 702 0032 FFF7FEFF 		bl	delay_us
+ 132:hardware/src/sccb.c **** 	//设置寄存器地址后，才是读
+ 133:hardware/src/sccb.c **** 	SCCB_Start();
+ 703              		.loc 1 133 2
+ 704 0036 FFF7FEFF 		bl	SCCB_Start
+ 134:hardware/src/sccb.c **** 	SCCB_WR_Byte(SCCB_ID|0X01);	//发送读命令	  
+ 705              		.loc 1 134 2
+ 706 003a 4320     		movs	r0, #67
+ 707 003c FFF7FEFF 		bl	SCCB_WR_Byte
+ 135:hardware/src/sccb.c **** 	delay_us(100);
+ 708              		.loc 1 135 2
+ 709 0040 6420     		movs	r0, #100
+ 710 0042 FFF7FEFF 		bl	delay_us
+ 136:hardware/src/sccb.c ****   	val=SCCB_RD_Byte();		 	//读取数据
+ 711              		.loc 1 136 8
+ 712 0046 FFF7FEFF 		bl	SCCB_RD_Byte
+ 713 004a 0346     		mov	r3, r0
+ 714 004c FB73     		strb	r3, [r7, #15]
+ 137:hardware/src/sccb.c ****   	SCCB_No_Ack();
+ 715              		.loc 1 137 4
+ 716 004e FFF7FEFF 		bl	SCCB_No_Ack
+ 138:hardware/src/sccb.c ****   	SCCB_Stop();
+ 717              		.loc 1 138 4
+ 718 0052 FFF7FEFF 		bl	SCCB_Stop
+ 139:hardware/src/sccb.c ****   	return val;
+ 719              		.loc 1 139 11
+ 720 0056 FB7B     		ldrb	r3, [r7, #15]	@ zero_extendqisi2
+ 140:hardware/src/sccb.c **** }
+ 721              		.loc 1 140 1
+ 722 0058 1846     		mov	r0, r3
+ 723 005a 1037     		adds	r7, r7, #16
+ 724              	.LCFI29:
+ 725              		.cfi_def_cfa_offset 8
+ 726 005c BD46     		mov	sp, r7
+ARM GAS  /tmp/ccR0i3qD.s 			page 16
+
+
+ 727              	.LCFI30:
+ 728              		.cfi_def_cfa_register 13
+ 729              		@ sp needed
+ 730 005e 80BD     		pop	{r7, pc}
+ 731              		.cfi_endproc
+ 732              	.LFE70:
+ 734              		.text
+ 735              	.Letext0:
+ 736              		.file 2 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/machine/_defa
+ 737              		.file 3 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/_stdint.h
+ 738              		.file 4 "Inc/stm32f10x.h"
+ 739              		.file 5 "Drivers/Inc/stm32f10x_gpio.h"
+ARM GAS  /tmp/ccR0i3qD.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 sccb.c
+     /tmp/ccR0i3qD.s:16     .text.SCCB_Init:0000000000000000 $t
+     /tmp/ccR0i3qD.s:24     .text.SCCB_Init:0000000000000000 SCCB_Init
+     /tmp/ccR0i3qD.s:103    .text.SCCB_Init:0000000000000070 $d
+     /tmp/ccR0i3qD.s:108    .text.SCCB_Start:0000000000000000 $t
+     /tmp/ccR0i3qD.s:115    .text.SCCB_Start:0000000000000000 SCCB_Start
+     /tmp/ccR0i3qD.s:161    .text.SCCB_Start:000000000000002c $d
+     /tmp/ccR0i3qD.s:167    .text.SCCB_Stop:0000000000000000 $t
+     /tmp/ccR0i3qD.s:174    .text.SCCB_Stop:0000000000000000 SCCB_Stop
+     /tmp/ccR0i3qD.s:218    .text.SCCB_Stop:000000000000002c $d
+     /tmp/ccR0i3qD.s:224    .text.SCCB_No_Ack:0000000000000000 $t
+     /tmp/ccR0i3qD.s:231    .text.SCCB_No_Ack:0000000000000000 SCCB_No_Ack
+     /tmp/ccR0i3qD.s:283    .text.SCCB_No_Ack:0000000000000038 $d
+     /tmp/ccR0i3qD.s:289    .text.SCCB_WR_Byte:0000000000000000 $t
+     /tmp/ccR0i3qD.s:296    .text.SCCB_WR_Byte:0000000000000000 SCCB_WR_Byte
+     /tmp/ccR0i3qD.s:436    .text.SCCB_WR_Byte:00000000000000b4 $d
+     /tmp/ccR0i3qD.s:444    .text.SCCB_RD_Byte:0000000000000000 $t
+     /tmp/ccR0i3qD.s:451    .text.SCCB_RD_Byte:0000000000000000 SCCB_RD_Byte
+     /tmp/ccR0i3qD.s:554    .text.SCCB_RD_Byte:0000000000000084 $d
+     /tmp/ccR0i3qD.s:561    .text.SCCB_WR_Reg:0000000000000000 $t
+     /tmp/ccR0i3qD.s:568    .text.SCCB_WR_Reg:0000000000000000 SCCB_WR_Reg
+     /tmp/ccR0i3qD.s:654    .text.SCCB_RD_Reg:0000000000000000 $t
+     /tmp/ccR0i3qD.s:661    .text.SCCB_RD_Reg:0000000000000000 SCCB_RD_Reg
+
+UNDEFINED SYMBOLS
+RCC_APB2PeriphClockCmd
+GPIO_Init
+GPIO_SetBits
+delay_us

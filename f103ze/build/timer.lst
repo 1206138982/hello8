@@ -1,0 +1,1689 @@
+ARM GAS  /tmp/ccYGaOh0.s 			page 1
+
+
+   1              		.cpu cortex-m3
+   2              		.eabi_attribute 20, 1
+   3              		.eabi_attribute 21, 1
+   4              		.eabi_attribute 23, 3
+   5              		.eabi_attribute 24, 1
+   6              		.eabi_attribute 25, 1
+   7              		.eabi_attribute 26, 1
+   8              		.eabi_attribute 30, 6
+   9              		.eabi_attribute 34, 1
+  10              		.eabi_attribute 18, 4
+  11              		.file	"timer.c"
+  12              		.text
+  13              	.Ltext0:
+  14              		.cfi_sections	.debug_frame
+  15              		.section	.text.TIM3_Int_Init,"ax",%progbits
+  16              		.align	1
+  17              		.global	TIM3_Int_Init
+  18              		.arch armv7-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu softvfp
+  24              	TIM3_Int_Init:
+  25              	.LFB66:
+  26              		.file 1 "hardware/src/timer.c"
+   1:hardware/src/timer.c **** #include "time.h"
+   2:hardware/src/timer.c **** #include "stm32f10x.h"
+   3:hardware/src/timer.c **** #include "stdio.h"
+   4:hardware/src/timer.c **** 
+   5:hardware/src/timer.c **** // extern u32 timerCounter;
+   6:hardware/src/timer.c **** 
+   7:hardware/src/timer.c **** void TIM3_Int_Init(u16 arr,u16 psc)
+   8:hardware/src/timer.c **** {
+  27              		.loc 1 8 1
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 24
+  30              		@ frame_needed = 1, uses_anonymous_args = 0
+  31 0000 80B5     		push	{r7, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 7, -8
+  35              		.cfi_offset 14, -4
+  36 0002 86B0     		sub	sp, sp, #24
+  37              	.LCFI1:
+  38              		.cfi_def_cfa_offset 32
+  39 0004 00AF     		add	r7, sp, #0
+  40              	.LCFI2:
+  41              		.cfi_def_cfa_register 7
+  42 0006 0346     		mov	r3, r0
+  43 0008 0A46     		mov	r2, r1
+  44 000a FB80     		strh	r3, [r7, #6]	@ movhi
+  45 000c 1346     		mov	r3, r2	@ movhi
+  46 000e BB80     		strh	r3, [r7, #4]	@ movhi
+   9:hardware/src/timer.c ****     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  10:hardware/src/timer.c **** 	NVIC_InitTypeDef NVIC_InitStructure;
+  11:hardware/src/timer.c **** 
+  12:hardware/src/timer.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); //Ê±ÖÓÊ¹ÄÜ
+ARM GAS  /tmp/ccYGaOh0.s 			page 2
+
+
+  47              		.loc 1 12 2
+  48 0010 0121     		movs	r1, #1
+  49 0012 0220     		movs	r0, #2
+  50 0014 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  13:hardware/src/timer.c **** 
+  14:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Period = arr; //×Ô¶¯ÖØ×°ÔØÖÜÆÚÖµ	
+  51              		.loc 1 14 35
+  52 0018 FB88     		ldrh	r3, [r7, #6]	@ movhi
+  53 001a 3B82     		strh	r3, [r7, #16]	@ movhi
+  15:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Prescaler =psc; //Ô¤·ÖÆµÖµ  
+  54              		.loc 1 15 38
+  55 001c BB88     		ldrh	r3, [r7, #4]	@ movhi
+  56 001e BB81     		strh	r3, [r7, #12]	@ movhi
+  16:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //ÉèÖÃÊ±ÖÓ·Ö¸î:TDTS = Tck_tim
+  57              		.loc 1 16 42
+  58 0020 0023     		movs	r3, #0
+  59 0022 7B82     		strh	r3, [r7, #18]	@ movhi
+  17:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIMÏòÉÏ¼ÆÊýÄ£Ê½
+  60              		.loc 1 17 40
+  61 0024 0023     		movs	r3, #0
+  62 0026 FB81     		strh	r3, [r7, #14]	@ movhi
+  18:hardware/src/timer.c **** 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); //¸ù¾ÝÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯TIMx
+  63              		.loc 1 18 2
+  64 0028 07F10C03 		add	r3, r7, #12
+  65 002c 1946     		mov	r1, r3
+  66 002e 0E48     		ldr	r0, .L2
+  67 0030 FFF7FEFF 		bl	TIM_TimeBaseInit
+  19:hardware/src/timer.c ****  
+  20:hardware/src/timer.c **** 	TIM_ITConfig(  TIM3,TIM_IT_Update  |  TIM_IT_Trigger,  ENABLE  );//Ê¹ÄÜ¸üÐÂ´¥·¢TIMÖÐ¶Ï
+  68              		.loc 1 20 2
+  69 0034 0122     		movs	r2, #1
+  70 0036 4121     		movs	r1, #65
+  71 0038 0B48     		ldr	r0, .L2
+  72 003a FFF7FEFF 		bl	TIM_ITConfig
+  21:hardware/src/timer.c **** 
+  22:hardware/src/timer.c **** 	//ÖÐ¶Ï·Ö×éÉèÖÃ
+  23:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  //TIM3ÖÐ¶Ï
+  73              		.loc 1 23 37
+  74 003e 1D23     		movs	r3, #29
+  75 0040 3B72     		strb	r3, [r7, #8]
+  24:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;  //ÏÈÕ¼ÓÅÏÈ¼¶0¼¶
+  76              		.loc 1 24 55
+  77 0042 0023     		movs	r3, #0
+  78 0044 7B72     		strb	r3, [r7, #9]
+  25:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;  //´ÓÓÅÏÈ¼¶3¼¶
+  79              		.loc 1 25 48
+  80 0046 0323     		movs	r3, #3
+  81 0048 BB72     		strb	r3, [r7, #10]
+  26:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQÍ¨µÀ±»Ê¹ÄÜ
+  82              		.loc 1 26 40
+  83 004a 0123     		movs	r3, #1
+  84 004c FB72     		strb	r3, [r7, #11]
+  27:hardware/src/timer.c **** 	NVIC_Init(&NVIC_InitStructure);  //¸ù¾ÝNVIC_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷
+  85              		.loc 1 27 2
+  86 004e 07F10803 		add	r3, r7, #8
+  87 0052 1846     		mov	r0, r3
+  88 0054 FFF7FEFF 		bl	NVIC_Init
+ARM GAS  /tmp/ccYGaOh0.s 			page 3
+
+
+  28:hardware/src/timer.c **** 
+  29:hardware/src/timer.c **** 	TIM_Cmd(TIM3, ENABLE);  //Ê¹ÄÜTIMxÍâÉè	 
+  89              		.loc 1 29 2
+  90 0058 0121     		movs	r1, #1
+  91 005a 0348     		ldr	r0, .L2
+  92 005c FFF7FEFF 		bl	TIM_Cmd
+  30:hardware/src/timer.c **** }
+  93              		.loc 1 30 1
+  94 0060 00BF     		nop
+  95 0062 1837     		adds	r7, r7, #24
+  96              	.LCFI3:
+  97              		.cfi_def_cfa_offset 8
+  98 0064 BD46     		mov	sp, r7
+  99              	.LCFI4:
+ 100              		.cfi_def_cfa_register 13
+ 101              		@ sp needed
+ 102 0066 80BD     		pop	{r7, pc}
+ 103              	.L3:
+ 104              		.align	2
+ 105              	.L2:
+ 106 0068 00040040 		.word	1073742848
+ 107              		.cfi_endproc
+ 108              	.LFE66:
+ 110              		.section	.text.TIM3_IRQHandler,"ax",%progbits
+ 111              		.align	1
+ 112              		.global	TIM3_IRQHandler
+ 113              		.syntax unified
+ 114              		.thumb
+ 115              		.thumb_func
+ 116              		.fpu softvfp
+ 118              	TIM3_IRQHandler:
+ 119              	.LFB67:
+  31:hardware/src/timer.c **** 
+  32:hardware/src/timer.c **** void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
+  33:hardware/src/timer.c **** {
+ 120              		.loc 1 33 1
+ 121              		.cfi_startproc
+ 122              		@ args = 0, pretend = 0, frame = 0
+ 123              		@ frame_needed = 1, uses_anonymous_args = 0
+ 124 0000 80B5     		push	{r7, lr}
+ 125              	.LCFI5:
+ 126              		.cfi_def_cfa_offset 8
+ 127              		.cfi_offset 7, -8
+ 128              		.cfi_offset 14, -4
+ 129 0002 00AF     		add	r7, sp, #0
+ 130              	.LCFI6:
+ 131              		.cfi_def_cfa_register 7
+  34:hardware/src/timer.c **** 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //¼ì²éÖ¸¶¨µÄTIMÖÐ¶Ï·¢ÉúÓë·ñ:TIM ÖÐ¶ÏÔ´ 
+ 132              		.loc 1 34 6
+ 133 0004 0121     		movs	r1, #1
+ 134 0006 0648     		ldr	r0, .L7
+ 135 0008 FFF7FEFF 		bl	TIM_GetITStatus
+ 136 000c 0346     		mov	r3, r0
+ 137              		.loc 1 34 5
+ 138 000e 002B     		cmp	r3, #0
+ 139 0010 03D0     		beq	.L6
+  35:hardware/src/timer.c **** 		{
+ARM GAS  /tmp/ccYGaOh0.s 			page 4
+
+
+  36:hardware/src/timer.c **** 				TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  //Çå³ýTIMxµÄÖÐ¶Ï´ý´¦ÀíÎ»:TIM ÖÐ¶ÏÔ´ 
+ 140              		.loc 1 36 5
+ 141 0012 0121     		movs	r1, #1
+ 142 0014 0248     		ldr	r0, .L7
+ 143 0016 FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 144              	.L6:
+  37:hardware/src/timer.c **** 				// LED1=!LED1;
+  38:hardware/src/timer.c **** 			//   timerCounter ++;
+  39:hardware/src/timer.c **** 			//   if(timerCounter >= 100)  //·ÀÖ¹Òç³ö
+  40:hardware/src/timer.c **** 			// 	{
+  41:hardware/src/timer.c **** 			// 		  timerCounter = 0;
+  42:hardware/src/timer.c **** 			// 	}
+  43:hardware/src/timer.c **** 		}
+  44:hardware/src/timer.c **** }
+ 145              		.loc 1 44 1
+ 146 001a 00BF     		nop
+ 147 001c 80BD     		pop	{r7, pc}
+ 148              	.L8:
+ 149 001e 00BF     		.align	2
+ 150              	.L7:
+ 151 0020 00040040 		.word	1073742848
+ 152              		.cfi_endproc
+ 153              	.LFE67:
+ 155              		.section	.text.TIM3_PWM_Init,"ax",%progbits
+ 156              		.align	1
+ 157              		.global	TIM3_PWM_Init
+ 158              		.syntax unified
+ 159              		.thumb
+ 160              		.thumb_func
+ 161              		.fpu softvfp
+ 163              	TIM3_PWM_Init:
+ 164              	.LFB68:
+  45:hardware/src/timer.c **** //PWMÊä³ö³õÊ¼»¯
+  46:hardware/src/timer.c **** //arr£º×Ô¶¯ÖØ×°Öµ
+  47:hardware/src/timer.c **** //psc£ºÊ±ÖÓÔ¤·ÖÆµÊý
+  48:hardware/src/timer.c **** void TIM3_PWM_Init(u16 arr,u16 psc)
+  49:hardware/src/timer.c **** {  
+ 165              		.loc 1 49 1
+ 166              		.cfi_startproc
+ 167              		@ args = 0, pretend = 0, frame = 40
+ 168              		@ frame_needed = 1, uses_anonymous_args = 0
+ 169 0000 80B5     		push	{r7, lr}
+ 170              	.LCFI7:
+ 171              		.cfi_def_cfa_offset 8
+ 172              		.cfi_offset 7, -8
+ 173              		.cfi_offset 14, -4
+ 174 0002 8AB0     		sub	sp, sp, #40
+ 175              	.LCFI8:
+ 176              		.cfi_def_cfa_offset 48
+ 177 0004 00AF     		add	r7, sp, #0
+ 178              	.LCFI9:
+ 179              		.cfi_def_cfa_register 7
+ 180 0006 0346     		mov	r3, r0
+ 181 0008 0A46     		mov	r2, r1
+ 182 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 183 000c 1346     		mov	r3, r2	@ movhi
+ 184 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ARM GAS  /tmp/ccYGaOh0.s 			page 5
+
+
+  50:hardware/src/timer.c **** 	GPIO_InitTypeDef GPIO_InitStructure;
+  51:hardware/src/timer.c **** 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  52:hardware/src/timer.c **** 	TIM_OCInitTypeDef  TIM_OCInitStructure;
+  53:hardware/src/timer.c **** 	
+  54:hardware/src/timer.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+ 185              		.loc 1 54 2
+ 186 0010 0121     		movs	r1, #1
+ 187 0012 0220     		movs	r0, #2
+ 188 0014 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  55:hardware/src/timer.c ****  	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB  | RCC_APB2Periph_AFIO, ENABLE);  //Ê¹ÄÜGPIOÍâÉèºÍAFI
+ 189              		.loc 1 55 3
+ 190 0018 0121     		movs	r1, #1
+ 191 001a 0920     		movs	r0, #9
+ 192 001c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  56:hardware/src/timer.c **** 	
+  57:hardware/src/timer.c **** 	GPIO_PinRemapConfig(GPIO_PartialRemap_TIM3, ENABLE); //Timer3²¿·ÖÖØÓ³Éä  TIM3_CH2->PB5            
+ 193              		.loc 1 57 2
+ 194 0020 0121     		movs	r1, #1
+ 195 0022 1E48     		ldr	r0, .L10
+ 196 0024 FFF7FEFF 		bl	GPIO_PinRemapConfig
+  58:hardware/src/timer.c ****  
+  59:hardware/src/timer.c ****    //ÉèÖÃ¸ÃÒý½ÅÎª¸´ÓÃÊä³ö¹¦ÄÜ,Êä³öTIM3 CH2µÄPWMÂö³å²¨ÐÎ
+  60:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5; //TIM_CH2
+ 197              		.loc 1 60 30
+ 198 0028 2023     		movs	r3, #32
+ 199 002a BB84     		strh	r3, [r7, #36]	@ movhi
+  61:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //¸´ÓÃÍÆÍìÊä³ö
+ 200              		.loc 1 61 31
+ 201 002c 1823     		movs	r3, #24
+ 202 002e 87F82730 		strb	r3, [r7, #39]
+  62:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 203              		.loc 1 62 32
+ 204 0032 0323     		movs	r3, #3
+ 205 0034 87F82630 		strb	r3, [r7, #38]
+  63:hardware/src/timer.c **** 	GPIO_Init(GPIOB, &GPIO_InitStructure);
+ 206              		.loc 1 63 2
+ 207 0038 07F12403 		add	r3, r7, #36
+ 208 003c 1946     		mov	r1, r3
+ 209 003e 1848     		ldr	r0, .L10+4
+ 210 0040 FFF7FEFF 		bl	GPIO_Init
+  64:hardware/src/timer.c **** 	//GPIO_WriteBit(GPIOA, GPIO_Pin_7,Bit_SET); // PA7ÉÏÀ­	
+  65:hardware/src/timer.c **** 
+  66:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Period = arr; //ÉèÖÃÔÚÏÂÒ»¸ö¸üÐÂÊÂ¼þ×°Èë»î¶¯µÄ×Ô¶¯ÖØ×°ÔØ¼Ä´æÆ÷ÖÜÆÚµÄÖµ	 
+ 211              		.loc 1 66 35
+ 212 0044 FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 213 0046 BB83     		strh	r3, [r7, #28]	@ movhi
+  67:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Prescaler =psc; //ÉèÖÃÓÃÀ´×÷ÎªTIMxÊ±ÖÓÆµÂÊ³ýÊýµÄÔ¤·ÖÆµÖµ  ²»·ÖÆµ
+ 214              		.loc 1 67 38
+ 215 0048 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 216 004a 3B83     		strh	r3, [r7, #24]	@ movhi
+  68:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //ÉèÖÃÊ±ÖÓ·Ö¸î:TDTS = Tck_tim
+ 217              		.loc 1 68 42
+ 218 004c 0023     		movs	r3, #0
+ 219 004e FB83     		strh	r3, [r7, #30]	@ movhi
+  69:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIMÏòÉÏ¼ÆÊýÄ£Ê½
+ 220              		.loc 1 69 40
+ 221 0050 0023     		movs	r3, #0
+ARM GAS  /tmp/ccYGaOh0.s 			page 6
+
+
+ 222 0052 7B83     		strh	r3, [r7, #26]	@ movhi
+  70:hardware/src/timer.c **** 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); //¸ù¾ÝTIM_TimeBaseInitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯TIMx
+ 223              		.loc 1 70 2
+ 224 0054 07F11803 		add	r3, r7, #24
+ 225 0058 1946     		mov	r1, r3
+ 226 005a 1248     		ldr	r0, .L10+8
+ 227 005c FFF7FEFF 		bl	TIM_TimeBaseInit
+  71:hardware/src/timer.c **** 	
+  72:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM2; //Ñ¡Ôñ¶¨Ê±Æ÷Ä£Ê½:TIMÂö³å¿í¶Èµ÷ÖÆÄ£Ê½2
+ 228              		.loc 1 72 33
+ 229 0060 7023     		movs	r3, #112
+ 230 0062 3B81     		strh	r3, [r7, #8]	@ movhi
+  73:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //±È½ÏÊä³öÊ¹ÄÜ
+ 231              		.loc 1 73 38
+ 232 0064 0123     		movs	r3, #1
+ 233 0066 7B81     		strh	r3, [r7, #10]	@ movhi
+  74:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_Pulse = 0; //ÉèÖÃ´ý×°Èë²¶»ñ±È½Ï¼Ä´æÆ÷µÄÂö³åÖµ
+ 234              		.loc 1 74 32
+ 235 0068 0023     		movs	r3, #0
+ 236 006a FB81     		strh	r3, [r7, #14]	@ movhi
+  75:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High; //Êä³ö¼«ÐÔ:TIMÊä³ö±È½Ï¼«ÐÔ¸ß
+ 237              		.loc 1 75 37
+ 238 006c 0023     		movs	r3, #0
+ 239 006e 3B82     		strh	r3, [r7, #16]	@ movhi
+  76:hardware/src/timer.c **** 	TIM_OC2Init(TIM3, &TIM_OCInitStructure);  //¸ù¾ÝTIM_OCInitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèTIMx
+ 240              		.loc 1 76 2
+ 241 0070 07F10803 		add	r3, r7, #8
+ 242 0074 1946     		mov	r1, r3
+ 243 0076 0B48     		ldr	r0, .L10+8
+ 244 0078 FFF7FEFF 		bl	TIM_OC2Init
+  77:hardware/src/timer.c **** 	TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);  //Ê¹ÄÜTIMxÔÚCCR2ÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+ 245              		.loc 1 77 2
+ 246 007c 0821     		movs	r1, #8
+ 247 007e 0948     		ldr	r0, .L10+8
+ 248 0080 FFF7FEFF 		bl	TIM_OC2PreloadConfig
+  78:hardware/src/timer.c **** 	
+  79:hardware/src/timer.c **** 	TIM_ARRPreloadConfig(TIM3, ENABLE); //Ê¹ÄÜTIMxÔÚARRÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+ 249              		.loc 1 79 2
+ 250 0084 0121     		movs	r1, #1
+ 251 0086 0748     		ldr	r0, .L10+8
+ 252 0088 FFF7FEFF 		bl	TIM_ARRPreloadConfig
+  80:hardware/src/timer.c **** 
+  81:hardware/src/timer.c **** 	TIM_Cmd(TIM3, ENABLE);  //Ê¹ÄÜTIMxÍâÉè
+ 253              		.loc 1 81 2
+ 254 008c 0121     		movs	r1, #1
+ 255 008e 0548     		ldr	r0, .L10+8
+ 256 0090 FFF7FEFF 		bl	TIM_Cmd
+  82:hardware/src/timer.c **** }
+ 257              		.loc 1 82 1
+ 258 0094 00BF     		nop
+ 259 0096 2837     		adds	r7, r7, #40
+ 260              	.LCFI10:
+ 261              		.cfi_def_cfa_offset 8
+ 262 0098 BD46     		mov	sp, r7
+ 263              	.LCFI11:
+ 264              		.cfi_def_cfa_register 13
+ 265              		@ sp needed
+ARM GAS  /tmp/ccYGaOh0.s 			page 7
+
+
+ 266 009a 80BD     		pop	{r7, pc}
+ 267              	.L11:
+ 268              		.align	2
+ 269              	.L10:
+ 270 009c 00081A00 		.word	1705984
+ 271 00a0 000C0140 		.word	1073810432
+ 272 00a4 00040040 		.word	1073742848
+ 273              		.cfi_endproc
+ 274              	.LFE68:
+ 276              		.global	TIM5_ICInitStructure
+ 277              		.section	.bss.TIM5_ICInitStructure,"aw",%nobits
+ 278              		.align	2
+ 281              	TIM5_ICInitStructure:
+ 282 0000 00000000 		.space	10
+ 282      00000000 
+ 282      0000
+ 283              		.section	.text.TIM5_Cap_Init,"ax",%progbits
+ 284              		.align	1
+ 285              		.global	TIM5_Cap_Init
+ 286              		.syntax unified
+ 287              		.thumb
+ 288              		.thumb_func
+ 289              		.fpu softvfp
+ 291              	TIM5_Cap_Init:
+ 292              	.LFB69:
+  83:hardware/src/timer.c **** 
+  84:hardware/src/timer.c **** //¶¨Ê±Æ÷5Í¨µÀ1ÊäÈë²¶»ñÅäÖÃ
+  85:hardware/src/timer.c **** TIM_ICInitTypeDef  TIM5_ICInitStructure;
+  86:hardware/src/timer.c **** 
+  87:hardware/src/timer.c **** void TIM5_Cap_Init(u16 arr,u16 psc)
+  88:hardware/src/timer.c **** {	 
+ 293              		.loc 1 88 1
+ 294              		.cfi_startproc
+ 295              		@ args = 0, pretend = 0, frame = 32
+ 296              		@ frame_needed = 1, uses_anonymous_args = 0
+ 297 0000 80B5     		push	{r7, lr}
+ 298              	.LCFI12:
+ 299              		.cfi_def_cfa_offset 8
+ 300              		.cfi_offset 7, -8
+ 301              		.cfi_offset 14, -4
+ 302 0002 88B0     		sub	sp, sp, #32
+ 303              	.LCFI13:
+ 304              		.cfi_def_cfa_offset 40
+ 305 0004 00AF     		add	r7, sp, #0
+ 306              	.LCFI14:
+ 307              		.cfi_def_cfa_register 7
+ 308 0006 0346     		mov	r3, r0
+ 309 0008 0A46     		mov	r2, r1
+ 310 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 311 000c 1346     		mov	r3, r2	@ movhi
+ 312 000e BB80     		strh	r3, [r7, #4]	@ movhi
+  89:hardware/src/timer.c **** 	GPIO_InitTypeDef GPIO_InitStructure;
+  90:hardware/src/timer.c **** 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+  91:hardware/src/timer.c ****    	NVIC_InitTypeDef NVIC_InitStructure;
+  92:hardware/src/timer.c **** 
+  93:hardware/src/timer.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);
+ 313              		.loc 1 93 2
+ARM GAS  /tmp/ccYGaOh0.s 			page 8
+
+
+ 314 0010 0121     		movs	r1, #1
+ 315 0012 0820     		movs	r0, #8
+ 316 0014 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+  94:hardware/src/timer.c ****  	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);  //Ê¹ÄÜGPIOÍâÉèºÍAFIO¸´ÓÃ¹¦ÄÜÄ£¿éÊ±ÖÓÊ¹ÄÜ
+ 317              		.loc 1 94 3
+ 318 0018 0121     		movs	r1, #1
+ 319 001a 0420     		movs	r0, #4
+ 320 001c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+  95:hardware/src/timer.c **** 	
+  96:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0;  //PA0 Çå³ýÖ®Ç°ÉèÖÃ  
+ 321              		.loc 1 96 31
+ 322 0020 0123     		movs	r3, #1
+ 323 0022 BB83     		strh	r3, [r7, #28]	@ movhi
+  97:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; //PA0 ÊäÈë  
+ 324              		.loc 1 97 31
+ 325 0024 2823     		movs	r3, #40
+ 326 0026 FB77     		strb	r3, [r7, #31]
+  98:hardware/src/timer.c **** 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+ 327              		.loc 1 98 2
+ 328 0028 07F11C03 		add	r3, r7, #28
+ 329 002c 1946     		mov	r1, r3
+ 330 002e 2148     		ldr	r0, .L13
+ 331 0030 FFF7FEFF 		bl	GPIO_Init
+  99:hardware/src/timer.c **** 	GPIO_ResetBits(GPIOA,GPIO_Pin_0);						 //PA0 ÏÂÀ­
+ 332              		.loc 1 99 2
+ 333 0034 0121     		movs	r1, #1
+ 334 0036 1F48     		ldr	r0, .L13
+ 335 0038 FFF7FEFF 		bl	GPIO_ResetBits
+ 100:hardware/src/timer.c **** 		 
+ 101:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Period = arr; //Éè¶¨¼ÆÊýÆ÷×Ô¶¯ÖØ×°Öµ ×î´ó10msÒç³ö  
+ 336              		.loc 1 101 35
+ 337 003c FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 338 003e BB82     		strh	r3, [r7, #20]	@ movhi
+ 102:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Prescaler =psc; 	//Ô¤·ÖÆµÆ÷,1MµÄ¼ÆÊýÆµÂÊ,1us¼Ó1.	   
+ 339              		.loc 1 102 38
+ 340 0040 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 341 0042 3B82     		strh	r3, [r7, #16]	@ movhi
+ 103:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1; //ÉèÖÃÊ±ÖÓ·Ö¸î:TDTS = Tck_tim
+ 342              		.loc 1 103 42
+ 343 0044 0023     		movs	r3, #0
+ 344 0046 FB82     		strh	r3, [r7, #22]	@ movhi
+ 104:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIMÏòÉÏ¼ÆÊýÄ£Ê½
+ 345              		.loc 1 104 40
+ 346 0048 0023     		movs	r3, #0
+ 347 004a 7B82     		strh	r3, [r7, #18]	@ movhi
+ 105:hardware/src/timer.c **** 
+ 106:hardware/src/timer.c **** 	TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure); //¸ù¾ÝTIM_TimeBaseInitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯TIMx
+ 348              		.loc 1 106 2
+ 349 004c 07F11003 		add	r3, r7, #16
+ 350 0050 1946     		mov	r1, r3
+ 351 0052 1948     		ldr	r0, .L13+4
+ 352 0054 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 107:hardware/src/timer.c ****   
+ 108:hardware/src/timer.c **** 	TIM5_ICInitStructure.TIM_Channel = TIM_Channel_1; //CC1S=01 	Ñ¡ÔñÊäÈë¶Ë IC1Ó³Éäµ½TI1ÉÏ
+ 353              		.loc 1 108 35
+ 354 0058 184B     		ldr	r3, .L13+8
+ 355 005a 0022     		movs	r2, #0
+ARM GAS  /tmp/ccYGaOh0.s 			page 9
+
+
+ 356 005c 1A80     		strh	r2, [r3]	@ movhi
+ 109:hardware/src/timer.c ****   	TIM5_ICInitStructure.TIM_ICPolarity = TIM_ICPolarity_Rising;	//ÉÏÉýÑØ²¶»ñ
+ 357              		.loc 1 109 40
+ 358 005e 174B     		ldr	r3, .L13+8
+ 359 0060 0022     		movs	r2, #0
+ 360 0062 5A80     		strh	r2, [r3, #2]	@ movhi
+ 110:hardware/src/timer.c ****   	TIM5_ICInitStructure.TIM_ICSelection = TIM_ICSelection_DirectTI;
+ 361              		.loc 1 110 41
+ 362 0064 154B     		ldr	r3, .L13+8
+ 363 0066 0122     		movs	r2, #1
+ 364 0068 9A80     		strh	r2, [r3, #4]	@ movhi
+ 111:hardware/src/timer.c ****   	TIM5_ICInitStructure.TIM_ICPrescaler = TIM_ICPSC_DIV1;	 //ÅäÖÃÊäÈë·ÖÆµ,²»·ÖÆµ 
+ 365              		.loc 1 111 41
+ 366 006a 144B     		ldr	r3, .L13+8
+ 367 006c 0022     		movs	r2, #0
+ 368 006e DA80     		strh	r2, [r3, #6]	@ movhi
+ 112:hardware/src/timer.c ****   	TIM5_ICInitStructure.TIM_ICFilter = 0x00;//IC1F=0000 ÅäÖÃÊäÈëÂË²¨Æ÷ ²»ÂË²¨
+ 369              		.loc 1 112 38
+ 370 0070 124B     		ldr	r3, .L13+8
+ 371 0072 0022     		movs	r2, #0
+ 372 0074 1A81     		strh	r2, [r3, #8]	@ movhi
+ 113:hardware/src/timer.c **** 
+ 114:hardware/src/timer.c ****   	TIM_ICInit(TIM5, &TIM5_ICInitStructure);
+ 373              		.loc 1 114 4
+ 374 0076 1149     		ldr	r1, .L13+8
+ 375 0078 0F48     		ldr	r0, .L13+4
+ 376 007a FFF7FEFF 		bl	TIM_ICInit
+ 115:hardware/src/timer.c **** 		
+ 116:hardware/src/timer.c ****    	TIM_Cmd(TIM5,ENABLE ); 	//Ê¹ÄÜ¶¨Ê±Æ÷5
+ 377              		.loc 1 116 5
+ 378 007e 0121     		movs	r1, #1
+ 379 0080 0D48     		ldr	r0, .L13+4
+ 380 0082 FFF7FEFF 		bl	TIM_Cmd
+ 117:hardware/src/timer.c ****    	TIM_ITConfig( TIM5,TIM_IT_Update|TIM_IT_CC1,ENABLE);//ÔÊÐí¸üÐÂÖÐ¶Ï ,ÔÊÐíCC1IE²¶»ñÖÐ¶Ï	
+ 381              		.loc 1 117 5
+ 382 0086 0122     		movs	r2, #1
+ 383 0088 0321     		movs	r1, #3
+ 384 008a 0B48     		ldr	r0, .L13+4
+ 385 008c FFF7FEFF 		bl	TIM_ITConfig
+ 118:hardware/src/timer.c **** 
+ 119:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;  //TIM3ÖÐ¶Ï
+ 386              		.loc 1 119 37
+ 387 0090 3223     		movs	r3, #50
+ 388 0092 3B73     		strb	r3, [r7, #12]
+ 120:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;  //ÏÈÕ¼ÓÅÏÈ¼¶0¼¶
+ 389              		.loc 1 120 55
+ 390 0094 0223     		movs	r3, #2
+ 391 0096 7B73     		strb	r3, [r7, #13]
+ 121:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;  //´ÓÓÅÏÈ¼¶3¼¶
+ 392              		.loc 1 121 48
+ 393 0098 0023     		movs	r3, #0
+ 394 009a BB73     		strb	r3, [r7, #14]
+ 122:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQÍ¨µÀ±»Ê¹ÄÜ
+ 395              		.loc 1 122 40
+ 396 009c 0123     		movs	r3, #1
+ 397 009e FB73     		strb	r3, [r7, #15]
+ 123:hardware/src/timer.c **** 	NVIC_Init(&NVIC_InitStructure);  //¸ù¾ÝNVIC_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷ 
+ARM GAS  /tmp/ccYGaOh0.s 			page 10
+
+
+ 398              		.loc 1 123 2
+ 399 00a0 07F10C03 		add	r3, r7, #12
+ 400 00a4 1846     		mov	r0, r3
+ 401 00a6 FFF7FEFF 		bl	NVIC_Init
+ 124:hardware/src/timer.c **** }
+ 402              		.loc 1 124 1
+ 403 00aa 00BF     		nop
+ 404 00ac 2037     		adds	r7, r7, #32
+ 405              	.LCFI15:
+ 406              		.cfi_def_cfa_offset 8
+ 407 00ae BD46     		mov	sp, r7
+ 408              	.LCFI16:
+ 409              		.cfi_def_cfa_register 13
+ 410              		@ sp needed
+ 411 00b0 80BD     		pop	{r7, pc}
+ 412              	.L14:
+ 413 00b2 00BF     		.align	2
+ 414              	.L13:
+ 415 00b4 00080140 		.word	1073809408
+ 416 00b8 000C0040 		.word	1073744896
+ 417 00bc 00000000 		.word	TIM5_ICInitStructure
+ 418              		.cfi_endproc
+ 419              	.LFE69:
+ 421              		.global	TIM5CH1_CAPTURE_STA
+ 422              		.section	.bss.TIM5CH1_CAPTURE_STA,"aw",%nobits
+ 425              	TIM5CH1_CAPTURE_STA:
+ 426 0000 00       		.space	1
+ 427              		.global	TIM5CH1_CAPTURE_VAL
+ 428              		.section	.bss.TIM5CH1_CAPTURE_VAL,"aw",%nobits
+ 429              		.align	1
+ 432              	TIM5CH1_CAPTURE_VAL:
+ 433 0000 0000     		.space	2
+ 434              		.section	.text.TIM5_IRQHandler,"ax",%progbits
+ 435              		.align	1
+ 436              		.global	TIM5_IRQHandler
+ 437              		.syntax unified
+ 438              		.thumb
+ 439              		.thumb_func
+ 440              		.fpu softvfp
+ 442              	TIM5_IRQHandler:
+ 443              	.LFB70:
+ 125:hardware/src/timer.c **** 
+ 126:hardware/src/timer.c **** u8  TIM5CH1_CAPTURE_STA=0;	//ÊäÈë²¶»ñ×´Ì¬		    				
+ 127:hardware/src/timer.c **** u16	TIM5CH1_CAPTURE_VAL;	//ÊäÈë²¶»ñÖµ
+ 128:hardware/src/timer.c ****  
+ 129:hardware/src/timer.c **** //¶¨Ê±Æ÷5ÖÐ¶Ï·þÎñ³ÌÐò	 
+ 130:hardware/src/timer.c **** void TIM5_IRQHandler(void)
+ 131:hardware/src/timer.c **** { 
+ 444              		.loc 1 131 1
+ 445              		.cfi_startproc
+ 446              		@ args = 0, pretend = 0, frame = 0
+ 447              		@ frame_needed = 1, uses_anonymous_args = 0
+ 448 0000 80B5     		push	{r7, lr}
+ 449              	.LCFI17:
+ 450              		.cfi_def_cfa_offset 8
+ 451              		.cfi_offset 7, -8
+ 452              		.cfi_offset 14, -4
+ARM GAS  /tmp/ccYGaOh0.s 			page 11
+
+
+ 453 0002 00AF     		add	r7, sp, #0
+ 454              	.LCFI18:
+ 455              		.cfi_def_cfa_register 7
+ 132:hardware/src/timer.c ****  	if((TIM5CH1_CAPTURE_STA&0X80)==0)//»¹Î´³É¹¦²¶»ñ	
+ 456              		.loc 1 132 32
+ 457 0004 324B     		ldr	r3, .L20
+ 458 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 459 0008 5BB2     		sxtb	r3, r3
+ 460              		.loc 1 132 5
+ 461 000a 002B     		cmp	r3, #0
+ 462 000c 59DB     		blt	.L16
+ 133:hardware/src/timer.c **** 	{	  
+ 134:hardware/src/timer.c **** 		if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)
+ 463              		.loc 1 134 7
+ 464 000e 0121     		movs	r1, #1
+ 465 0010 3048     		ldr	r0, .L20+4
+ 466 0012 FFF7FEFF 		bl	TIM_GetITStatus
+ 467 0016 0346     		mov	r3, r0
+ 468              		.loc 1 134 6
+ 469 0018 002B     		cmp	r3, #0
+ 470 001a 1DD0     		beq	.L17
+ 135:hardware/src/timer.c **** 		 
+ 136:hardware/src/timer.c **** 		{	    
+ 137:hardware/src/timer.c **** 			if(TIM5CH1_CAPTURE_STA&0X40)//ÒÑ¾­²¶»ñµ½¸ßµçÆ½ÁË
+ 471              		.loc 1 137 26
+ 472 001c 2C4B     		ldr	r3, .L20
+ 473 001e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 474 0020 03F04003 		and	r3, r3, #64
+ 475              		.loc 1 137 6
+ 476 0024 002B     		cmp	r3, #0
+ 477 0026 17D0     		beq	.L17
+ 138:hardware/src/timer.c **** 			{
+ 139:hardware/src/timer.c **** 				if((TIM5CH1_CAPTURE_STA&0X3F)==0X3F)//¸ßµçÆ½Ì«³¤ÁË
+ 478              		.loc 1 139 28
+ 479 0028 294B     		ldr	r3, .L20
+ 480 002a 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 481 002c 03F03F03 		and	r3, r3, #63
+ 482              		.loc 1 139 7
+ 483 0030 3F2B     		cmp	r3, #63
+ 484 0032 0BD1     		bne	.L18
+ 140:hardware/src/timer.c **** 				{
+ 141:hardware/src/timer.c **** 					TIM5CH1_CAPTURE_STA|=0X80;//±ê¼Ç³É¹¦²¶»ñÁËÒ»´Î
+ 485              		.loc 1 141 25
+ 486 0034 264B     		ldr	r3, .L20
+ 487 0036 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 488 0038 63F07F03 		orn	r3, r3, #127
+ 489 003c DAB2     		uxtb	r2, r3
+ 490 003e 244B     		ldr	r3, .L20
+ 491 0040 1A70     		strb	r2, [r3]
+ 142:hardware/src/timer.c **** 					TIM5CH1_CAPTURE_VAL=0XFFFF;
+ 492              		.loc 1 142 25
+ 493 0042 254B     		ldr	r3, .L20+8
+ 494 0044 4FF6FF72 		movw	r2, #65535
+ 495 0048 1A80     		strh	r2, [r3]	@ movhi
+ 496 004a 05E0     		b	.L17
+ 497              	.L18:
+ 143:hardware/src/timer.c **** 				}else TIM5CH1_CAPTURE_STA++;
+ARM GAS  /tmp/ccYGaOh0.s 			page 12
+
+
+ 498              		.loc 1 143 30
+ 499 004c 204B     		ldr	r3, .L20
+ 500 004e 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 501 0050 0133     		adds	r3, r3, #1
+ 502 0052 DAB2     		uxtb	r2, r3
+ 503 0054 1E4B     		ldr	r3, .L20
+ 504 0056 1A70     		strb	r2, [r3]
+ 505              	.L17:
+ 144:hardware/src/timer.c **** 			}	 
+ 145:hardware/src/timer.c **** 		}
+ 146:hardware/src/timer.c **** 	if (TIM_GetITStatus(TIM5, TIM_IT_CC1) != RESET)//²¶»ñ1·¢Éú²¶»ñÊÂ¼þ
+ 506              		.loc 1 146 6
+ 507 0058 0221     		movs	r1, #2
+ 508 005a 1E48     		ldr	r0, .L20+4
+ 509 005c FFF7FEFF 		bl	TIM_GetITStatus
+ 510 0060 0346     		mov	r3, r0
+ 511              		.loc 1 146 5
+ 512 0062 002B     		cmp	r3, #0
+ 513 0064 2DD0     		beq	.L16
+ 147:hardware/src/timer.c **** 		{	
+ 148:hardware/src/timer.c **** 			if(TIM5CH1_CAPTURE_STA&0X40)		//²¶»ñµ½Ò»¸öÏÂ½µÑØ 		
+ 514              		.loc 1 148 26
+ 515 0066 1A4B     		ldr	r3, .L20
+ 516 0068 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 517 006a 03F04003 		and	r3, r3, #64
+ 518              		.loc 1 148 6
+ 519 006e 002B     		cmp	r3, #0
+ 520 0070 12D0     		beq	.L19
+ 149:hardware/src/timer.c **** 			{	  			
+ 150:hardware/src/timer.c **** 				TIM5CH1_CAPTURE_STA|=0X80;		//±ê¼Ç³É¹¦²¶»ñµ½Ò»´ÎÉÏÉýÑØ
+ 521              		.loc 1 150 24
+ 522 0072 174B     		ldr	r3, .L20
+ 523 0074 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 524 0076 63F07F03 		orn	r3, r3, #127
+ 525 007a DAB2     		uxtb	r2, r3
+ 526 007c 144B     		ldr	r3, .L20
+ 527 007e 1A70     		strb	r2, [r3]
+ 151:hardware/src/timer.c **** 				TIM5CH1_CAPTURE_VAL=TIM_GetCapture1(TIM5);
+ 528              		.loc 1 151 25
+ 529 0080 1448     		ldr	r0, .L20+4
+ 530 0082 FFF7FEFF 		bl	TIM_GetCapture1
+ 531 0086 0346     		mov	r3, r0
+ 532 0088 1A46     		mov	r2, r3
+ 533              		.loc 1 151 24
+ 534 008a 134B     		ldr	r3, .L20+8
+ 535 008c 1A80     		strh	r2, [r3]	@ movhi
+ 152:hardware/src/timer.c **** 		   		TIM_OC1PolarityConfig(TIM5,TIM_ICPolarity_Rising); //CC1P=0 ÉèÖÃÎªÉÏÉýÑØ²¶»ñ
+ 536              		.loc 1 152 8
+ 537 008e 0021     		movs	r1, #0
+ 538 0090 1048     		ldr	r0, .L20+4
+ 539 0092 FFF7FEFF 		bl	TIM_OC1PolarityConfig
+ 540 0096 14E0     		b	.L16
+ 541              	.L19:
+ 153:hardware/src/timer.c **** 			}else  								//»¹Î´¿ªÊ¼,µÚÒ»´Î²¶»ñÉÏÉýÑØ
+ 154:hardware/src/timer.c **** 			{
+ 155:hardware/src/timer.c **** 				TIM5CH1_CAPTURE_STA=0;			//Çå¿Õ
+ 542              		.loc 1 155 24
+ARM GAS  /tmp/ccYGaOh0.s 			page 13
+
+
+ 543 0098 0D4B     		ldr	r3, .L20
+ 544 009a 0022     		movs	r2, #0
+ 545 009c 1A70     		strb	r2, [r3]
+ 156:hardware/src/timer.c **** 				TIM5CH1_CAPTURE_VAL=0;
+ 546              		.loc 1 156 24
+ 547 009e 0E4B     		ldr	r3, .L20+8
+ 548 00a0 0022     		movs	r2, #0
+ 549 00a2 1A80     		strh	r2, [r3]	@ movhi
+ 157:hardware/src/timer.c **** 	 			TIM_SetCounter(TIM5,0);
+ 550              		.loc 1 157 6
+ 551 00a4 0021     		movs	r1, #0
+ 552 00a6 0B48     		ldr	r0, .L20+4
+ 553 00a8 FFF7FEFF 		bl	TIM_SetCounter
+ 158:hardware/src/timer.c **** 				TIM5CH1_CAPTURE_STA|=0X40;		//±ê¼Ç²¶»ñµ½ÁËÉÏÉýÑØ
+ 554              		.loc 1 158 24
+ 555 00ac 084B     		ldr	r3, .L20
+ 556 00ae 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 557 00b0 43F04003 		orr	r3, r3, #64
+ 558 00b4 DAB2     		uxtb	r2, r3
+ 559 00b6 064B     		ldr	r3, .L20
+ 560 00b8 1A70     		strb	r2, [r3]
+ 159:hardware/src/timer.c **** 		   		TIM_OC1PolarityConfig(TIM5,TIM_ICPolarity_Falling);		//CC1P=1 ÉèÖÃÎªÏÂ½µÑØ²¶»ñ
+ 561              		.loc 1 159 8
+ 562 00ba 0221     		movs	r1, #2
+ 563 00bc 0548     		ldr	r0, .L20+4
+ 564 00be FFF7FEFF 		bl	TIM_OC1PolarityConfig
+ 565              	.L16:
+ 160:hardware/src/timer.c **** 			}		    
+ 161:hardware/src/timer.c **** 		}			     	    					   
+ 162:hardware/src/timer.c ****  	}
+ 163:hardware/src/timer.c ****  
+ 164:hardware/src/timer.c ****     TIM_ClearITPendingBit(TIM5, TIM_IT_CC1|TIM_IT_Update); 
+ 566              		.loc 1 164 5
+ 567 00c2 0321     		movs	r1, #3
+ 568 00c4 0348     		ldr	r0, .L20+4
+ 569 00c6 FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 165:hardware/src/timer.c **** }
+ 570              		.loc 1 165 1
+ 571 00ca 00BF     		nop
+ 572 00cc 80BD     		pop	{r7, pc}
+ 573              	.L21:
+ 574 00ce 00BF     		.align	2
+ 575              	.L20:
+ 576 00d0 00000000 		.word	TIM5CH1_CAPTURE_STA
+ 577 00d4 000C0040 		.word	1073744896
+ 578 00d8 00000000 		.word	TIM5CH1_CAPTURE_VAL
+ 579              		.cfi_endproc
+ 580              	.LFE70:
+ 582              		.section	.text.TIM1_PWM_Init,"ax",%progbits
+ 583              		.align	1
+ 584              		.global	TIM1_PWM_Init
+ 585              		.syntax unified
+ 586              		.thumb
+ 587              		.thumb_func
+ 588              		.fpu softvfp
+ 590              	TIM1_PWM_Init:
+ 591              	.LFB71:
+ARM GAS  /tmp/ccYGaOh0.s 			page 14
+
+
+ 166:hardware/src/timer.c **** 
+ 167:hardware/src/timer.c **** //TIM1 CH1 PWMÊä³öÉèÖÃ 
+ 168:hardware/src/timer.c **** //PWMÊä³ö³õÊ¼»¯
+ 169:hardware/src/timer.c **** //arr£º×Ô¶¯ÖØ×°Öµ
+ 170:hardware/src/timer.c **** //psc£ºÊ±ÖÓÔ¤·ÖÆµÊý
+ 171:hardware/src/timer.c **** void TIM1_PWM_Init(u16 arr,u16 psc)
+ 172:hardware/src/timer.c **** {	
+ 592              		.loc 1 172 1
+ 593              		.cfi_startproc
+ 594              		@ args = 0, pretend = 0, frame = 40
+ 595              		@ frame_needed = 1, uses_anonymous_args = 0
+ 596 0000 80B5     		push	{r7, lr}
+ 597              	.LCFI19:
+ 598              		.cfi_def_cfa_offset 8
+ 599              		.cfi_offset 7, -8
+ 600              		.cfi_offset 14, -4
+ 601 0002 8AB0     		sub	sp, sp, #40
+ 602              	.LCFI20:
+ 603              		.cfi_def_cfa_offset 48
+ 604 0004 00AF     		add	r7, sp, #0
+ 605              	.LCFI21:
+ 606              		.cfi_def_cfa_register 7
+ 607 0006 0346     		mov	r3, r0
+ 608 0008 0A46     		mov	r2, r1
+ 609 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 610 000c 1346     		mov	r3, r2	@ movhi
+ 611 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 173:hardware/src/timer.c **** 	GPIO_InitTypeDef GPIO_InitStructure;
+ 174:hardware/src/timer.c **** 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+ 175:hardware/src/timer.c **** 	TIM_OCInitTypeDef  TIM_OCInitStructure;
+ 176:hardware/src/timer.c **** 
+ 177:hardware/src/timer.c **** 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_TIM1, ENABLE); //Ê¹ÄÜTIMxÍâÉè
+ 612              		.loc 1 177 2
+ 613 0010 0121     		movs	r1, #1
+ 614 0012 4FF40060 		mov	r0, #2048
+ 615 0016 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 178:hardware/src/timer.c ****  	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);  //Ê¹ÄÜGPIOAÍâÉèÊ±ÖÓÊ¹ÄÜ
+ 616              		.loc 1 178 3
+ 617 001a 0121     		movs	r1, #1
+ 618 001c 0820     		movs	r0, #8
+ 619 001e FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 179:hardware/src/timer.c **** 
+ 180:hardware/src/timer.c ****   //ÉèÖÃ¸ÃÒý½ÅÎª¸´ÓÃÊä³ö¹¦ÄÜ,Êä³öTIM1 CH1µÄPWMÂö³å²¨ÐÎ
+ 181:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8; //TIM_CH1
+ 620              		.loc 1 181 30
+ 621 0022 4FF48073 		mov	r3, #256
+ 622 0026 BB84     		strh	r3, [r7, #36]	@ movhi
+ 182:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //¸´ÓÃ¹¦ÄÜÊä³ö
+ 623              		.loc 1 182 31
+ 624 0028 1823     		movs	r3, #24
+ 625 002a 87F82730 		strb	r3, [r7, #39]
+ 183:hardware/src/timer.c **** 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+ 626              		.loc 1 183 32
+ 627 002e 0323     		movs	r3, #3
+ 628 0030 87F82630 		strb	r3, [r7, #38]
+ 184:hardware/src/timer.c **** 	GPIO_Init(GPIOA, &GPIO_InitStructure); //³õÊ¼»¯GPIO
+ 629              		.loc 1 184 2
+ARM GAS  /tmp/ccYGaOh0.s 			page 15
+
+
+ 630 0034 07F12403 		add	r3, r7, #36
+ 631 0038 1946     		mov	r1, r3
+ 632 003a 1948     		ldr	r0, .L23
+ 633 003c FFF7FEFF 		bl	GPIO_Init
+ 185:hardware/src/timer.c ****  
+ 186:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Period = arr; //ÉèÖÃ×Ô¶¯ÖØ×°ÔØÖÜÆÚÖµ
+ 634              		.loc 1 186 35
+ 635 0040 FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 636 0042 BB83     		strh	r3, [r7, #28]	@ movhi
+ 187:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Prescaler =psc; //ÉèÖÃÔ¤·ÖÆµÖµ ²»·ÖÆµ
+ 637              		.loc 1 187 38
+ 638 0044 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 639 0046 3B83     		strh	r3, [r7, #24]	@ movhi
+ 188:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //ÉèÖÃÊ±ÖÓ·Ö¸î:TDTS = Tck_tim
+ 640              		.loc 1 188 42
+ 641 0048 0023     		movs	r3, #0
+ 642 004a FB83     		strh	r3, [r7, #30]	@ movhi
+ 189:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIMÏòÉÏ¼ÆÊýÄ£Ê½
+ 643              		.loc 1 189 40
+ 644 004c 0023     		movs	r3, #0
+ 645 004e 7B83     		strh	r3, [r7, #26]	@ movhi
+ 190:hardware/src/timer.c **** 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure); //¸ù¾ÝÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯TIMx
+ 646              		.loc 1 190 2
+ 647 0050 07F11803 		add	r3, r7, #24
+ 648 0054 1946     		mov	r1, r3
+ 649 0056 1348     		ldr	r0, .L23+4
+ 650 0058 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 191:hardware/src/timer.c **** 	 
+ 192:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM2; //CH1 PWM2Ä£Ê½	
+ 651              		.loc 1 192 33
+ 652 005c 7023     		movs	r3, #112
+ 653 005e 3B81     		strh	r3, [r7, #8]	@ movhi
+ 193:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable; //±È½ÏÊä³öÊ¹ÄÜ
+ 654              		.loc 1 193 38
+ 655 0060 0123     		movs	r3, #1
+ 656 0062 7B81     		strh	r3, [r7, #10]	@ movhi
+ 194:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_Pulse = 0; //ÉèÖÃ´ý×°Èë²¶»ñ±È½Ï¼Ä´æÆ÷µÄÂö³åÖµ
+ 657              		.loc 1 194 32
+ 658 0064 0023     		movs	r3, #0
+ 659 0066 FB81     		strh	r3, [r7, #14]	@ movhi
+ 195:hardware/src/timer.c **** 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_Low; //OC1 µÍµçÆ½ÓÐÐ§ 
+ 660              		.loc 1 195 37
+ 661 0068 0223     		movs	r3, #2
+ 662 006a 3B82     		strh	r3, [r7, #16]	@ movhi
+ 196:hardware/src/timer.c **** 	TIM_OC1Init(TIM1, &TIM_OCInitStructure);  //¸ù¾ÝÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèTIMx
+ 663              		.loc 1 196 2
+ 664 006c 07F10803 		add	r3, r7, #8
+ 665 0070 1946     		mov	r1, r3
+ 666 0072 0C48     		ldr	r0, .L23+4
+ 667 0074 FFF7FEFF 		bl	TIM_OC1Init
+ 197:hardware/src/timer.c **** 
+ 198:hardware/src/timer.c **** 	TIM_OC1PreloadConfig(TIM1, TIM_OCPreload_Enable);  //CH1 Ô¤×°ÔØÊ¹ÄÜ
+ 668              		.loc 1 198 2
+ 669 0078 0821     		movs	r1, #8
+ 670 007a 0A48     		ldr	r0, .L23+4
+ 671 007c FFF7FEFF 		bl	TIM_OC1PreloadConfig
+ 199:hardware/src/timer.c **** 	
+ARM GAS  /tmp/ccYGaOh0.s 			page 16
+
+
+ 200:hardware/src/timer.c **** 	TIM_ARRPreloadConfig(TIM1, ENABLE); //Ê¹ÄÜTIMxÔÚARRÉÏµÄÔ¤×°ÔØ¼Ä´æÆ÷
+ 672              		.loc 1 200 2
+ 673 0080 0121     		movs	r1, #1
+ 674 0082 0848     		ldr	r0, .L23+4
+ 675 0084 FFF7FEFF 		bl	TIM_ARRPreloadConfig
+ 201:hardware/src/timer.c **** 	
+ 202:hardware/src/timer.c **** 	TIM_CtrlPWMOutputs(TIM1,ENABLE);	//MOE Ö÷Êä³öÊ¹ÄÜ,¸ß¼¶¶¨Ê±Æ÷±ØÐë¿ªÆôÕâ¸ö 
+ 676              		.loc 1 202 2
+ 677 0088 0121     		movs	r1, #1
+ 678 008a 0648     		ldr	r0, .L23+4
+ 679 008c FFF7FEFF 		bl	TIM_CtrlPWMOutputs
+ 203:hardware/src/timer.c **** 	
+ 204:hardware/src/timer.c **** 	TIM_Cmd(TIM1, ENABLE);  //Ê¹ÄÜTIMx  										  
+ 680              		.loc 1 204 2
+ 681 0090 0121     		movs	r1, #1
+ 682 0092 0448     		ldr	r0, .L23+4
+ 683 0094 FFF7FEFF 		bl	TIM_Cmd
+ 205:hardware/src/timer.c **** } 
+ 684              		.loc 1 205 1
+ 685 0098 00BF     		nop
+ 686 009a 2837     		adds	r7, r7, #40
+ 687              	.LCFI22:
+ 688              		.cfi_def_cfa_offset 8
+ 689 009c BD46     		mov	sp, r7
+ 690              	.LCFI23:
+ 691              		.cfi_def_cfa_register 13
+ 692              		@ sp needed
+ 693 009e 80BD     		pop	{r7, pc}
+ 694              	.L24:
+ 695              		.align	2
+ 696              	.L23:
+ 697 00a0 00080140 		.word	1073809408
+ 698 00a4 002C0140 		.word	1073818624
+ 699              		.cfi_endproc
+ 700              	.LFE71:
+ 702              		.global	ov_frame
+ 703              		.section	.bss.ov_frame,"aw",%nobits
+ 706              	ov_frame:
+ 707 0000 00       		.space	1
+ 708              		.section	.rodata
+ 709              		.align	2
+ 710              	.LC0:
+ 711 0000 6672616D 		.ascii	"frame:%dfps\015\012\000"
+ 711      653A2564 
+ 711      6670730D 
+ 711      0A00
+ 712              		.section	.text.TIM6_IRQHandler,"ax",%progbits
+ 713              		.align	1
+ 714              		.global	TIM6_IRQHandler
+ 715              		.syntax unified
+ 716              		.thumb
+ 717              		.thumb_func
+ 718              		.fpu softvfp
+ 720              	TIM6_IRQHandler:
+ 721              	.LFB72:
+ 206:hardware/src/timer.c **** 
+ 207:hardware/src/timer.c **** u8 ov_frame; 	//Í³¼ÆÖ¡Êý
+ARM GAS  /tmp/ccYGaOh0.s 			page 17
+
+
+ 208:hardware/src/timer.c **** //¶¨Ê±Æ÷6ÖÐ¶Ï·þÎñ³ÌÐò	 
+ 209:hardware/src/timer.c **** void TIM6_IRQHandler(void)
+ 210:hardware/src/timer.c **** { 		    		  			    
+ 722              		.loc 1 210 1
+ 723              		.cfi_startproc
+ 724              		@ args = 0, pretend = 0, frame = 0
+ 725              		@ frame_needed = 1, uses_anonymous_args = 0
+ 726 0000 80B5     		push	{r7, lr}
+ 727              	.LCFI24:
+ 728              		.cfi_def_cfa_offset 8
+ 729              		.cfi_offset 7, -8
+ 730              		.cfi_offset 14, -4
+ 731 0002 00AF     		add	r7, sp, #0
+ 732              	.LCFI25:
+ 733              		.cfi_def_cfa_register 7
+ 211:hardware/src/timer.c **** 	if (TIM_GetITStatus(TIM6, TIM_IT_Update) != RESET) //¼ì²éÖ¸¶¨µÄTIMÖÐ¶Ï·¢ÉúÓë·ñ:TIM ÖÐ¶ÏÔ´ 
+ 734              		.loc 1 211 6
+ 735 0004 0121     		movs	r1, #1
+ 736 0006 0A48     		ldr	r0, .L27
+ 737 0008 FFF7FEFF 		bl	TIM_GetITStatus
+ 738 000c 0346     		mov	r3, r0
+ 739              		.loc 1 211 5
+ 740 000e 002B     		cmp	r3, #0
+ 741 0010 08D0     		beq	.L26
+ 212:hardware/src/timer.c **** 	{				    
+ 213:hardware/src/timer.c **** 		printf("frame:%dfps\r\n",ov_frame);	//´òÓ¡Ö¡ÂÊ
+ 742              		.loc 1 213 3
+ 743 0012 084B     		ldr	r3, .L27+4
+ 744 0014 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 745 0016 1946     		mov	r1, r3
+ 746 0018 0748     		ldr	r0, .L27+8
+ 747 001a FFF7FEFF 		bl	printf
+ 214:hardware/src/timer.c **** 		ov_frame=0;		    				   				     	    	
+ 748              		.loc 1 214 11
+ 749 001e 054B     		ldr	r3, .L27+4
+ 750 0020 0022     		movs	r2, #0
+ 751 0022 1A70     		strb	r2, [r3]
+ 752              	.L26:
+ 215:hardware/src/timer.c **** 	}				   
+ 216:hardware/src/timer.c **** 	TIM_ClearITPendingBit(TIM6, TIM_IT_Update  );  //Çå³ýTIMxµÄÖÐ¶Ï´ý´¦ÀíÎ»:TIM ÖÐ¶ÏÔ´ 	    
+ 753              		.loc 1 216 2
+ 754 0024 0121     		movs	r1, #1
+ 755 0026 0248     		ldr	r0, .L27
+ 756 0028 FFF7FEFF 		bl	TIM_ClearITPendingBit
+ 217:hardware/src/timer.c **** }
+ 757              		.loc 1 217 1
+ 758 002c 00BF     		nop
+ 759 002e 80BD     		pop	{r7, pc}
+ 760              	.L28:
+ 761              		.align	2
+ 762              	.L27:
+ 763 0030 00100040 		.word	1073745920
+ 764 0034 00000000 		.word	ov_frame
+ 765 0038 00000000 		.word	.LC0
+ 766              		.cfi_endproc
+ 767              	.LFE72:
+ 769              		.section	.text.TIM6_Int_Init,"ax",%progbits
+ARM GAS  /tmp/ccYGaOh0.s 			page 18
+
+
+ 770              		.align	1
+ 771              		.global	TIM6_Int_Init
+ 772              		.syntax unified
+ 773              		.thumb
+ 774              		.thumb_func
+ 775              		.fpu softvfp
+ 777              	TIM6_Int_Init:
+ 778              	.LFB73:
+ 218:hardware/src/timer.c **** //»ù±¾¶¨Ê±Æ÷6ÖÐ¶Ï³õÊ¼»¯
+ 219:hardware/src/timer.c **** //ÕâÀïÊ±ÖÓÑ¡ÔñÎªAPB1µÄ2±¶£¬¶øAPB1Îª36M
+ 220:hardware/src/timer.c **** //arr£º×Ô¶¯ÖØ×°Öµ¡£
+ 221:hardware/src/timer.c **** //psc£ºÊ±ÖÓÔ¤·ÖÆµÊý
+ 222:hardware/src/timer.c **** //ÕâÀïÊ¹ÓÃµÄÊÇ¶¨Ê±Æ÷3!
+ 223:hardware/src/timer.c **** void TIM6_Int_Init(u16 arr,u16 psc)
+ 224:hardware/src/timer.c **** {
+ 779              		.loc 1 224 1
+ 780              		.cfi_startproc
+ 781              		@ args = 0, pretend = 0, frame = 24
+ 782              		@ frame_needed = 1, uses_anonymous_args = 0
+ 783 0000 80B5     		push	{r7, lr}
+ 784              	.LCFI26:
+ 785              		.cfi_def_cfa_offset 8
+ 786              		.cfi_offset 7, -8
+ 787              		.cfi_offset 14, -4
+ 788 0002 86B0     		sub	sp, sp, #24
+ 789              	.LCFI27:
+ 790              		.cfi_def_cfa_offset 32
+ 791 0004 00AF     		add	r7, sp, #0
+ 792              	.LCFI28:
+ 793              		.cfi_def_cfa_register 7
+ 794 0006 0346     		mov	r3, r0
+ 795 0008 0A46     		mov	r2, r1
+ 796 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 797 000c 1346     		mov	r3, r2	@ movhi
+ 798 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 225:hardware/src/timer.c ****   	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+ 226:hardware/src/timer.c **** 	NVIC_InitTypeDef NVIC_InitStructure;
+ 227:hardware/src/timer.c **** 
+ 228:hardware/src/timer.c **** 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM6, ENABLE); //Ê±ÖÓÊ¹ÄÜ
+ 799              		.loc 1 228 2
+ 800 0010 0121     		movs	r1, #1
+ 801 0012 1020     		movs	r0, #16
+ 802 0014 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 229:hardware/src/timer.c **** 
+ 230:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Period = arr; //ÉèÖÃÔÚÏÂÒ»¸ö¸üÐÂÊÂ¼þ×°Èë»î¶¯µÄ×Ô¶¯ÖØ×°ÔØ¼Ä´æÆ÷ÖÜÆÚµÄÖµ	 
+ 803              		.loc 1 230 35
+ 804 0018 FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 805 001a 3B82     		strh	r3, [r7, #16]	@ movhi
+ 231:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_Prescaler =psc; //ÉèÖÃÓÃÀ´×÷ÎªTIMxÊ±ÖÓÆµÂÊ³ýÊýµÄÔ¤·ÖÆµÖµ  10KhzµÄ¼ÆÊýÆµÂ
+ 806              		.loc 1 231 38
+ 807 001c BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 808 001e BB81     		strh	r3, [r7, #12]	@ movhi
+ 232:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //ÉèÖÃÊ±ÖÓ·Ö¸î:TDTS = Tck_tim
+ 809              		.loc 1 232 42
+ 810 0020 0023     		movs	r3, #0
+ 811 0022 7B82     		strh	r3, [r7, #18]	@ movhi
+ 233:hardware/src/timer.c **** 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIMÏòÉÏ¼ÆÊýÄ£Ê½
+ARM GAS  /tmp/ccYGaOh0.s 			page 19
+
+
+ 812              		.loc 1 233 40
+ 813 0024 0023     		movs	r3, #0
+ 814 0026 FB81     		strh	r3, [r7, #14]	@ movhi
+ 234:hardware/src/timer.c **** 	TIM_TimeBaseInit(TIM6, &TIM_TimeBaseStructure); //¸ù¾ÝTIM_TimeBaseInitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯TIMx
+ 815              		.loc 1 234 2
+ 816 0028 07F10C03 		add	r3, r7, #12
+ 817 002c 1946     		mov	r1, r3
+ 818 002e 0E48     		ldr	r0, .L30
+ 819 0030 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 235:hardware/src/timer.c ****  
+ 236:hardware/src/timer.c **** 	TIM_ITConfig( TIM6,TIM_IT_Update|TIM_IT_Trigger,ENABLE);//Ê¹ÄÜ¶¨Ê±Æ÷6¸üÐÂ´¥·¢ÖÐ¶Ï
+ 820              		.loc 1 236 2
+ 821 0034 0122     		movs	r2, #1
+ 822 0036 4121     		movs	r1, #65
+ 823 0038 0B48     		ldr	r0, .L30
+ 824 003a FFF7FEFF 		bl	TIM_ITConfig
+ 237:hardware/src/timer.c ****  
+ 238:hardware/src/timer.c **** 	TIM_Cmd(TIM6, ENABLE);  //Ê¹ÄÜTIMxÍâÉè
+ 825              		.loc 1 238 2
+ 826 003e 0121     		movs	r1, #1
+ 827 0040 0948     		ldr	r0, .L30
+ 828 0042 FFF7FEFF 		bl	TIM_Cmd
+ 239:hardware/src/timer.c ****  	
+ 240:hardware/src/timer.c ****   	NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;  //TIM3ÖÐ¶Ï
+ 829              		.loc 1 240 39
+ 830 0046 3623     		movs	r3, #54
+ 831 0048 3B72     		strb	r3, [r7, #8]
+ 241:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;  //ÏÈÕ¼ÓÅÏÈ¼¶0¼¶
+ 832              		.loc 1 241 55
+ 833 004a 0123     		movs	r3, #1
+ 834 004c 7B72     		strb	r3, [r7, #9]
+ 242:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;  //´ÓÓÅÏÈ¼¶3¼¶
+ 835              		.loc 1 242 48
+ 836 004e 0323     		movs	r3, #3
+ 837 0050 BB72     		strb	r3, [r7, #10]
+ 243:hardware/src/timer.c **** 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQÍ¨µÀ±»Ê¹ÄÜ
+ 838              		.loc 1 243 40
+ 839 0052 0123     		movs	r3, #1
+ 840 0054 FB72     		strb	r3, [r7, #11]
+ 244:hardware/src/timer.c **** 	NVIC_Init(&NVIC_InitStructure);  //¸ù¾ÝNVIC_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèNVIC¼Ä´æÆ÷ 									 
+ 841              		.loc 1 244 2
+ 842 0056 07F10803 		add	r3, r7, #8
+ 843 005a 1846     		mov	r0, r3
+ 844 005c FFF7FEFF 		bl	NVIC_Init
+ 245:hardware/src/timer.c **** }
+ 845              		.loc 1 245 1
+ 846 0060 00BF     		nop
+ 847 0062 1837     		adds	r7, r7, #24
+ 848              	.LCFI29:
+ 849              		.cfi_def_cfa_offset 8
+ 850 0064 BD46     		mov	sp, r7
+ 851              	.LCFI30:
+ 852              		.cfi_def_cfa_register 13
+ 853              		@ sp needed
+ 854 0066 80BD     		pop	{r7, pc}
+ 855              	.L31:
+ 856              		.align	2
+ARM GAS  /tmp/ccYGaOh0.s 			page 20
+
+
+ 857              	.L30:
+ 858 0068 00100040 		.word	1073745920
+ 859              		.cfi_endproc
+ 860              	.LFE73:
+ 862              		.section	.text.monitor_PWM_Init,"ax",%progbits
+ 863              		.align	1
+ 864              		.global	monitor_PWM_Init
+ 865              		.syntax unified
+ 866              		.thumb
+ 867              		.thumb_func
+ 868              		.fpu softvfp
+ 870              	monitor_PWM_Init:
+ 871              	.LFB74:
+ 246:hardware/src/timer.c **** 
+ 247:hardware/src/timer.c **** /*  https://blog.csdn.net/qq_36958104/article/details/83661117  
+ 248:hardware/src/timer.c ****     used for l298n motor      */
+ 249:hardware/src/timer.c **** void monitor_PWM_Init(u16 arr,u16 psc)
+ 250:hardware/src/timer.c **** {
+ 872              		.loc 1 250 1
+ 873              		.cfi_startproc
+ 874              		@ args = 0, pretend = 0, frame = 40
+ 875              		@ frame_needed = 1, uses_anonymous_args = 0
+ 876 0000 80B5     		push	{r7, lr}
+ 877              	.LCFI31:
+ 878              		.cfi_def_cfa_offset 8
+ 879              		.cfi_offset 7, -8
+ 880              		.cfi_offset 14, -4
+ 881 0002 8AB0     		sub	sp, sp, #40
+ 882              	.LCFI32:
+ 883              		.cfi_def_cfa_offset 48
+ 884 0004 00AF     		add	r7, sp, #0
+ 885              	.LCFI33:
+ 886              		.cfi_def_cfa_register 7
+ 887 0006 0346     		mov	r3, r0
+ 888 0008 0A46     		mov	r2, r1
+ 889 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 890 000c 1346     		mov	r3, r2	@ movhi
+ 891 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 251:hardware/src/timer.c ****     GPIO_InitTypeDef     GPIO_InitStrue;
+ 252:hardware/src/timer.c ****     TIM_OCInitTypeDef     TIM_OCInitStrue;
+ 253:hardware/src/timer.c ****     TIM_TimeBaseInitTypeDef     TIM_TimeBaseInitStrue;
+ 254:hardware/src/timer.c **** 
+ 255:hardware/src/timer.c ****     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);        //Ê¹ÄÜTIM3ºÍÏà¹ØGPIOÊ±ÖÓ
+ 892              		.loc 1 255 5
+ 893 0010 0121     		movs	r1, #1
+ 894 0012 0220     		movs	r0, #2
+ 895 0014 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 256:hardware/src/timer.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);// Ê¹ÄÜGPIOBÊ±ÖÓ(LEDÔÚBP5Òý½Å),Ê¹ÄÜAFIOÊ±ÖÓ(
+ 896              		.loc 1 256 5
+ 897 0018 0121     		movs	r1, #1
+ 898 001a 0120     		movs	r0, #1
+ 899 001c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 257:hardware/src/timer.c **** 
+ 258:hardware/src/timer.c ****     GPIO_PinRemapConfig(GPIO_PartialRemap_TIM3,ENABLE);
+ 900              		.loc 1 258 5
+ 901 0020 0121     		movs	r1, #1
+ 902 0022 2948     		ldr	r0, .L33
+ARM GAS  /tmp/ccYGaOh0.s 			page 21
+
+
+ 903 0024 FFF7FEFF 		bl	GPIO_PinRemapConfig
+ 259:hardware/src/timer.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+ 904              		.loc 1 259 5
+ 905 0028 0121     		movs	r1, #1
+ 906 002a 0820     		movs	r0, #8
+ 907 002c FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 260:hardware/src/timer.c ****     
+ 261:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Pin=GPIO_Pin_5;     // TIM3_CH2
+ 908              		.loc 1 261 28
+ 909 0030 2023     		movs	r3, #32
+ 910 0032 BB84     		strh	r3, [r7, #36]	@ movhi
+ 262:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Mode=GPIO_Mode_AF_PP;    // ¸´ÓÃÍÆÍì
+ 911              		.loc 1 262 29
+ 912 0034 1823     		movs	r3, #24
+ 913 0036 87F82730 		strb	r3, [r7, #39]
+ 263:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;    //ÉèÖÃ×î´óÊä³öËÙ¶È
+ 914              		.loc 1 263 30
+ 915 003a 0323     		movs	r3, #3
+ 916 003c 87F82630 		strb	r3, [r7, #38]
+ 264:hardware/src/timer.c ****     GPIO_Init(GPIOB,&GPIO_InitStrue);                //GPIO¶Ë¿Ú³õÊ¼»¯ÉèÖÃ
+ 917              		.loc 1 264 5
+ 918 0040 07F12403 		add	r3, r7, #36
+ 919 0044 1946     		mov	r1, r3
+ 920 0046 2148     		ldr	r0, .L33+4
+ 921 0048 FFF7FEFF 		bl	GPIO_Init
+ 265:hardware/src/timer.c **** 
+ 266:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Pin=GPIO_Pin_4;     // TIM3_CH1
+ 922              		.loc 1 266 28
+ 923 004c 1023     		movs	r3, #16
+ 924 004e BB84     		strh	r3, [r7, #36]	@ movhi
+ 267:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Mode=GPIO_Mode_AF_PP;    // ¸´ÓÃÍÆÍì
+ 925              		.loc 1 267 29
+ 926 0050 1823     		movs	r3, #24
+ 927 0052 87F82730 		strb	r3, [r7, #39]
+ 268:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;    //ÉèÖÃ×î´óÊä³öËÙ¶È
+ 928              		.loc 1 268 30
+ 929 0056 0323     		movs	r3, #3
+ 930 0058 87F82630 		strb	r3, [r7, #38]
+ 269:hardware/src/timer.c ****     GPIO_Init(GPIOB,&GPIO_InitStrue);                //GPIO¶Ë¿Ú³õÊ¼»¯ÉèÖÃ
+ 931              		.loc 1 269 5
+ 932 005c 07F12403 		add	r3, r7, #36
+ 933 0060 1946     		mov	r1, r3
+ 934 0062 1A48     		ldr	r0, .L33+4
+ 935 0064 FFF7FEFF 		bl	GPIO_Init
+ 270:hardware/src/timer.c ****     
+ 271:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_Period=arr;    //ÉèÖÃ×Ô¶¯ÖØ×°ÔØÖµ
+ 936              		.loc 1 271 37
+ 937 0068 FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 938 006a BB81     		strh	r3, [r7, #12]	@ movhi
+ 272:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_Prescaler=psc;        //Ô¤·ÖÆµÏµÊý
+ 939              		.loc 1 272 40
+ 940 006c BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 941 006e 3B81     		strh	r3, [r7, #8]	@ movhi
+ 273:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_CounterMode=TIM_CounterMode_Up;    //¼ÆÊýÆ÷ÏòÉÏÒç³ö
+ 942              		.loc 1 273 42
+ 943 0070 0023     		movs	r3, #0
+ 944 0072 7B81     		strh	r3, [r7, #10]	@ movhi
+ARM GAS  /tmp/ccYGaOh0.s 			page 22
+
+
+ 274:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_ClockDivision=TIM_CKD_DIV1;        //Ê±ÖÓµÄ·ÖÆµÒò×Ó£¬Æðµ½ÁËÒ»µãµãµÄÑÓ
+ 945              		.loc 1 274 44
+ 946 0074 0023     		movs	r3, #0
+ 947 0076 FB81     		strh	r3, [r7, #14]	@ movhi
+ 275:hardware/src/timer.c ****     TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStrue);        //TIM3³õÊ¼»¯ÉèÖÃ(ÉèÖÃPWMµÄÖÜÆÚ)
+ 948              		.loc 1 275 5
+ 949 0078 07F10803 		add	r3, r7, #8
+ 950 007c 1946     		mov	r1, r3
+ 951 007e 1448     		ldr	r0, .L33+8
+ 952 0080 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 276:hardware/src/timer.c ****     
+ 277:hardware/src/timer.c ****     TIM_OCInitStrue.TIM_OCMode=TIM_OCMode_PWM2;        // PWMÄ£Ê½2:CNT>CCRÊ±Êä³öÓÐÐ§
+ 953              		.loc 1 277 31
+ 954 0084 7023     		movs	r3, #112
+ 955 0086 BB82     		strh	r3, [r7, #20]	@ movhi
+ 278:hardware/src/timer.c ****     TIM_OCInitStrue.TIM_OCPolarity=TIM_OCPolarity_High;// ÉèÖÃ¼«ÐÔ-ÓÐÐ§Îª¸ßµçÆ½
+ 956              		.loc 1 278 35
+ 957 0088 0023     		movs	r3, #0
+ 958 008a BB83     		strh	r3, [r7, #28]	@ movhi
+ 279:hardware/src/timer.c ****     TIM_OCInitStrue.TIM_OutputState=TIM_OutputState_Enable;// Êä³öÊ¹ÄÜ
+ 959              		.loc 1 279 36
+ 960 008c 0123     		movs	r3, #1
+ 961 008e FB82     		strh	r3, [r7, #22]	@ movhi
+ 280:hardware/src/timer.c **** 	TIM_OC1Init(TIM3,&TIM_OCInitStrue);			// TIM3_CH1    PB4
+ 962              		.loc 1 280 2
+ 963 0090 07F11403 		add	r3, r7, #20
+ 964 0094 1946     		mov	r1, r3
+ 965 0096 0E48     		ldr	r0, .L33+8
+ 966 0098 FFF7FEFF 		bl	TIM_OC1Init
+ 281:hardware/src/timer.c ****     TIM_OC2Init(TIM3,&TIM_OCInitStrue);        // TIM3_CH2    PB5
+ 967              		.loc 1 281 5
+ 968 009c 07F11403 		add	r3, r7, #20
+ 969 00a0 1946     		mov	r1, r3
+ 970 00a2 0B48     		ldr	r0, .L33+8
+ 971 00a4 FFF7FEFF 		bl	TIM_OC2Init
+ 282:hardware/src/timer.c ****  
+ 283:hardware/src/timer.c ****     TIM_OC1PreloadConfig(TIM3,TIM_OCPreload_Enable);        //Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷
+ 972              		.loc 1 283 5
+ 973 00a8 0821     		movs	r1, #8
+ 974 00aa 0948     		ldr	r0, .L33+8
+ 975 00ac FFF7FEFF 		bl	TIM_OC1PreloadConfig
+ 284:hardware/src/timer.c ****     TIM_OC2PreloadConfig(TIM3,TIM_OCPreload_Enable);        //Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷
+ 976              		.loc 1 284 5
+ 977 00b0 0821     		movs	r1, #8
+ 978 00b2 0748     		ldr	r0, .L33+8
+ 979 00b4 FFF7FEFF 		bl	TIM_OC2PreloadConfig
+ 285:hardware/src/timer.c ****     
+ 286:hardware/src/timer.c ****     TIM_Cmd(TIM3,ENABLE);        //Ê¹ÄÜTIM3
+ 980              		.loc 1 286 5
+ 981 00b8 0121     		movs	r1, #1
+ 982 00ba 0548     		ldr	r0, .L33+8
+ 983 00bc FFF7FEFF 		bl	TIM_Cmd
+ 287:hardware/src/timer.c **** }
+ 984              		.loc 1 287 1
+ 985 00c0 00BF     		nop
+ 986 00c2 2837     		adds	r7, r7, #40
+ 987              	.LCFI34:
+ARM GAS  /tmp/ccYGaOh0.s 			page 23
+
+
+ 988              		.cfi_def_cfa_offset 8
+ 989 00c4 BD46     		mov	sp, r7
+ 990              	.LCFI35:
+ 991              		.cfi_def_cfa_register 13
+ 992              		@ sp needed
+ 993 00c6 80BD     		pop	{r7, pc}
+ 994              	.L34:
+ 995              		.align	2
+ 996              	.L33:
+ 997 00c8 00081A00 		.word	1705984
+ 998 00cc 000C0140 		.word	1073810432
+ 999 00d0 00040040 		.word	1073742848
+ 1000              		.cfi_endproc
+ 1001              	.LFE74:
+ 1003              		.section	.text.motorA_PWM_Init,"ax",%progbits
+ 1004              		.align	1
+ 1005              		.global	motorA_PWM_Init
+ 1006              		.syntax unified
+ 1007              		.thumb
+ 1008              		.thumb_func
+ 1009              		.fpu softvfp
+ 1011              	motorA_PWM_Init:
+ 1012              	.LFB75:
+ 288:hardware/src/timer.c **** 
+ 289:hardware/src/timer.c **** /*  used for A4950 motor  */
+ 290:hardware/src/timer.c **** void motorA_PWM_Init(u16 arr,u16 psc)
+ 291:hardware/src/timer.c **** {
+ 1013              		.loc 1 291 1
+ 1014              		.cfi_startproc
+ 1015              		@ args = 0, pretend = 0, frame = 40
+ 1016              		@ frame_needed = 1, uses_anonymous_args = 0
+ 1017 0000 80B5     		push	{r7, lr}
+ 1018              	.LCFI36:
+ 1019              		.cfi_def_cfa_offset 8
+ 1020              		.cfi_offset 7, -8
+ 1021              		.cfi_offset 14, -4
+ 1022 0002 8AB0     		sub	sp, sp, #40
+ 1023              	.LCFI37:
+ 1024              		.cfi_def_cfa_offset 48
+ 1025 0004 00AF     		add	r7, sp, #0
+ 1026              	.LCFI38:
+ 1027              		.cfi_def_cfa_register 7
+ 1028 0006 0346     		mov	r3, r0
+ 1029 0008 0A46     		mov	r2, r1
+ 1030 000a FB80     		strh	r3, [r7, #6]	@ movhi
+ 1031 000c 1346     		mov	r3, r2	@ movhi
+ 1032 000e BB80     		strh	r3, [r7, #4]	@ movhi
+ 292:hardware/src/timer.c ****     GPIO_InitTypeDef     GPIO_InitStrue;
+ 293:hardware/src/timer.c ****     TIM_OCInitTypeDef     TIM_OCInitStrue;
+ 294:hardware/src/timer.c ****     TIM_TimeBaseInitTypeDef     TIM_TimeBaseInitStrue;
+ 295:hardware/src/timer.c **** 
+ 296:hardware/src/timer.c ****     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);        //Ê¹ÄÜTIM3ºÍÏà¹ØGPIOÊ±ÖÓ
+ 1033              		.loc 1 296 5
+ 1034 0010 0121     		movs	r1, #1
+ 1035 0012 0220     		movs	r0, #2
+ 1036 0014 FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 297:hardware/src/timer.c ****     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4,ENABLE);        //Ê¹ÄÜTIM3ºÍÏà¹ØGPIOÊ±ÖÓ
+ARM GAS  /tmp/ccYGaOh0.s 			page 24
+
+
+ 1037              		.loc 1 297 5
+ 1038 0018 0121     		movs	r1, #1
+ 1039 001a 0420     		movs	r0, #4
+ 1040 001c FFF7FEFF 		bl	RCC_APB1PeriphClockCmd
+ 298:hardware/src/timer.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);// Ê¹ÄÜGPIOBÊ±ÖÓ(LEDÔÚBP5Òý½Å),Ê¹ÄÜAFIOÊ±ÖÓ(
+ 1041              		.loc 1 298 5
+ 1042 0020 0121     		movs	r1, #1
+ 1043 0022 0120     		movs	r0, #1
+ 1044 0024 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 299:hardware/src/timer.c **** 
+ 300:hardware/src/timer.c ****     GPIO_PinRemapConfig(GPIO_PartialRemap_TIM3,ENABLE);
+ 1045              		.loc 1 300 5
+ 1046 0028 0121     		movs	r1, #1
+ 1047 002a 4748     		ldr	r0, .L36
+ 1048 002c FFF7FEFF 		bl	GPIO_PinRemapConfig
+ 301:hardware/src/timer.c ****     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+ 1049              		.loc 1 301 5
+ 1050 0030 0121     		movs	r1, #1
+ 1051 0032 0820     		movs	r0, #8
+ 1052 0034 FFF7FEFF 		bl	RCC_APB2PeriphClockCmd
+ 302:hardware/src/timer.c **** 
+ 303:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Pin=GPIO_Pin_4;     // TIM3_CH1
+ 1053              		.loc 1 303 28
+ 1054 0038 1023     		movs	r3, #16
+ 1055 003a BB84     		strh	r3, [r7, #36]	@ movhi
+ 304:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Mode=GPIO_Mode_AF_PP;    // ¸´ÓÃÍÆÍì
+ 1056              		.loc 1 304 29
+ 1057 003c 1823     		movs	r3, #24
+ 1058 003e 87F82730 		strb	r3, [r7, #39]
+ 305:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;    //ÉèÖÃ×î´óÊä³öËÙ¶È
+ 1059              		.loc 1 305 30
+ 1060 0042 0323     		movs	r3, #3
+ 1061 0044 87F82630 		strb	r3, [r7, #38]
+ 306:hardware/src/timer.c ****     GPIO_Init(GPIOB,&GPIO_InitStrue);                //GPIO¶Ë¿Ú³õÊ¼»¯ÉèÖÃ
+ 1062              		.loc 1 306 5
+ 1063 0048 07F12403 		add	r3, r7, #36
+ 1064 004c 1946     		mov	r1, r3
+ 1065 004e 3F48     		ldr	r0, .L36+4
+ 1066 0050 FFF7FEFF 		bl	GPIO_Init
+ 307:hardware/src/timer.c **** 
+ 308:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Pin=GPIO_Pin_5;     // TIM3_CH2
+ 1067              		.loc 1 308 28
+ 1068 0054 2023     		movs	r3, #32
+ 1069 0056 BB84     		strh	r3, [r7, #36]	@ movhi
+ 309:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Mode=GPIO_Mode_AF_PP;    // ¸´ÓÃÍÆÍì
+ 1070              		.loc 1 309 29
+ 1071 0058 1823     		movs	r3, #24
+ 1072 005a 87F82730 		strb	r3, [r7, #39]
+ 310:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;    //ÉèÖÃ×î´óÊä³öËÙ¶È
+ 1073              		.loc 1 310 30
+ 1074 005e 0323     		movs	r3, #3
+ 1075 0060 87F82630 		strb	r3, [r7, #38]
+ 311:hardware/src/timer.c ****     GPIO_Init(GPIOB,&GPIO_InitStrue);                //GPIO¶Ë¿Ú³õÊ¼»¯ÉèÖÃ
+ 1076              		.loc 1 311 5
+ 1077 0064 07F12403 		add	r3, r7, #36
+ 1078 0068 1946     		mov	r1, r3
+ 1079 006a 3848     		ldr	r0, .L36+4
+ARM GAS  /tmp/ccYGaOh0.s 			page 25
+
+
+ 1080 006c FFF7FEFF 		bl	GPIO_Init
+ 312:hardware/src/timer.c **** 	
+ 313:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Pin=GPIO_Pin_8;     // TIM4_CH3
+ 1081              		.loc 1 313 28
+ 1082 0070 4FF48073 		mov	r3, #256
+ 1083 0074 BB84     		strh	r3, [r7, #36]	@ movhi
+ 314:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Mode=GPIO_Mode_AF_PP;    // ¸´ÓÃÍÆÍì
+ 1084              		.loc 1 314 29
+ 1085 0076 1823     		movs	r3, #24
+ 1086 0078 87F82730 		strb	r3, [r7, #39]
+ 315:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;    //ÉèÖÃ×î´óÊä³öËÙ¶È
+ 1087              		.loc 1 315 30
+ 1088 007c 0323     		movs	r3, #3
+ 1089 007e 87F82630 		strb	r3, [r7, #38]
+ 316:hardware/src/timer.c ****     GPIO_Init(GPIOB,&GPIO_InitStrue);                //GPIO¶Ë¿Ú³õÊ¼»¯ÉèÖÃ
+ 1090              		.loc 1 316 5
+ 1091 0082 07F12403 		add	r3, r7, #36
+ 1092 0086 1946     		mov	r1, r3
+ 1093 0088 3048     		ldr	r0, .L36+4
+ 1094 008a FFF7FEFF 		bl	GPIO_Init
+ 317:hardware/src/timer.c **** 
+ 318:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Pin=GPIO_Pin_9;     // TIM4_CH4
+ 1095              		.loc 1 318 28
+ 1096 008e 4FF40073 		mov	r3, #512
+ 1097 0092 BB84     		strh	r3, [r7, #36]	@ movhi
+ 319:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Mode=GPIO_Mode_AF_PP;    // ¸´ÓÃÍÆÍì
+ 1098              		.loc 1 319 29
+ 1099 0094 1823     		movs	r3, #24
+ 1100 0096 87F82730 		strb	r3, [r7, #39]
+ 320:hardware/src/timer.c ****     GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;    //ÉèÖÃ×î´óÊä³öËÙ¶È
+ 1101              		.loc 1 320 30
+ 1102 009a 0323     		movs	r3, #3
+ 1103 009c 87F82630 		strb	r3, [r7, #38]
+ 321:hardware/src/timer.c ****     GPIO_Init(GPIOB,&GPIO_InitStrue);                //GPIO¶Ë¿Ú³õÊ¼»¯ÉèÖÃ
+ 1104              		.loc 1 321 5
+ 1105 00a0 07F12403 		add	r3, r7, #36
+ 1106 00a4 1946     		mov	r1, r3
+ 1107 00a6 2948     		ldr	r0, .L36+4
+ 1108 00a8 FFF7FEFF 		bl	GPIO_Init
+ 322:hardware/src/timer.c **** 
+ 323:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_Period=arr;    //ÉèÖÃ×Ô¶¯ÖØ×°ÔØÖµ
+ 1109              		.loc 1 323 37
+ 1110 00ac FB88     		ldrh	r3, [r7, #6]	@ movhi
+ 1111 00ae BB81     		strh	r3, [r7, #12]	@ movhi
+ 324:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_Prescaler=psc;        //Ô¤·ÖÆµÏµÊý
+ 1112              		.loc 1 324 40
+ 1113 00b0 BB88     		ldrh	r3, [r7, #4]	@ movhi
+ 1114 00b2 3B81     		strh	r3, [r7, #8]	@ movhi
+ 325:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_CounterMode=TIM_CounterMode_Up;    //¼ÆÊýÆ÷ÏòÉÏÒç³ö
+ 1115              		.loc 1 325 42
+ 1116 00b4 0023     		movs	r3, #0
+ 1117 00b6 7B81     		strh	r3, [r7, #10]	@ movhi
+ 326:hardware/src/timer.c ****     TIM_TimeBaseInitStrue.TIM_ClockDivision=TIM_CKD_DIV1;        //Ê±ÖÓµÄ·ÖÆµÒò×Ó£¬Æðµ½ÁËÒ»µãµãµÄÑÓ
+ 1118              		.loc 1 326 44
+ 1119 00b8 0023     		movs	r3, #0
+ 1120 00ba FB81     		strh	r3, [r7, #14]	@ movhi
+ 327:hardware/src/timer.c ****     TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStrue);        //TIM3³õÊ¼»¯ÉèÖÃ(ÉèÖÃPWMµÄÖÜÆÚ)
+ARM GAS  /tmp/ccYGaOh0.s 			page 26
+
+
+ 1121              		.loc 1 327 5
+ 1122 00bc 07F10803 		add	r3, r7, #8
+ 1123 00c0 1946     		mov	r1, r3
+ 1124 00c2 2348     		ldr	r0, .L36+8
+ 1125 00c4 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 328:hardware/src/timer.c ****     TIM_TimeBaseInit(TIM4,&TIM_TimeBaseInitStrue);        //TIM3³õÊ¼»¯ÉèÖÃ(ÉèÖÃPWMµÄÖÜÆÚ)
+ 1126              		.loc 1 328 5
+ 1127 00c8 07F10803 		add	r3, r7, #8
+ 1128 00cc 1946     		mov	r1, r3
+ 1129 00ce 2148     		ldr	r0, .L36+12
+ 1130 00d0 FFF7FEFF 		bl	TIM_TimeBaseInit
+ 329:hardware/src/timer.c ****     
+ 330:hardware/src/timer.c ****     TIM_OCInitStrue.TIM_OCMode=TIM_OCMode_PWM1;        // PWMÄ£Ê½2:CNT>CCRÊ±Êä³öÓÐÐ§
+ 1131              		.loc 1 330 31
+ 1132 00d4 6023     		movs	r3, #96
+ 1133 00d6 BB82     		strh	r3, [r7, #20]	@ movhi
+ 331:hardware/src/timer.c ****     TIM_OCInitStrue.TIM_OCPolarity=TIM_OCPolarity_High;// ÉèÖÃ¼«ÐÔ-ÓÐÐ§Îª¸ßµçÆ½
+ 1134              		.loc 1 331 35
+ 1135 00d8 0023     		movs	r3, #0
+ 1136 00da BB83     		strh	r3, [r7, #28]	@ movhi
+ 332:hardware/src/timer.c ****     TIM_OCInitStrue.TIM_OutputState=TIM_OutputState_Enable;// Êä³öÊ¹ÄÜ
+ 1137              		.loc 1 332 36
+ 1138 00dc 0123     		movs	r3, #1
+ 1139 00de FB82     		strh	r3, [r7, #22]	@ movhi
+ 333:hardware/src/timer.c **** 	TIM_OC1Init(TIM3,&TIM_OCInitStrue);			// TIM3_CH1    PB4
+ 1140              		.loc 1 333 2
+ 1141 00e0 07F11403 		add	r3, r7, #20
+ 1142 00e4 1946     		mov	r1, r3
+ 1143 00e6 1A48     		ldr	r0, .L36+8
+ 1144 00e8 FFF7FEFF 		bl	TIM_OC1Init
+ 334:hardware/src/timer.c ****     TIM_OC2Init(TIM3,&TIM_OCInitStrue);        // TIM3_CH2    PB5
+ 1145              		.loc 1 334 5
+ 1146 00ec 07F11403 		add	r3, r7, #20
+ 1147 00f0 1946     		mov	r1, r3
+ 1148 00f2 1748     		ldr	r0, .L36+8
+ 1149 00f4 FFF7FEFF 		bl	TIM_OC2Init
+ 335:hardware/src/timer.c **** 	TIM_OC3Init(TIM4,&TIM_OCInitStrue);			// TIM4_CH3    PB8
+ 1150              		.loc 1 335 2
+ 1151 00f8 07F11403 		add	r3, r7, #20
+ 1152 00fc 1946     		mov	r1, r3
+ 1153 00fe 1548     		ldr	r0, .L36+12
+ 1154 0100 FFF7FEFF 		bl	TIM_OC3Init
+ 336:hardware/src/timer.c ****     TIM_OC4Init(TIM4,&TIM_OCInitStrue);        // TIM4_CH4    PB9
+ 1155              		.loc 1 336 5
+ 1156 0104 07F11403 		add	r3, r7, #20
+ 1157 0108 1946     		mov	r1, r3
+ 1158 010a 1248     		ldr	r0, .L36+12
+ 1159 010c FFF7FEFF 		bl	TIM_OC4Init
+ 337:hardware/src/timer.c ****  
+ 338:hardware/src/timer.c ****     TIM_OC1PreloadConfig(TIM3,TIM_OCPreload_Enable);        //Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷
+ 1160              		.loc 1 338 5
+ 1161 0110 0821     		movs	r1, #8
+ 1162 0112 0F48     		ldr	r0, .L36+8
+ 1163 0114 FFF7FEFF 		bl	TIM_OC1PreloadConfig
+ 339:hardware/src/timer.c ****     TIM_OC2PreloadConfig(TIM3,TIM_OCPreload_Enable);        //Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷
+ 1164              		.loc 1 339 5
+ 1165 0118 0821     		movs	r1, #8
+ARM GAS  /tmp/ccYGaOh0.s 			page 27
+
+
+ 1166 011a 0D48     		ldr	r0, .L36+8
+ 1167 011c FFF7FEFF 		bl	TIM_OC2PreloadConfig
+ 340:hardware/src/timer.c ****     TIM_OC3PreloadConfig(TIM4,TIM_OCPreload_Enable);        //Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷
+ 1168              		.loc 1 340 5
+ 1169 0120 0821     		movs	r1, #8
+ 1170 0122 0C48     		ldr	r0, .L36+12
+ 1171 0124 FFF7FEFF 		bl	TIM_OC3PreloadConfig
+ 341:hardware/src/timer.c ****     TIM_OC4PreloadConfig(TIM4,TIM_OCPreload_Enable);        //Ê¹ÄÜÔ¤×°ÔØ¼Ä´æÆ÷
+ 1172              		.loc 1 341 5
+ 1173 0128 0821     		movs	r1, #8
+ 1174 012a 0A48     		ldr	r0, .L36+12
+ 1175 012c FFF7FEFF 		bl	TIM_OC4PreloadConfig
+ 342:hardware/src/timer.c ****     
+ 343:hardware/src/timer.c ****     TIM_Cmd(TIM3,ENABLE);        //Ê¹ÄÜTIM3
+ 1176              		.loc 1 343 5
+ 1177 0130 0121     		movs	r1, #1
+ 1178 0132 0748     		ldr	r0, .L36+8
+ 1179 0134 FFF7FEFF 		bl	TIM_Cmd
+ 344:hardware/src/timer.c ****     TIM_Cmd(TIM4,ENABLE);        //Ê¹ÄÜTIM3
+ 1180              		.loc 1 344 5
+ 1181 0138 0121     		movs	r1, #1
+ 1182 013a 0648     		ldr	r0, .L36+12
+ 1183 013c FFF7FEFF 		bl	TIM_Cmd
+ 345:hardware/src/timer.c **** }
+ 1184              		.loc 1 345 1
+ 1185 0140 00BF     		nop
+ 1186 0142 2837     		adds	r7, r7, #40
+ 1187              	.LCFI39:
+ 1188              		.cfi_def_cfa_offset 8
+ 1189 0144 BD46     		mov	sp, r7
+ 1190              	.LCFI40:
+ 1191              		.cfi_def_cfa_register 13
+ 1192              		@ sp needed
+ 1193 0146 80BD     		pop	{r7, pc}
+ 1194              	.L37:
+ 1195              		.align	2
+ 1196              	.L36:
+ 1197 0148 00081A00 		.word	1705984
+ 1198 014c 000C0140 		.word	1073810432
+ 1199 0150 00040040 		.word	1073742848
+ 1200 0154 00080040 		.word	1073743872
+ 1201              		.cfi_endproc
+ 1202              	.LFE75:
+ 1204              		.text
+ 1205              	.Letext0:
+ 1206              		.file 2 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/machine/_defa
+ 1207              		.file 3 "/home/ubuntu/tools/gcc-arm-none-eabi-10-2020-q4-major/arm-none-eabi/include/sys/_stdint.h
+ 1208              		.file 4 "Inc/stm32f10x.h"
+ 1209              		.file 5 "Drivers/Inc/stm32f10x_gpio.h"
+ 1210              		.file 6 "Drivers/Inc/stm32f10x_tim.h"
+ 1211              		.file 7 "Drivers/Inc/misc.h"
+ARM GAS  /tmp/ccYGaOh0.s 			page 28
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 timer.c
+     /tmp/ccYGaOh0.s:16     .text.TIM3_Int_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:24     .text.TIM3_Int_Init:0000000000000000 TIM3_Int_Init
+     /tmp/ccYGaOh0.s:106    .text.TIM3_Int_Init:0000000000000068 $d
+     /tmp/ccYGaOh0.s:111    .text.TIM3_IRQHandler:0000000000000000 $t
+     /tmp/ccYGaOh0.s:118    .text.TIM3_IRQHandler:0000000000000000 TIM3_IRQHandler
+     /tmp/ccYGaOh0.s:151    .text.TIM3_IRQHandler:0000000000000020 $d
+     /tmp/ccYGaOh0.s:156    .text.TIM3_PWM_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:163    .text.TIM3_PWM_Init:0000000000000000 TIM3_PWM_Init
+     /tmp/ccYGaOh0.s:270    .text.TIM3_PWM_Init:000000000000009c $d
+     /tmp/ccYGaOh0.s:281    .bss.TIM5_ICInitStructure:0000000000000000 TIM5_ICInitStructure
+     /tmp/ccYGaOh0.s:278    .bss.TIM5_ICInitStructure:0000000000000000 $d
+     /tmp/ccYGaOh0.s:284    .text.TIM5_Cap_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:291    .text.TIM5_Cap_Init:0000000000000000 TIM5_Cap_Init
+     /tmp/ccYGaOh0.s:415    .text.TIM5_Cap_Init:00000000000000b4 $d
+     /tmp/ccYGaOh0.s:425    .bss.TIM5CH1_CAPTURE_STA:0000000000000000 TIM5CH1_CAPTURE_STA
+     /tmp/ccYGaOh0.s:426    .bss.TIM5CH1_CAPTURE_STA:0000000000000000 $d
+     /tmp/ccYGaOh0.s:432    .bss.TIM5CH1_CAPTURE_VAL:0000000000000000 TIM5CH1_CAPTURE_VAL
+     /tmp/ccYGaOh0.s:429    .bss.TIM5CH1_CAPTURE_VAL:0000000000000000 $d
+     /tmp/ccYGaOh0.s:435    .text.TIM5_IRQHandler:0000000000000000 $t
+     /tmp/ccYGaOh0.s:442    .text.TIM5_IRQHandler:0000000000000000 TIM5_IRQHandler
+     /tmp/ccYGaOh0.s:576    .text.TIM5_IRQHandler:00000000000000d0 $d
+     /tmp/ccYGaOh0.s:583    .text.TIM1_PWM_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:590    .text.TIM1_PWM_Init:0000000000000000 TIM1_PWM_Init
+     /tmp/ccYGaOh0.s:697    .text.TIM1_PWM_Init:00000000000000a0 $d
+     /tmp/ccYGaOh0.s:706    .bss.ov_frame:0000000000000000 ov_frame
+     /tmp/ccYGaOh0.s:707    .bss.ov_frame:0000000000000000 $d
+     /tmp/ccYGaOh0.s:709    .rodata:0000000000000000 $d
+     /tmp/ccYGaOh0.s:713    .text.TIM6_IRQHandler:0000000000000000 $t
+     /tmp/ccYGaOh0.s:720    .text.TIM6_IRQHandler:0000000000000000 TIM6_IRQHandler
+     /tmp/ccYGaOh0.s:763    .text.TIM6_IRQHandler:0000000000000030 $d
+     /tmp/ccYGaOh0.s:770    .text.TIM6_Int_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:777    .text.TIM6_Int_Init:0000000000000000 TIM6_Int_Init
+     /tmp/ccYGaOh0.s:858    .text.TIM6_Int_Init:0000000000000068 $d
+     /tmp/ccYGaOh0.s:863    .text.monitor_PWM_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:870    .text.monitor_PWM_Init:0000000000000000 monitor_PWM_Init
+     /tmp/ccYGaOh0.s:997    .text.monitor_PWM_Init:00000000000000c8 $d
+     /tmp/ccYGaOh0.s:1004   .text.motorA_PWM_Init:0000000000000000 $t
+     /tmp/ccYGaOh0.s:1011   .text.motorA_PWM_Init:0000000000000000 motorA_PWM_Init
+     /tmp/ccYGaOh0.s:1197   .text.motorA_PWM_Init:0000000000000148 $d
+
+UNDEFINED SYMBOLS
+RCC_APB1PeriphClockCmd
+TIM_TimeBaseInit
+TIM_ITConfig
+NVIC_Init
+TIM_Cmd
+TIM_GetITStatus
+TIM_ClearITPendingBit
+RCC_APB2PeriphClockCmd
+GPIO_PinRemapConfig
+GPIO_Init
+TIM_OC2Init
+TIM_OC2PreloadConfig
+TIM_ARRPreloadConfig
+GPIO_ResetBits
+ARM GAS  /tmp/ccYGaOh0.s 			page 29
+
+
+TIM_ICInit
+TIM_GetCapture1
+TIM_OC1PolarityConfig
+TIM_SetCounter
+TIM_OC1Init
+TIM_OC1PreloadConfig
+TIM_CtrlPWMOutputs
+printf
+TIM_OC3Init
+TIM_OC4Init
+TIM_OC3PreloadConfig
+TIM_OC4PreloadConfig
