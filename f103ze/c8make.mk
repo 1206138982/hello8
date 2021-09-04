@@ -3,32 +3,24 @@ BUILD_DIR = build
 
 C_SOURCES2 =  \
 Src/stm32f10x_it.c \
+Src/system_stm32f10x.c \
+Src/uart.c \
+Src/sys.c \
+Src/main.c \
 Drivers/Src/stm32f10x_gpio.c \
 Drivers/Src/stm32f10x_flash.c \
 Drivers/Src/stm32f10x_tim.c \
-Drivers/Src/stm32f10x_tim.c \
-/Src/system_stm32f10x.c \
 Drivers/Src/stm32f10x_dma.c \
-Drivers/Src/stm32f10x_fsmc.c \
-Src/main.c \
 Drivers/Src/stm32f10x_rcc.c \
 Drivers/Src/stm32f10x_pwr.c \
 Drivers/Src/stm32f10x_usart.c \
 Drivers/Src/stm32f10x_exti.c \
 Drivers/Src/misc.c \
-Src/uart.c \
-Src/sys.c \
 hardware/src/led.c \
 hardware/src/key.c \
 hardware/src/delay.c \
-hardware/src/lcd.c \
-hardware/src/sccb.c \
-hardware/src/ov7670.c \
 hardware/src/timer.c \
 hardware/src/exti.c \
-hardware/src/grey.c \
-hardware/src/move.c \
-hardware/src/a4950.c \
 hardware/src/inout.c \
 
 # C includes
