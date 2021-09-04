@@ -4,12 +4,35 @@
 
 extern char KEY0_PUSH;
 extern char KEY1_PUSH;
+extern char KEY2_PUSH;
 
 //外部中断0服务程序
 void EXTI0_IRQHandler(void)
 {
-	delay_ms(10);	//消抖
+	delay_ms(15);	//消抖
+  // printf("get exti0\r\n");
+  KEY2_PUSH = 1;
   EXTI_ClearITPendingBit(EXTI_Line0);  //清除EXTI0线路挂起位  
+}
+void EXTI0_Init(void)
+{
+ //GPIOA.0	  中断线以及中断初始化配置 下降沿触发
+  EXTI_InitTypeDef EXTI_InitStructure;
+ 	NVIC_InitTypeDef NVIC_InitStructure;
+
+  GPIO_EXTILineConfig(GPIO_PortSourceGPIOA,GPIO_PinSource0);
+
+  EXTI_InitStructure.EXTI_Line=EXTI_Line0;
+  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;	
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+  EXTI_Init(&EXTI_InitStructure);	  	//根据EXTI_InitStruct中指定的参数初始化外设EXTI寄存器
+
+  NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;			//使能按键所在的外部中断通道
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x02;	//抢占优先级2 
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;					//子优先级1 
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;								//使能外部中断通道
+  NVIC_Init(&NVIC_InitStructure);  	  //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器
 }
 //外部中断2服务程序
 void EXTI2_IRQHandler(void)
@@ -22,7 +45,7 @@ void EXTI3_IRQHandler(void)
 {
 	delay_ms(15);	//消抖
   KEY0_PUSH = 1;
-  printf("push key 0!\r\n");
+  // printf("push key 0!\r\n");
 	EXTI_ClearITPendingBit(EXTI_Line3);  //清除EXTI0线路挂起位
 }
 void EXTI3_Init(void)
@@ -50,7 +73,7 @@ void EXTI4_IRQHandler(void)
 {
 	delay_ms(15);	//消抖
   KEY1_PUSH = 1;
-  printf("push key 1!\r\n");
+  // printf("push key 1!\r\n");
   // JumpToISP();
 	EXTI_ClearITPendingBit(EXTI_Line4);  //清除EXTI0线路挂起位
 }		   

@@ -5,6 +5,7 @@
 
 char KEY0_PUSH = 0;
 char KEY1_PUSH = 0;
+char KEY2_PUSH = 0;
 
 void pinMode(char pin_n,char is_out)
 {
@@ -37,6 +38,15 @@ char digitalRead(char key_n)
         case 11:
             if(KEY1_PUSH){
                 KEY1_PUSH = 0;
+                return 1;
+            }
+            else{
+                return 0;
+            }
+
+        case 12:
+            if(KEY2_PUSH){
+                KEY2_PUSH = 0;
                 return 1;
             }
             else{

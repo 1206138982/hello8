@@ -24,6 +24,17 @@ void KEY1_init(void)
 	GPIO_Init(GPIOE, &GPIO_InitStructure); 
 }
 
+void KEY2_init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA, &GPIO_InitStructure); 
+}
+
 void keys_init(char key_n)
 {
 	switch (key_n)
@@ -36,6 +47,11 @@ void keys_init(char key_n)
 	case 11:
 		KEY1_init();
 		EXTI4_Init();
+		break;
+
+	case 12:
+		KEY2_init();
+		EXTI0_Init();
 		break;
 
 	default:
