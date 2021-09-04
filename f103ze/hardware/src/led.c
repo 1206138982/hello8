@@ -38,6 +38,12 @@ void leds_init(char led_n)
 			GPIO_Init(LED1_PORT, &GPIO_InitStructure);
 			LED1_POWER_OFF();
 			break;
+		case 2:
+			LED2_RCC_ENABLE();
+			GPIO_InitStructure.GPIO_Pin = LED2_PIN;
+			GPIO_Init(LED2_PORT, &GPIO_InitStructure);
+			LED2_POWER_OFF();
+			break;
 		default:
 			printf("error input led_n\r\n");
 			break;
@@ -58,6 +64,12 @@ void led_set_status(char led_n,char status)
 				LED1_POWER_ON();
 			else
 				LED1_POWER_OFF();
+			break;
+		case 2:
+			if(status)
+				LED2_POWER_ON();
+			else
+				LED2_POWER_OFF();
 			break;
 		default:
 			break;

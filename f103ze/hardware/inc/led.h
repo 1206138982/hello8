@@ -14,6 +14,12 @@
 #define LED1_POWER_ON()   GPIO_ResetBits(LED1_PORT,LED1_PIN)
 #define LED1_POWER_OFF()   GPIO_SetBits(LED1_PORT,LED1_PIN)
 
+#define LED2_PORT   GPIOC
+#define LED2_PIN    GPIO_Pin_13
+#define LED2_RCC_ENABLE()		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE)
+#define LED2_POWER_ON()   GPIO_ResetBits(LED2_PORT,LED2_PIN)
+#define LED2_POWER_OFF()   GPIO_SetBits(LED2_PORT,LED2_PIN)
+
 #define POWER_G_IO_PORT						GPIOB
 #define POWER_G_IO_PIN						GPIO_Pin_5
 #define POWER_G_IO_RCC_ENABLE()		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE)	
