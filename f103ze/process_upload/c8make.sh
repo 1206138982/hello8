@@ -1,2 +1,2 @@
 cd ..
-make -f c8make
+make -f c8make.mk
