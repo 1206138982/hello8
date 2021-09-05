@@ -1,6 +1,7 @@
 #include "stm32f10x.h"
 #include "AllHead.h"
-#include "led.h"
+#include "inout.h"
+#include "servo.h"
 #include "uart.h"
 #include "delay.h"
 #include "sys.h"
@@ -23,7 +24,6 @@ int main(void)
 	JTAG_Set(0x01);
 	delay_init();	    	 //延时函数初始化	  
 	NVIC_Configuration(); 	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
- 	LED_Init();			     //LED端口初始化		
 #if defined(REMOTE_TEST) && REMOTE_TEST
 	uart1_init(115200);
 // user init functions
