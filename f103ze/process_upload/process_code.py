@@ -17,6 +17,7 @@ if __name__ == '__main__':
   full_str = full_str.replace('0.attach','attach')
   full_str = full_str.replace('1.attach','attach')
   full_str = full_str.replace('.write','_write')
+  full_str = full_str.replace('volatile',' ')
   full_list = full_str.split('\n')
   setupA = setupB = loopA = loopB = -1
   block_index = 0;
