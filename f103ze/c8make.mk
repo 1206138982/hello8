@@ -19,9 +19,10 @@ Drivers/Src/misc.c \
 hardware/src/led_c8.c \
 hardware/src/key_c8.c \
 hardware/src/delay.c \
-hardware/src/timer.c \
+hardware/src/timer_c8.c \
 hardware/src/exti.c \
 hardware/src/inout.c \
+hardware/src/servo.c
 
 # C includes
 C_INCLUDES =  \
