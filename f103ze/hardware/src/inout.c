@@ -1,6 +1,5 @@
 #include "inout.h"
 #include "stm32f10x.h"
-#include "led.h"
 #include "key.h"
 
 char KEY0_PUSH = 0;

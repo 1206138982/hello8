@@ -7,7 +7,7 @@ Drivers/Src/stm32f10x_gpio.c \
 Drivers/Src/stm32f10x_flash.c \
 Drivers/Src/stm32f10x_tim.c \
 Drivers/Src/stm32f10x_tim.c \
-/Src/system_stm32f10x.c \
+Src/system_stm32f10x.c \
 Drivers/Src/stm32f10x_dma.c \
 Drivers/Src/stm32f10x_fsmc.c \
 Src/main.c \
@@ -18,7 +18,7 @@ Drivers/Src/stm32f10x_exti.c \
 Drivers/Src/misc.c \
 Src/uart.c \
 Src/sys.c \
-hardware/src/led.c \
+hardware/src/led_ze.c \
 hardware/src/key.c \
 hardware/src/delay.c \
 hardware/src/lcd.c \
@@ -35,7 +35,6 @@ hardware/src/inout.c \
 C_INCLUDES =  \
 -IInc \
 -IDrivers/Inc \
--ILED \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include	\
 -Ihardware/inc \
@@ -80,7 +79,7 @@ $(BUILD_DIR)/%.o: %.c
 $(BUILD_DIR)/%.o:%.s   
 	$(AS) -c $(CFLAGS) $^ -o $@
 	
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) build/led.o  
+$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS)
 	$(CC) $^ $(LDFLAGS) -o $@
 	$(SZ) $@
 	

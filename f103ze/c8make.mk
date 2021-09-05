@@ -16,7 +16,7 @@ Drivers/Src/stm32f10x_pwr.c \
 Drivers/Src/stm32f10x_usart.c \
 Drivers/Src/stm32f10x_exti.c \
 Drivers/Src/misc.c \
-hardware/src/led.c \
+hardware/src/led_c8.c \
 hardware/src/key.c \
 hardware/src/delay.c \
 hardware/src/timer.c \
@@ -27,7 +27,6 @@ hardware/src/inout.c \
 C_INCLUDES =  \
 -IInc \
 -IDrivers/Inc \
--ILED \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
 -IDrivers/CMSIS/Include	\
 -Ihardware/inc \
@@ -72,7 +71,7 @@ $(BUILD_DIR)/%.o: %.c
 $(BUILD_DIR)/%.o:%.s   
 	$(AS) -c $(CFLAGS) $^ -o $@
 	
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) build/led.o  
+$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS)
 	$(CC) $^ $(LDFLAGS) -o $@
 	$(SZ) $@
 	
