@@ -28,12 +28,12 @@ void keys_init(char key_n)
 {
 	switch (key_n)
 	{
-	case 10:
+	case 0:
 		KEY0_init();
 		EXTI3_Init();
 		break;
 	
-	case 11:
+	case 1:
 		KEY1_init();
 		EXTI4_Init();
 		break;

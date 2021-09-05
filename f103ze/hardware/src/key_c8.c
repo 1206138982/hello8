@@ -17,7 +17,7 @@ void keys_init(char key_n)
 {
 	switch (key_n)
 	{
-	case 10:
+	case 0:
 		KEY0_init();
 		EXTI0_Init();
 		break;

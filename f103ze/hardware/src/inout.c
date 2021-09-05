@@ -23,7 +23,7 @@ void digitalWrite(char led_n,char status)
 char digitalRead(char key_n)
 {
     switch(key_n){
-        case 10:
+        case 0:
             if(KEY0_PUSH){
                 KEY0_PUSH = 0;
                 return 1;
@@ -31,7 +31,7 @@ char digitalRead(char key_n)
             else{
                 return 0;
             }
-        case 11:
+        case 1:
             if(KEY1_PUSH){
                 KEY1_PUSH = 0;
                 return 1;
