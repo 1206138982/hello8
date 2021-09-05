@@ -4,14 +4,13 @@
 
 extern char KEY0_PUSH;
 extern char KEY1_PUSH;
-extern char KEY2_PUSH;
 
 //外部中断0服务程序
 void EXTI0_IRQHandler(void)
 {
 	delay_ms(15);	//消抖
   // printf("get exti0\r\n");
-  KEY2_PUSH = 1;
+  KEY0_PUSH = 1;
   EXTI_ClearITPendingBit(EXTI_Line0);  //清除EXTI0线路挂起位  
 }
 void EXTI0_Init(void)

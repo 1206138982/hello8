@@ -19,7 +19,7 @@ Drivers/Src/misc.c \
 Src/uart.c \
 Src/sys.c \
 hardware/src/led_ze.c \
-hardware/src/key.c \
+hardware/src/key_ze.c \
 hardware/src/delay.c \
 hardware/src/lcd.c \
 hardware/src/sccb.c \

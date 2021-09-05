@@ -17,7 +17,7 @@ Drivers/Src/stm32f10x_usart.c \
 Drivers/Src/stm32f10x_exti.c \
 Drivers/Src/misc.c \
 hardware/src/led_c8.c \
-hardware/src/key.c \
+hardware/src/key_c8.c \
 hardware/src/delay.c \
 hardware/src/timer.c \
 hardware/src/exti.c \
