@@ -17,15 +17,11 @@ u8 RUNNING = 0;
 
 int main(void)
 {	 
-#if defined(REMOTE_TEST) && REMOTE_TEST
-	//user varible defination
-#endif
-	uart1_init(115200);	 	//串口初始化为9600
+	uart1_init(115200);
 	JTAG_Set(0x01);
-	delay_init();	    	 //延时函数初始化	  
+	delay_init();
 	NVIC_Configuration(); 	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
 #if defined(REMOTE_TEST) && REMOTE_TEST
-	uart1_init(115200);
 // user init functions
 #endif
 #if defined(REMOTE_TEST) && REMOTE_TEST
