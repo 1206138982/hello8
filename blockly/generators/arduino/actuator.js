@@ -490,8 +490,14 @@ Blockly.Arduino.AFMotorRun = function () {
   var direction = this.getFieldValue('direction');
   var speed = Blockly.Arduino.valueToCode(this, 'speed', Blockly.Arduino.ORDER_ATOMIC);
   var code = "";
-  Blockly.Arduino.definitions_['var_declare_motor_' + motorNO] =  "AF_DCMotor" + ' motor'+motorNO+'(' + motorNO + ');';
-  code = ' motor'+motorNO + ".setSpeed(" + speed + ");\n" + ' motor'+motorNO  + ".run(" + direction + ");\n";
+  Blockly.Arduino.setups_['var_declare_motor_' + motorNO] =  ' motor_init'+'(' + motorNO + ');';
+  if(direction == 'FORWARD'){
+    code = ' motor' + "_setSpeed(" +motorNO+","+ speed + ");\n" ;
+  }
+  else{
+    code = ' motor' + "_setSpeed(" +motorNO+",-"+ speed + ");\n";
+  }
+  
   return code;
 };
 

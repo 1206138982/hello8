@@ -22,7 +22,8 @@ hardware/src/delay.c \
 hardware/src/timer_c8.c \
 hardware/src/exti.c \
 hardware/src/inout.c \
-hardware/src/servo.c
+hardware/src/servo.c \
+hardware/src/motor.c \
 
 # C includes
 C_INCLUDES =  \
