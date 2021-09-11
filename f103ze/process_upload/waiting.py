@@ -37,5 +37,6 @@ if __name__ == '__main__':
       os.system('./aft_make.sh')
       print("finished of making")
       save_log('finished of making')
+      mtime_new = os.stat('/home/user000/upload/code.txt').st_mtime
       mtime_before = mtime_new
 
