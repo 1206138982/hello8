@@ -39,7 +39,7 @@ class TInteractObj(QObject):
     # str表示接收str类型的信号,信号是从js发出的.可以出传递的参数类型有很多种：str、int、list、object、float、tuple、dict等等
     @pyqtSlot(str)
     def receive_str_from_js(self, str):
-        print('接受消息str is ',str)
+        print('pyqt receive code from js:\n',str)
         self.receive_str_from_js_callback(str)
  
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -72,17 +72,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def receive_data(self, data):
         with open("code.txt","w") as f:
             f.write(data)  # 自带文件关闭功能，不需要再写f.close()
-        print('receive data from html')
+        print('write code to local txt')
         self.upload_code()
  
     @pyqtSlot()
     def on_pushButton_clicked(self):
-        print('pyqt send message')
         # 这个信号是在js中和一个js方法绑定的,所以发射这个信号时会执行对应的js方法.
         self.interact_obj.sig_send_to_js.emit('compile')
+        print('pyqt send command to js to get code')
     @pyqtSlot()
     def on_pushButton_2_clicked(self):
-        print("download")
+        print("try to get hex file from server")
         getfromPath = "/home/user000/upload/make103.hex"
         gettoPath = os.path.join(os.getcwd(), "make103.hex")
         client = paramiko.SSHClient()
@@ -92,7 +92,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.get(getfromPath,gettoPath)
         sftp_client.close()
         client.close()
+        print("get hex file from server")
         os.system('.\download.bat')
+        print('finish download hex file')
 
     def upload_code(self):
         client = paramiko.SSHClient()
@@ -104,6 +106,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.put(fromPath_code, toPath_code)
         sftp_client.close()
         client.close()
+        print('send code to server')
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -96,8 +96,7 @@ class Ui_MainWindow(object):
         # self.comboBox_2.setItemText(1, _translate("MainWindow", "item2"))
         
     def button3Clicked(self):
-        global COM_MESSAGE
-        print('get button3')
+        print('try to get the port information')
         new_name_list = []
         uart_port_num = QSerialPortInfo.availablePorts()
         for info in uart_port_num:
@@ -114,21 +113,20 @@ class Ui_MainWindow(object):
         self.save_comMessage(self.comboBox_2.itemText(0)[3])
 
     def selectionChange(self,i):
-        print('comboBox_2,index', i, 'value', self.comboBox_2.itemText(i))
+        print('select port:%s,index:%d'%(self.comboBox_2.itemText(i),i))
         self.save_comMessage(self.comboBox_2.itemText(i)[3])
 
     def save_comMessage(self,str):
-        print('save message',str)
         str2write = 'cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str[0]+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn ..\\make103.hex -r --a 08000000'
-        print(str2write)
         with open("download.bat","w") as f:
             f.write(str2write)  # 自带文件关闭功能，不需要再写f.close()
+        print('update download.bat')
 
     def selectionChange3(self,i):
-        print('comboBox_3,index', i, 'value', self.comboBox_3.itemText(i))
+        print('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
         saveBoard(self.comboBox_3.itemText(i))
 
 def saveBoard(str):
-    # print('in saveBoard:'+str)
     with open("board.txt","w") as f:
         f.write(str)  # 自带文件关闭功能，不需要再写f.close()
+    print('update board.txt')
