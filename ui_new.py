@@ -112,7 +112,8 @@ class Ui_MainWindow(object):
             _translate = QtCore.QCoreApplication.translate
             self.comboBox_2.setItemText(num, _translate("MainWindow", i))
             num = num+1
-        self.save_comMessage(self.comboBox_2.itemText(0)[3])
+        if num != 0:
+            self.save_comMessage(self.comboBox_2.itemText(0)[3])
 
     def selectionChange(self,i):
         print('select port:%s,index:%d'%(self.comboBox_2.itemText(i),i))
