@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtSerialPort import QSerialPortInfo
+import my_logging
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -97,6 +98,7 @@ class Ui_MainWindow(object):
         
     def button3Clicked(self):
         print('try to get the port information')
+        my_logging.save_log('try to get the port information')
         new_name_list = []
         uart_port_num = QSerialPortInfo.availablePorts()
         for info in uart_port_num:
@@ -114,6 +116,7 @@ class Ui_MainWindow(object):
 
     def selectionChange(self,i):
         print('select port:%s,index:%d'%(self.comboBox_2.itemText(i),i))
+        my_logging.save_log('select port:%s,index:%d'%(self.comboBox_2.itemText(i),i))
         self.save_comMessage(self.comboBox_2.itemText(i)[3])
 
     def save_comMessage(self,str):
@@ -121,12 +124,15 @@ class Ui_MainWindow(object):
         with open("download.bat","w") as f:
             f.write(str2write)  # 自带文件关闭功能，不需要再写f.close()
         print('update download.bat')
+        my_logging.save_log('update download.bat')
 
     def selectionChange3(self,i):
         print('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
+        my_logging.save_log('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
         saveBoard(self.comboBox_3.itemText(i))
 
 def saveBoard(str):
     with open("board.txt","w") as f:
         f.write(str)  # 自带文件关闭功能，不需要再写f.close()
     print('update board.txt')
+    my_logging.save_log('update board.txt')

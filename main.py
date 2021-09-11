@@ -2,6 +2,7 @@ import os
 import sys
 import paramiko
 import time
+import my_logging
 
 from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
@@ -40,11 +41,13 @@ class TInteractObj(QObject):
     @pyqtSlot(str)
     def receive_str_from_js(self, str):
         print('pyqt receive code from js:\n',str)
+        my_logging.save_log('pyqt receive code from js:\n%s'%(str))
         self.receive_str_from_js_callback(str)
  
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
+        my_logging.init_log()
         self.setupUi(self)
  
         # self.index = (os.path.split(os.path.realpath(__file__))[0]) + "/demo14.html"
@@ -73,6 +76,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         with open("code.txt","w") as f:
             f.write(data)  # 自带文件关闭功能，不需要再写f.close()
         print('write code to local txt')
+        my_logging.save_log('write code to local txt')
         self.upload_code()
  
     @pyqtSlot()
@@ -80,9 +84,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # 这个信号是在js中和一个js方法绑定的,所以发射这个信号时会执行对应的js方法.
         self.interact_obj.sig_send_to_js.emit('compile')
         print('pyqt send command to js to get code')
+        my_logging.save_log('pyqt send command to js to get code')
     @pyqtSlot()
     def on_pushButton_2_clicked(self):
         print("try to get hex file from server")
+        my_logging.save_log("try to get hex file from server")
         getfromPath = "/home/user000/upload/make103.hex"
         gettoPath = os.path.join(os.getcwd(), "make103.hex")
         client = paramiko.SSHClient()
@@ -93,8 +99,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.close()
         client.close()
         print("get hex file from server")
+        my_logging.save_log("get hex file from server")
         os.system('.\download.bat')
         print('finish download hex file')
+        my_logging.save_log('finish download hex file')
 
     def upload_code(self):
         client = paramiko.SSHClient()
@@ -107,6 +115,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.close()
         client.close()
         print('send code to server')
+        my_logging.save_log('send code to server')
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -115,4 +124,5 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 
 #########################################
+##pyqt reference:
 ## https://blog.csdn.net/qq_37193537/article/details/90904331?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162886055316780357279334%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162886055316780357279334&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-90904331.first_rank_v2_pc_rank_v29&utm_term=pyqt%E4%B8%8Ehtml%E9%80%9A%E8%AE%AF&spm=1018.2226.3001.4187
