@@ -90,6 +90,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
         sftp_client = paramiko.SFTPClient.from_transport(client.get_transport())
         sftp_client.get(getfromPath,gettoPath)
+        sftp_client.close()
+        client.close()
         os.system('.\download.bat')
 
     def upload_code(self):
