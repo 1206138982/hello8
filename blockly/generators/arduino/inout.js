@@ -27,8 +27,8 @@ Blockly.Arduino.inout_digital_write2 = function () {
     if (window.isNaN(dropdown_pin) && board_type.match(RegExp(/STM32/)) == null) {
         code = code + 'pinMode(' + dropdown_pin + ', OUTPUT);\n';
     } else {
-        if (Blockly.Arduino.setups_['setup_input_' + dropdown_pin])
-            delete Blockly.Arduino.setups_['setup_input_' + dropdown_pin];
+        // if (Blockly.Arduino.setups_['setup_input_' + dropdown_pin])
+        //     delete Blockly.Arduino.setups_['setup_input_' + dropdown_pin];
         Blockly.Arduino.setups_['setup_output_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', OUTPUT);';
     }
     code += 'digitalWrite(' + dropdown_pin + ',' + dropdown_stat + ');\n'
@@ -56,11 +56,11 @@ Blockly.Arduino.inout_digital_read2 = function () {
         Blockly.Arduino.definitions_[funcName] = code2;
         code = 'mixly_digitalRead(' + dropdown_pin + ')';
     } else {
-        if (Blockly.Arduino.setups_['setup_output_' + dropdown_pin]) {
-            //存在pinMode已设为output则不再设为input
-        } else {
+        // if (Blockly.Arduino.setups_['setup_output_' + dropdown_pin]) {
+        //     //存在pinMode已设为output则不再设为input
+        // } else {
             Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', INPUT);';
-        }
+        // }
         if (Blockly.Arduino.setups_['setup_setup']) { //解决pullup重复问题
             if (Blockly.Arduino.setups_['setup_setup'].indexOf('pinMode(' + dropdown_pin) > -1) {
                 delete Blockly.Arduino.setups_['setup_input_' + dropdown_pin];
