@@ -27,7 +27,11 @@ void motor_setSpeed(char motor_n,signed char speed)
     }
     switch(motor_n){
         case 1:
-            if(speed >= 0){
+            if(speed == 0){
+                TIM_SetCompare1(TIM3,0);
+                TIM_SetCompare2(TIM3,0);
+            }
+	    else if(speed >  0){
                 TIM_SetCompare1(TIM3,MIN_ARR+(int)((MAX_ARR-MIN_ARR)*speed/100.0));
                 TIM_SetCompare2(TIM3,0);
             }
@@ -37,7 +41,11 @@ void motor_setSpeed(char motor_n,signed char speed)
             }
             break;
         case 2:
-            if(speed >= 0){
+            if(speed == 0){
+                TIM_SetCompare3(TIM3,0);
+                TIM_SetCompare4(TIM3,0);
+            }
+	    else if(speed > 0){
                 TIM_SetCompare3(TIM3,MIN_ARR+(int)((MAX_ARR-MIN_ARR)*speed/100.0));
                 TIM_SetCompare4(TIM3,0);
             }
