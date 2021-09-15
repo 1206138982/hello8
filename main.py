@@ -78,6 +78,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print('write code to local txt')
         my_logging.save_log('write code to local txt')
         self.upload_code()
+        time.sleep(0.1)
+        self.get_hex()
  
     @pyqtSlot()
     def on_pushButton_clicked(self):
@@ -85,8 +87,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.interact_obj.sig_send_to_js.emit('compile')
         print('pyqt send command to js to get code')
         my_logging.save_log('pyqt send command to js to get code')
+
     @pyqtSlot()
-    def on_pushButton_2_clicked(self):
+    # def on_pushButton_2_clicked(self):
+    #     self.get_hex()
+
+    def upload_code(self):
+        client = paramiko.SSHClient()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
+
+        sftp_client = paramiko.SFTPClient.from_transport(client.get_transport())
+        sftp_client.put(fromPath_board, toPath_board)
+        sftp_client.put(fromPath_code, toPath_code)
+        sftp_client.close()
+        client.close()
+        print('send code to server')
+        my_logging.save_log('send code to server')
+
+    def get_hex(self):
         print("try to get hex file from server")
         my_logging.save_log("try to get hex file from server")
         getfromPath = "/home/user000/upload/make103.hex"
@@ -103,19 +122,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         os.system('.\download.bat')
         print('finish download hex file')
         my_logging.save_log('finish download hex file')
-
-    def upload_code(self):
-        client = paramiko.SSHClient()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
-
-        sftp_client = paramiko.SFTPClient.from_transport(client.get_transport())
-        sftp_client.put(fromPath_board, toPath_board)
-        sftp_client.put(fromPath_code, toPath_code)
-        sftp_client.close()
-        client.close()
-        print('send code to server')
-        my_logging.save_log('send code to server')
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)

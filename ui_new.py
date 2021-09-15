@@ -42,9 +42,9 @@ class Ui_MainWindow(object):
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout.addWidget(self.pushButton)
 
-        self.pushButton_2 = QtWidgets.QPushButton(self.widget)
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout.addWidget(self.pushButton_2)
+        # self.pushButton_2 = QtWidgets.QPushButton(self.widget)
+        # self.pushButton_2.setObjectName("pushButton_2")
+        # self.horizontalLayout.addWidget(self.pushButton_2)
 
         self.widget1 = QtWidgets.QWidget(self.centralwidget)
         self.widget1.setGeometry(QtCore.QRect(690, 10, 321, 30))
@@ -90,8 +90,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton_2.setText(_translate("MainWindow", "下载"))
-        self.pushButton.setText(_translate("MainWindow", "编译"))
+        self.pushButton.setText(_translate("MainWindow", "编译下载"))
+        # self.pushButton_2.setText(_translate("MainWindow", "下载"))
         self.pushButton_3.setText(_translate("MainWindow", "刷新串口"))
         # self.comboBox_2.setItemText(0, _translate("MainWindow", "item1"))
         # self.comboBox_2.setItemText(1, _translate("MainWindow", "item2"))
