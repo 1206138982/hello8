@@ -67,6 +67,23 @@ Blockly.Blocks.gps_getData_xxx = {
   }
 };
 
+Blockly.Blocks.test_inout_digital_write2 = {
+  init: function() {
+    this.setColour(Blockly.Blocks.base.HUE);
+    this.appendValueInput("PIN", Number)
+    .appendField(Blockly.MIXLY_DIGITALWRITE_PIN)
+    .setCheck(Number);
+    this.appendValueInput("STAT")
+    .appendField(Blockly.MIXLY_STAT)
+    .setCheck([Number,Boolean]);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setInputsInline(true);
+    this.setTooltip(Blockly.LANG_INOUT_DIGITAL_WRITE_TOOLTIP);
+    this.setHelpUrl("https://mixly.readthedocs.io/zh_CN/latest/arduino/02.Input-Output.html#id2");
+  }
+};
+
 Blockly.Blocks.chaoshengbo2 = {
   init: function () {
     this.setColour(Blockly.Blocks.sensor.HUE);

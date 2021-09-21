@@ -21,7 +21,7 @@ var MSG = {
 	catStorageSD:'SD',
 	catStorageSPIFFS:'SPIFFS',
 	catStorageEEPROM:'EEPROM',
-	catSensor: "Sensor",
+	catSensor: "Smart_drive",
 	catActuator: "Actuator",
 	catActuator_motor: "Motor",
 	catActuator_voice: "Sound",

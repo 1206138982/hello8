@@ -21,7 +21,7 @@ var MSG = {
 	catStorageSD:'SD',
 	catStorageSPIFFS:'SPIFFS',
 	catStorageEEPROM:'EEPROM',
-	catSensor: "传感器",
+	catSensor: "智能驾驶",
 	catActuator: "执行器",
 	catActuator_motor: "电机",
 	catActuator_voice: "声音",

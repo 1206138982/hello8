@@ -1,0 +1,24 @@
+文件结构：
+arduino：完整的arduino IDE
+blockly:米斯琪软件开发
+company：第三方公司安装的库
+cpbuild：所用到的固件
+microbitBuild:micropython项目创建时会用到
+mpBuild:micropython会用到
+mixpybuild：米斯琪micropython会用到的
+sample：所有的范例程序
+setting：软件设置参数、图标
+
+软件关键是blockly里边的文件：
+apps/mixly/ 每一个html文件对应一种板卡
+blocks下为每个标签长什么样子
+generators下定义生成的代码
+/msg/js/ 语言文件，方便转换不同的语言
+
+二次开发blockly：
+blockly/arduino.js:
+Blockly.Arduino.finish() 函数进来之后，直接return code，即可拿到blockly/generators里边生成的code
+blockly\generators\arduino\procedures.js  会调用Blockly.Arduino.scrub_()来获取code
+
+blockly.js
+函数 Blockly.Category_Icon_Add_With_Coordinates() 应该是给每个catetory添加图标、名字，但是没有找到哪个地方有调用该函数

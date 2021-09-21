@@ -37,6 +37,23 @@ Blockly.Arduino.gps_getData_xxx = function() {
   return [code,Blockly.Arduino.ORDER_ATOMIC];
 };
 
+Blockly.Arduino.test_inout_digital_write2 = function () {
+  var dropdown_pin = Blockly.Arduino.valueToCode(this, 'PIN', Blockly.Arduino.ORDER_ATOMIC);
+  var dropdown_stat = Blockly.Arduino.valueToCode(this, 'STAT', Blockly.Arduino.ORDER_ATOMIC);
+  var code="";
+  // var board_type = JSFuncs.getPlatform();
+  var board_type = 'Arduino_AVR_Boards';
+  if (window.isNaN(dropdown_pin) && board_type.match(RegExp(/STM32/)) == null) {
+      code = code + 'pinMode(' + dropdown_pin + ', OUTPUT);\n';
+  } else {
+      // if (Blockly.Arduino.setups_['setup_input_' + dropdown_pin])
+      //     delete Blockly.Arduino.setups_['setup_input_' + dropdown_pin];
+      Blockly.Arduino.setups_['setup_output_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', OUTPUT);';
+  }
+  code += 'digitalWrite(' + dropdown_pin + ',' + dropdown_stat + ');\n'
+  return code;
+};
+
 Blockly.Arduino.chaoshengbo2 = function () {
   var Trig = this.getFieldValue('Trig');
   var Echo = this.getFieldValue('Echo');
