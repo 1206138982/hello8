@@ -1,4 +1,5 @@
 import os
+import time
 
 if __name__ == '__main__':
   list_res_setup = list('\n')
@@ -6,9 +7,10 @@ if __name__ == '__main__':
   code_resA = '\n'
   code_resB = '\n'
   print('start to process code')
+  time.sleep(0.02)
   f = open('/home/user000/upload/code.txt')
-  # f = open('test.txt')
   full_str = f.read()
+  f.close()
   full_str = full_str.replace('delay','delay_lms')
   full_str = full_str.replace('OUTPUT','1')
   full_str = full_str.replace('INPUT','0')
@@ -48,9 +50,9 @@ if __name__ == '__main__':
     list_res_loop.insert(len(list_res_loop),'\n')
   code_resB = ''.join(list_res_loop)
 
-  # print(code_resA)
-  # print('-------------')
-  # print(code_resB)
+  #print(code_resA)
+  #print('-------------')
+  #print(code_resB)
   
   f = open('/home/ubuntu/hello8/f103ze/Src/main.c',encoding='utf-8')
   # f = open('main.c',encoding='utf-8')
