@@ -18,5 +18,7 @@
 #define LED2 PAout(7)
 
 void LED_Init(void);
+void leds_init(char led_n);
+void led_set_status(char led_n,char status);
 
 #endif

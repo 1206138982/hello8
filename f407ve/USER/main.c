@@ -9,15 +9,18 @@ int main(void)
 	uart_init(115200);
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	delay_init(168);
-	LED_Init();
 	EXTIX_Init();
+	pinMode(0,1);
+	pinMode(1,1);
 	
 	while(1)
 	{
-		LED0_POWER_ON();
-		delay_ms(2000);
-		LED0_POWER_OFF();
-		delay_ms(200);
+		digitalWrite(0,1);
+		digitalWrite(1,0);
+		delay_ms(1000);
+		digitalWrite(0,0);
+		digitalWrite(1,1);
+		delay_ms(1000);
 		printf("hello worrld\r\n");
 	}
 }

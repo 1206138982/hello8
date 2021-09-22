@@ -8,15 +8,16 @@ FWLIB/src/stm32f4xx_usart.c  \
 FWLIB/src/stm32f4xx_rcc.c  \
 FWLIB/src/stm32f4xx_exti.c  \
 FWLIB/src/stm32f4xx_syscfg.c  \
-HARDWARE/src/key.c  \
-HARDWARE/src/led.c  \
-HARDWARE/src/exti.c  \
 SYSTEM/delay/delay.c  \
 SYSTEM/sys/sys.c  \
 SYSTEM/usart/usart.c  \
 USER/main.c  \
 USER/stm32f4xx_it.c  \
 USER/system_stm32f4xx.c  \
+HARDWARE/src/key.c  \
+HARDWARE/src/led.c  \
+HARDWARE/src/exti.c  \
+HARDWARE/src/inout.c  \
 
 # C includes
 C_INCLUDES =  \
