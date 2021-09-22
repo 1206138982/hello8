@@ -1,13 +1,6 @@
 #include "key.h"
 #include "delay.h" 
-//////////////////////////////////////////////////////////////////////////////////	 
- 
-//按键输入驱动代码	   
-//STM32F4工程-库函数版本
-//淘宝店铺：http://mcudev.taobao.com								  
-////////////////////////////////////////////////////////////////////////////////// 	 
 
-//按键初始化函数
 void KEY_Init(void)
 {
 	
@@ -26,7 +19,51 @@ void KEY_Init(void)
   GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN ;//下拉
   GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA0
  
-} 
+}
+
+void KEY0_init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);
+}
+
+void KEY1_init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_Init(GPIOE, &GPIO_InitStructure);
+}
+
+void keys_init(char key_n)
+{
+	switch (key_n)
+	{
+	case 0:
+		KEY0_init();
+		EXTI3_Init();
+		break;
+	
+	case 1:
+		KEY1_init();
+		EXTI4_Init();
+		break;
+
+	default:
+		break;
+	}
+}
+
 //按键处理函数
 //返回按键值
 //mode:0,不支持连续按;1,支持连续按;
@@ -51,23 +88,3 @@ u8 KEY_Scan(u8 mode)
 	}else if(KEY0==1&&KEY1==1&&WK_UP==0)key_up=1; 	    
  	return 0;// 无按键按下
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

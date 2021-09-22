@@ -3,6 +3,8 @@
 #include "key.h"
 #include "stdio.h"
 
+extern char KEY0_PUSH;
+extern char KEY1_PUSH;
 void JumpToISP(void);
 
 void EXTI0_IRQHandler(void)
@@ -11,7 +13,7 @@ void EXTI0_IRQHandler(void)
 	if(WK_UP==1)	 
 	{
 		printf("jump to isp model\r\n");
-		JumpToISP();
+		// JumpToISP();
 	}		 
 	 EXTI_ClearITPendingBit(EXTI_Line0); //清除LINE0上的中断标志位 
 }	
@@ -75,6 +77,66 @@ void EXTIX_Init(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;//使能外部中断通道
   NVIC_Init(&NVIC_InitStructure);//配置
 	   
+}
+
+void EXTI3_IRQHandler(void)
+{
+	delay_ms(15);
+  KEY0_PUSH = 1;
+  // printf("push key 0!\r\n");
+	EXTI_ClearITPendingBit(EXTI_Line3);  //清除EXTI0线路挂起位
+}
+
+void EXTI3_Init(void)
+{
+	NVIC_InitTypeDef   NVIC_InitStructure;
+	EXTI_InitTypeDef   EXTI_InitStructure;
+ 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);//使能SYSCFG时钟
+ 
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource3);
+	
+  EXTI_InitStructure.EXTI_Line = EXTI_Line3;
+  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+  EXTI_Init(&EXTI_InitStructure);
+ 
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI3_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
+}
+
+void EXTI4_IRQHandler(void)
+{
+	delay_ms(15);
+  KEY1_PUSH = 1;
+  // printf("push key 1!\r\n");
+	EXTI_ClearITPendingBit(EXTI_Line4);  //清除EXTI0线路挂起位
+}
+
+void EXTI4_Init(void)
+{
+	NVIC_InitTypeDef   NVIC_InitStructure;
+	EXTI_InitTypeDef   EXTI_InitStructure;
+ 
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
+ 
+	SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOE, EXTI_PinSource4);
+	
+  EXTI_InitStructure.EXTI_Line = EXTI_Line4;
+  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+  EXTI_Init(&EXTI_InitStructure);
+ 
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI4_IRQn;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x00;
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+  NVIC_Init(&NVIC_InitStructure);
 }
 
 #define ISPAddress (uint32_t)0x1FFF0000 
