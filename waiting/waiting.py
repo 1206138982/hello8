@@ -15,28 +15,26 @@ def save_log(str):
   logger.info(str)
 
 if __name__ == '__main__':
-  mtime_before = os.stat('/home/user000/upload/code.txt').st_mtime
-  log_init()
+  mtime_before = os.stat('/home/user000/upload/board.txt').st_mtime
+  #log_init()
   while True:
     time.sleep(0.01)
-    mtime_new = os.stat('/home/user000/upload/code.txt').st_mtime
+    mtime_new = os.stat('/home/user000/upload/board.txt').st_mtime
     if(mtime_new != mtime_before):
-      print('get the new file')
-      save_log('get new file')
-      os.system('./bef_make.sh')
-      time.sleep(0.01)
-      os.system('./exchange_code.sh')
+      print('get a new board file')
+      #save_log('get new file')
       f = open('/home/user000/upload/board.txt')
       board_str = f.read()
       if(board_str.find('f103c8')!=-1):
-        os.system('./c8make.sh')
+        os.system('./f103c8.sh')
       elif(board_str.find('f103ze')!=-1):
-        os.system('./zemake.sh')
+        os.system('./f103ze.sh')
+      elif(board_str.find('f407ve')!=-1):
+        os.system('./f407ve.sh')
       else:
         print('cannot find board paired!')
-      os.system('./aft_make.sh')
-      print("finished of making")
-      save_log('finished of making')
-      mtime_new = os.stat('/home/user000/upload/code.txt').st_mtime
+      print("accomplish!")
+      #save_log('finished of making')
+      mtime_new = os.stat('/home/user000/upload/board.txt').st_mtime
       mtime_before = mtime_new
 
