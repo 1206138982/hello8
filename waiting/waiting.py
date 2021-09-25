@@ -16,13 +16,13 @@ def save_log(str):
 
 if __name__ == '__main__':
   mtime_before = os.stat('/home/user000/upload/board.txt').st_mtime
-  #log_init()
+  log_init()
   while True:
     time.sleep(0.01)
     mtime_new = os.stat('/home/user000/upload/board.txt').st_mtime
     if(mtime_new != mtime_before):
       print('get a new board file')
-      #save_log('get new file')
+      save_log('get a new board file')
       f = open('/home/user000/upload/board.txt')
       board_str = f.read()
       if(board_str.find('f103c8')!=-1):
@@ -33,8 +33,9 @@ if __name__ == '__main__':
         os.system('./f407ve.sh')
       else:
         print('cannot find board paired!')
+        save_log('cannot find board paired!')
       print("accomplish!")
-      #save_log('finished of making')
+      save_log('accomplish')
       mtime_new = os.stat('/home/user000/upload/board.txt').st_mtime
       mtime_before = mtime_new
 
