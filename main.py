@@ -98,8 +98,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
 
         sftp_client = paramiko.SFTPClient.from_transport(client.get_transport())
-        sftp_client.put(fromPath_board, toPath_board)
         sftp_client.put(fromPath_code, toPath_code)
+        sftp_client.put(fromPath_board, toPath_board)
         sftp_client.close()
         client.close()
         print('send code to server')

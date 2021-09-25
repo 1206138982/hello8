@@ -70,6 +70,7 @@ class Ui_MainWindow(object):
         self.comboBox_3.setObjectName("comboBox_3")
         self.comboBox_3.addItem("f103c8")
         self.comboBox_3.addItem("f103ze")
+        self.comboBox_3.addItem("f407ve")
         # self.comboBox_2.currentIndexChanged.connect(self.selectionChange3)
         self.comboBox_3.activated.connect(self.selectionChange3)
         self.horizontalLayout_2.addWidget(self.comboBox_3)
@@ -85,6 +86,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        self.erase_all = 1
+        self.com_info = -1
         saveBoard('f103c8')
 
     def retranslateUi(self, MainWindow):
@@ -113,24 +117,34 @@ class Ui_MainWindow(object):
             self.comboBox_2.setItemText(num, _translate("MainWindow", i))
             num = num+1
         if num != 0:
-            self.save_comMessage(self.comboBox_2.itemText(0)[3])
+            self.com_info = int(self.comboBox_2.itemText(0)[3])
+            self.update_downloadbat()
 
     def selectionChange(self,i):
         print('select port:%s,index:%d'%(self.comboBox_2.itemText(i),i))
         my_logging.save_log('select port:%s,index:%d'%(self.comboBox_2.itemText(i),i))
-        self.save_comMessage(self.comboBox_2.itemText(i)[3])
-
-    def save_comMessage(self,str):
-        str2write = 'cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str[0]+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn ..\\make103.hex -r --a 08000000'
-        with open("download.bat","w") as f:
-            f.write(str2write)  # 自带文件关闭功能，不需要再写f.close()
-        print('update download.bat')
-        my_logging.save_log('update download.bat')
+        self.com_info = int(self.comboBox_2.itemText(i)[3])
+        self.update_downloadbat()
 
     def selectionChange3(self,i):
         print('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
         my_logging.save_log('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
+        if 'f407ve' in self.comboBox_3.itemText(i):
+            self.erase_all = 0
+        else:
+            self.erase_all = 1
+        self.update_downloadbat()
         saveBoard(self.comboBox_3.itemText(i))
+
+    def update_downloadbat(self):
+        if self.erase_all == 1:
+            str2write = 'copy make103.hex Flash_Loader_Demo\n cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str(self.com_info)+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000'
+        else:
+            str2write = 'copy make103.hex Flash_Loader_Demo\n cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str(self.com_info)+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000'
+        with open("download.bat","w") as f:
+            f.write(str2write)  # 自带文件关闭功能，不需要再写f.close()
+        print('update download.bat')
+        my_logging.save_log('update download.bat')
 
 def saveBoard(str):
     with open("board.txt","w") as f:
