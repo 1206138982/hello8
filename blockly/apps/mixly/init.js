@@ -351,6 +351,8 @@ var resetACEFontSize = function(){
         // alert(str);
         if(str.indexOf('compile') != -1){
           send2pyqt();
+        }
+        else if(str.indexOf('download') != -1){
           alert('download completed');
         }
         // document.getElementById("output").value = str;

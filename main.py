@@ -3,6 +3,7 @@ import sys
 import paramiko
 import time
 import my_logging
+import threading
 
 from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
@@ -28,7 +29,6 @@ class TInteractObj(QObject):
     一个信号供js绑定,
     这个一个交互对象最基本的组成部分.
     """
- 
     # 定义信号,该信号会在js中绑定一个js方法.
     sig_send_to_js = pyqtSignal(str)
  
@@ -58,7 +58,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.webview.load(QUrl(QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))   # for windows
         self.init_channel()
         self.showMaximized()    #窗口最大化
- 
+        self.ready_download = 0
+
     def init_channel(self):
         """
         为webview绑定交互对象
@@ -117,15 +118,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.get(getfromPath,gettoPath)
         sftp_client.close()
         client.close()
+        self.ready_download = 1
         print("get hex file from server")
         my_logging.save_log("get hex file from server")
-        os.system('.\download.bat')
-        print('finish download hex file')
-        my_logging.save_log('finish download hex file')
+
+    def downloadingbat(self):
+        while True:
+            time.sleep(0.1)
+            if self.ready_download == 1:
+                os.system('.\download.bat')
+                self.interact_obj.sig_send_to_js.emit('download')
+                print('FINISH DOWNLOAD')
+                my_logging.save_log('FINISH DOWNLOAD')
+                self.ready_download = 0
  
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ui = MainWindow()
+    download_thread = threading.Thread(target=ui.downloadingbat, name='read')
+    download_thread.start()
     ui.show()
     sys.exit(app.exec_())
 
