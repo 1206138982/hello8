@@ -1,0 +1,1 @@
+.\STMFlashLoader.exe -c --pn 7 --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn C:\demo.hex -r --a 08000000
