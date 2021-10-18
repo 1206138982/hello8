@@ -12,8 +12,8 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 # from ui import Ui_MainWindow
 from ui_new import Ui_MainWindow
 
-host = "110.40.246.189"
-port = 22
+host = "hello654321.tpddns.cn"
+port = 5005
 username = "user000"
 password = "123456"
 timeout = 10
