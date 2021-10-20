@@ -31,6 +31,8 @@ if __name__ == '__main__':
         os.system('./f103ze.sh')
       elif(board_str.find('f407ve')!=-1):
         os.system('./f407ve.sh')
+      elif(board_str.find('f407zg')!=-1):
+        os.system('./f407zg.sh')
       else:
         print('cannot find board paired!')
         save_log('cannot find board paired!')
