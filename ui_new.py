@@ -71,6 +71,7 @@ class Ui_MainWindow(object):
         self.comboBox_3.addItem("f103c8")
         self.comboBox_3.addItem("f103ze")
         self.comboBox_3.addItem("f407ve")
+        self.comboBox_3.addItem("f407zg")
         # self.comboBox_2.currentIndexChanged.connect(self.selectionChange3)
         self.comboBox_3.activated.connect(self.selectionChange3)
         self.horizontalLayout_2.addWidget(self.comboBox_3)
