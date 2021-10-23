@@ -1,15 +1,10 @@
-import os
-import sys
-import paramiko
-import time
-import my_logging
-import threading
+import os, sys, paramiko, time, my_logging, threading
 
 from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
 from PyQt5.QtWidgets import QMainWindow, QApplication
  
-# from ui import Ui_MainWindow
+# from ui import Ui_MainWindow      # for test ui main window  
 from ui_new import Ui_MainWindow
 
 host = "hello654321.tpddns.cn"
@@ -19,7 +14,6 @@ password = "123456"
 timeout = 10
 fromPath_code = os.path.join(os.getcwd(), "code.txt")
 fromPath_board = os.path.join(os.getcwd(), "board.txt")
-# fromPath = 'D:\\Program Files\\Oracle\\sharedir\\pyqt\\hello8\\test.txt'
 toPath_code = "/home/user000/upload/code.txt"
 toPath_board = "/home/user000/upload/board.txt"
 
@@ -45,14 +39,12 @@ class TInteractObj(QObject):
         self.receive_str_from_js_callback(str)
  
 class MainWindow(QMainWindow, Ui_MainWindow):
+    flag_stop = 0
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         my_logging.init_log()
         self.setupUi(self)
  
-        # self.index = (os.path.split(os.path.realpath(__file__))[0]) + "/demo14.html"
-        # self.webview.load(QUrl.fromLocalFile(self.index))
-        # self.webview.load(QUrl("file:/home/embed/ebf_dir/pyqt/hello8/c.html"))
         # self.webview.load(QUrl("file:/home/embed/ebf_dir/pyqt/hello8/blockly/apps/mixly/index.html"))
         # self.webview.load(QUrl("file://"+QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))    # for ubuntu
         self.webview.load(QUrl(QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))   # for windows
@@ -61,9 +53,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.ready_download = 0
 
     def init_channel(self):
-        """
-        为webview绑定交互对象
-        """
+        # 为webview绑定交互对象
         self.interact_obj = TInteractObj(self)
         self.interact_obj.receive_str_from_js_callback = self.receive_data
  
@@ -125,6 +115,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def downloadingbat(self):
         while True:
             time.sleep(0.1)
+            if self.flag_stop == 1:
+                break
             if self.ready_download == 1:
                 os.system('.\download.bat')
                 self.interact_obj.sig_send_to_js.emit('download')
@@ -132,6 +124,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 my_logging.save_log('FINISH DOWNLOAD')
                 self.ready_download = 0
  
+    def closeEvent(self,event):
+        self.flag_stop = 1
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ui = MainWindow()
@@ -139,7 +134,3 @@ if __name__ == '__main__':
     download_thread.start()
     ui.show()
     sys.exit(app.exec_())
-
-#########################################
-##pyqt reference:
-## https://blog.csdn.net/qq_37193537/article/details/90904331?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162886055316780357279334%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162886055316780357279334&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-90904331.first_rank_v2_pc_rank_v29&utm_term=pyqt%E4%B8%8Ehtml%E9%80%9A%E8%AE%AF&spm=1018.2226.3001.4187

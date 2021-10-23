@@ -130,7 +130,7 @@ class Ui_MainWindow(object):
     def selectionChange3(self,i):
         print('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
         my_logging.save_log('select board:%s,index:%d'%(self.comboBox_3.itemText(i),i))
-        if 'f407ve' in self.comboBox_3.itemText(i):
+        if 'f407zg' in self.comboBox_3.itemText(i):
             self.erase_all = 0
         else:
             self.erase_all = 1

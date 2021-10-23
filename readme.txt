@@ -1,6 +1,11 @@
+pyqt 与 webview 的交互：
+https://blog.csdn.net/qq_37193537/article/details/90904331?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522162886055316780357279334%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=162886055316780357279334&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~baidu_landing_v2~default-1-90904331.first_rank_v2_pc_rank_v29&utm_term=pyqt%E4%B8%8Ehtml%E9%80%9A%E8%AE%AF&spm=1018.2226.3001.4187
+
 download image 相关：
 STMFlashLoader.exe使用前提：
 安装setup/flash_loader_demo_v2.8.0.exe
+擦除整个flash存储器：
+.\STMFlashLoader.exe -c --pn 4 --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000
 
 pyqt5环境搭建（参考https://blog.csdn.net/yl_best/article/details/83749861?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522163403627816780269865397%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=163403627816780269865397&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-83749861.first_rank_v2_pc_rank_v29&utm_term=pyqt5%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%EF%BC%88python%EF%BC%89&spm=1018.2226.3001.4187）：
 pip install PyQt5 -i https://pypi.douban.com/simple
