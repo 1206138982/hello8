@@ -8,6 +8,10 @@ FWLIB/src/stm32f4xx_usart.c  \
 FWLIB/src/stm32f4xx_rcc.c  \
 FWLIB/src/stm32f4xx_exti.c  \
 FWLIB/src/stm32f4xx_syscfg.c  \
+FWLIB/src/stm32f4xx_dma.c  \
+FWLIB/src/stm32f4xx_tim.c  \
+FWLIB/src/stm32f4xx_fsmc.c  \
+FWLIB/src/stm32f4xx_dcmi.c  \
 system/delay/delay.c  \
 system/sys/sys.c  \
 system/usart/usart.c  \
@@ -18,6 +22,11 @@ hardware/src/key.c  \
 hardware/src/led.c  \
 hardware/src/inout.c  \
 hardware/src/exti.c  \
+hardware/src/lcd.c  \
+hardware/src/timer.c  \
+hardware/src/ov2640.c  \
+hardware/src/sccb.c  \
+hardware/src/dcmi.c  \
 
 # C includes
 C_INCLUDES =  \
