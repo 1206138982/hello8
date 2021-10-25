@@ -23,10 +23,12 @@ hardware/src/led.c  \
 hardware/src/inout.c  \
 hardware/src/exti.c  \
 hardware/src/lcd.c  \
-hardware/src/timer.c  \
 hardware/src/ov2640.c  \
 hardware/src/sccb.c  \
-hardware/src/dcmi.c  \
+hardware/src/pwm.c  \
+hardware/src/driver.c  \
+# hardware/src/dcmi.c  \
+hardware/src/timer.c  \
 
 # C includes
 C_INCLUDES =  \

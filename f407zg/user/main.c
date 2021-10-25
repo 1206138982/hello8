@@ -1,17 +1,19 @@
+#include "allheader.h"
 #include "sys.h"
 #include "delay.h"
 #include "usart.h"
 #include "led.h"
 #include "key.h"
 #include "lcd.h"
-
 #include "timer.h"
 #include "ov2640.h"
 #include "dcmi.h"
+#include "pwm.h"
+#include "driver.h"
 
+#if defined(PWM_TEST) && PWM_TEST
 
-
-
+#else
 //STM32F407开发板
 //摄像头 实验 -库函数版本
 
@@ -26,11 +28,8 @@ u8 ov2640_mode = 0;						//工作模式:0,RGB565模式;1,JPEG模式
 // __align(4) u32 jpeg_buf[jpeg_buf_size];	//JPEG数据缓存buf
 u32 jpeg_buf[jpeg_buf_size];	//JPEG数据缓存buf
 
-
 volatile u32 jpeg_data_len = 0; 			//buf中的JPEG有效数据长度
 volatile u8 jpeg_data_ok = 0;				//JPEG数据采集完成标志
-
-
 
 //0,数据没有采集完;
 //1,数据采集完了,但是还没处理;
@@ -49,15 +48,109 @@ const u16 jpeg_img_size_tbl[][2] =
     1600, 1200,	//UXGA
 };
 
-
 const u8*EFFECTS_TBL[7] = {"Normal", "Negative", "B&W", "Redish", "Greenish", "Bluish", "Antique"};	//7种特效
 const u8*JPEG_SIZE_TBL[9] = {"QCIF", "QQVGA", "CIF", "QVGA", "VGA", "SVGA", "XGA", "SXGA", "UXGA"};	//JPEG图片 9种尺寸
 
+#endif
 
+int main(void)
+{
+#if defined(PWM_TEST) && PWM_TEST
+	u16 led0pwmval=0;    
+	u8 dir=1;
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
+	delay_init(168);  //初始化延时函数
+	uart_init(115200);//初始化串口波特率为115200
+ 	TIM14_PWM_Init(500-1,84-1);	//84M/84=1Mhz的计数频率,重装载值500，所以PWM频率为 1M/500=2Khz.     
+    motor_init();
+    motor_set_speed(0,90);
+    delay_ms(2000);
+    motor_set_speed(0,-90);
+    delay_ms(2000);
+    motor_set_speed(90,0);
+    delay_ms(2000);
+    motor_set_speed(-90,0);
+    delay_ms(2000);
+    motor_set_speed(0,0);
+   while(1) //实现比较值从0-300递增，到300后从300-0递减，循环
+	{
+ 		delay_ms(10);	 
+		if(dir)led0pwmval++;//dir==1 led0pwmval递增
+		else led0pwmval--;	//dir==0 led0pwmval递减 
+ 		// if(led0pwmval>300)dir=0;//led0pwmval到达300后，方向为递减
+		// if(led0pwmval==0)dir=1;	//led0pwmval递减到0后，方向改为递增
+ 		if(led0pwmval>300)
+         led0pwmval = 0;
+ 
+		TIM_SetCompare1(TIM14,led0pwmval);	//修改比较值，修改占空比
+	}
+#else
+    u8 t;
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
+    delay_init(168);  //初始化延时函数
+    
+	   //uart_init(115200);		//初始化串口波特率为115200:串口初始化放到摄像头不同的工作模式中，初始化成对应的波特率
+
+    LED_Init();					//初始化LED
+    LCD_Init();					//LCD初始化
+    KEY_Init();					//按键初始化
+
+
+    TIM3_Int_Init(10000 - 1, 84 - 1); //设置定时器的定时频率为10ms  1秒钟中断100次
+
+    POINT_COLOR = RED; //设置字体为红色
+	
+    LCD_ShowString(30, 50, 200, 16, 16, "STM32F4xx");
+    LCD_ShowString(30, 70, 200, 16, 16, "OV2640 TEST");
+    LCD_ShowString(30, 90, 200, 16, 16, "2017/5/14");
+
+
+    while(OV2640_Init())//初始化OV2640
+    {
+        LCD_ShowString(30, 130, 240, 16, 16, "OV2640 ERR");
+        delay_ms(200);
+        LCD_Fill(30, 130, 239, 170, WHITE);
+        delay_ms(200);
+    }
+    LCD_ShowString(30, 130, 200, 16, 16, "OV2640 OK");
+
+    while(1)
+    {
+        
+        if(Key_Flag == KEY0_PRES)			//RGB565模式
+        {
+            ov2640_mode = 0;
+            Key_Flag = 0; //清除键值
+            break;
+        }
+        else if(Key_Flag == KEY1_PRES)	//JPEG模式
+        {
+            ov2640_mode = 1;
+            Key_Flag = 0; //清除键值
+            break;
+        }
+        t++;
+        if(t == 100)LCD_ShowString(30, 150, 230, 16, 16, "KEY0:RGB565  KEY1:JPEG  lalala"); //闪烁显示提示信息
+        if(t == 200)
+        {
+            LCD_Fill(30, 150, 210, 150 + 16, WHITE);
+            t = 0;
+        }
+        delay_ms(5);
+    }
+		
+		
+    if(ov2640_mode)
+        jpeg_test();
+    else 
+        rgb565_test();
+#endif
+}
+
+#if defined(PWM_TEST) && PWM_TEST
+#else
 //处理JPEG数据
 //当采集完一帧JPEG数据后,调用此函数,切换JPEG BUF.开始下一帧采集.
-
-
 void jpeg_data_process(void)
 {
     if(ov2640_mode)//只有在JPEG格式下,才需要做处理.
@@ -88,10 +181,8 @@ void jpeg_data_process(void)
 		
 }
 
-
 //JPEG测试
 //JPEG数据,通过串口2发送给电脑.
-
 void jpeg_test(void)
 {
 	  u32 i,jpgstart,jpglen; 
@@ -104,8 +195,6 @@ void jpeg_test(void)
     u8 msgbuf[15];	//消息缓存区
     
 	  uart_init(921600);		///初始化串口波特率为921600   使通信速度更快，PC软件才能更快的刷新图片，太慢的话，会异常
-	
-	
 	  LCD_Clear(WHITE);
     POINT_COLOR = RED;
     LCD_ShowString(30, 50, 200, 16, 16, "STM32F4XX");
@@ -121,15 +210,12 @@ void jpeg_test(void)
     OV2640_JPEG_Mode();		//JPEG模式
     My_DCMI_Init();			//DCMI配置
 	
-	
-	
     DCMI_DMA_Init((u32)&jpeg_buf, jpeg_buf_size, DMA_MemoryDataSize_Word, DMA_MemoryInc_Enable); //DCMI DMA配置
 		
     OV2640_OutSize_Set(jpeg_img_size_tbl[size][0], jpeg_img_size_tbl[size][1]); //设置输出尺寸
 		
     DCMI_Start(); 		//启动传输
     
-		
 		while(1)
     {
 
@@ -218,22 +304,15 @@ void jpeg_test(void)
     }
 }
 
-
-
-
 //RGB565测试
 //RGB数据直接显示在LCD上面
-
-
 void rgb565_test(void)
 {
-
     u8 effect = 0, saturation = 2, contrast = 2;
     u8 scale = 1;		//默认是全尺寸缩放
     u8 msgbuf[15];	//消息缓存区
     
 	  uart_init(115200);		//初始化串口波特率为115200
-	
 	  LCD_Clear(WHITE);
     POINT_COLOR = RED;
     LCD_ShowString(30, 50, 200, 16, 16, "STM32F4XX");
@@ -307,74 +386,6 @@ void rgb565_test(void)
             ov_frame = 0;
             Com1SendFlag = 0; //清楚发送标记
         }
-
     }
 }
-
-
-
-
-
-
-int main(void)
-{
-
-    u8 t;
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);//设置系统中断优先级分组2
-    delay_init(168);  //初始化延时函数
-    
-	   //uart_init(115200);		//初始化串口波特率为115200:串口初始化放到摄像头不同的工作模式中，初始化成对应的波特率
-
-    LED_Init();					//初始化LED
-    LCD_Init();					//LCD初始化
-    KEY_Init();					//按键初始化
-
-
-    TIM3_Int_Init(10000 - 1, 84 - 1); //设置定时器的定时频率为10ms  1秒钟中断100次
-
-    POINT_COLOR = RED; //设置字体为红色
-	
-    LCD_ShowString(30, 50, 200, 16, 16, "STM32F4xx");
-    LCD_ShowString(30, 70, 200, 16, 16, "OV2640 TEST");
-    LCD_ShowString(30, 90, 200, 16, 16, "2017/5/14");
-
-
-    while(OV2640_Init())//初始化OV2640
-    {
-        LCD_ShowString(30, 130, 240, 16, 16, "OV2640 ERR");
-        delay_ms(200);
-        LCD_Fill(30, 130, 239, 170, WHITE);
-        delay_ms(200);
-    }
-    LCD_ShowString(30, 130, 200, 16, 16, "OV2640 OK");
-		
-		
-    while(1)
-    {
-        
-        if(Key_Flag == KEY0_PRES)			//RGB565模式
-        {
-            ov2640_mode = 0;
-            Key_Flag = 0; //清除键值
-            break;
-        }
-        else if(Key_Flag == KEY1_PRES)	//JPEG模式
-        {
-            ov2640_mode = 1;
-            Key_Flag = 0; //清除键值
-            break;
-        }
-        t++;
-        if(t == 100)LCD_ShowString(30, 150, 230, 16, 16, "KEY0:RGB565  KEY1:JPEG  lalala"); //闪烁显示提示信息
-        if(t == 200)
-        {
-            LCD_Fill(30, 150, 210, 150 + 16, WHITE);
-            t = 0;
-        }
-        delay_ms(5);
-    }
-		
-		
-    if(ov2640_mode)jpeg_test();
-    else rgb565_test();
-}
+#endif
