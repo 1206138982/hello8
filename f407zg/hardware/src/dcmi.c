@@ -10,7 +10,7 @@
 ////////////////////////////////////////////////////////////////////////////////// 	 
 
 u8 ov_frame=0;  						//帧率
-extern void jpeg_data_process(void);	//JPEG数据处理函数
+// extern void jpeg_data_process(void);	//JPEG数据处理函数
 
 DCMI_InitTypeDef DCMI_InitStructure;
 
@@ -19,7 +19,7 @@ void DCMI_IRQHandler(void)
 {
 	if(DCMI_GetITStatus(DCMI_IT_FRAME)==SET)//捕获到一帧图像
 	{
-		jpeg_data_process(); 	//jpeg数据处理	
+		// jpeg_data_process(); 	//jpeg数据处理	
 		DCMI_ClearITPendingBit(DCMI_IT_FRAME);//清除帧中断
 		LED0=!LED0;
 		ov_frame++;  

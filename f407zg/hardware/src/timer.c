@@ -46,7 +46,7 @@ void TIM3_Int_Init(u16 arr,u16 psc)
 }
 
 
-extern u8 Com1SendFlag;//串口1发送数据标记
+// extern u8 Com1SendFlag;//串口1发送数据标记
 
 u8  TimeS;//计数延时 1S
 
@@ -60,7 +60,7 @@ void TIM3_IRQHandler(void)
 		{
 			TimeS=0;
 	  	LED1=!LED1;//DS1翻转
-			if(Com1SendFlag!=1)Com1SendFlag=1;  //设置串口定时发送标记
+			// if(Com1SendFlag!=1)Com1SendFlag=1;  //设置串口定时发送标记
 		}
 		
 		KEY_Scan();//按键扫描函数	

@@ -27,7 +27,7 @@ hardware/src/ov2640.c  \
 hardware/src/sccb.c  \
 hardware/src/pwm.c  \
 hardware/src/driver.c  \
-# hardware/src/dcmi.c  \
+hardware/src/dcmi.c  \
 hardware/src/timer.c  \
 
 # C includes
