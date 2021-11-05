@@ -24,3 +24,9 @@ tplink路由器的应用管理中有DDNS，可以申请一个自己的域名，�
 github:
 git@github.com:helloworld654/hello8.git
 https://github.com/helloworld654/hello8.git
+
+arm-none-eabi-gcc 安装：
+tar jxvf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
+/etc/profile 中添加：export PATH=$PATH:/home/pico/tools/gcc.../bin
+source /etc/profile
+arm-none-eabi-gcc -v
