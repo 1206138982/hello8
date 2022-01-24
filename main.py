@@ -7,8 +7,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 # from ui import Ui_MainWindow      # for test ui main window  
 from ui_new import Ui_MainWindow
 
-host = "hello654321.tpddns.cn"
-port = 5005
+# host = "hello654321.tpddns.cn"
+# port = 5005
+host = "119.3.7.206"
+port = 22
 username = "user000"
 password = "123456"
 timeout = 10
@@ -108,7 +110,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.get(getfromPath,gettoPath)
         sftp_client.close()
         client.close()
-        self.ready_download = 1
+        # self.ready_download = 1
         print("get hex file from server")
         my_logging.save_log("get hex file from server")
 

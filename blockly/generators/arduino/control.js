@@ -131,7 +131,7 @@ Blockly.Arduino.controls_flow_statements = function () {
 Blockly.Arduino.controls_delay = function () {
     var delay_time = Blockly.Arduino.valueToCode(this, 'DELAY_TIME', Blockly.Arduino.ORDER_ATOMIC) || '1000'
     var unit = this.getFieldValue('UNIT');
-    var code = unit + '(' + delay_time + ');\n';
+    var code = unit.concat('_lms') + '(' + delay_time + ');\n';
     return code;
 };
 

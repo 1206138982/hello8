@@ -29,9 +29,13 @@ Blockly.Arduino.inout_digital_write2 = function () {
     } else {
         // if (Blockly.Arduino.setups_['setup_input_' + dropdown_pin])
         //     delete Blockly.Arduino.setups_['setup_input_' + dropdown_pin];
-        Blockly.Arduino.setups_['setup_output_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', OUTPUT);';
+        Blockly.Arduino.setups_['setup_output_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', 1);';
     }
-    code += 'digitalWrite(' + dropdown_pin + ',' + dropdown_stat + ');\n'
+    if(dropdown_stat.indexOf('HIGH')==0 && 'HIGH'.indexOf(dropdown_stat)==0)
+        code += 'digitalWrite(' + dropdown_pin + ',1);\n'
+    else
+        code += 'digitalWrite(' + dropdown_pin + ',0);\n'
+    console.log(code)
     return code;
 };
 
@@ -59,7 +63,7 @@ Blockly.Arduino.inout_digital_read2 = function () {
         // if (Blockly.Arduino.setups_['setup_output_' + dropdown_pin]) {
         //     //存在pinMode已设为output则不再设为input
         // } else {
-            Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', INPUT);';
+            Blockly.Arduino.setups_['setup_input_' + dropdown_pin] = 'pinMode(' + dropdown_pin + ', 0);';
         // }
         if (Blockly.Arduino.setups_['setup_setup']) { //解决pullup重复问题
             if (Blockly.Arduino.setups_['setup_setup'].indexOf('pinMode(' + dropdown_pin) > -1) {
