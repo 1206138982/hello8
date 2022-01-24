@@ -1,4 +1,4 @@
 sudo su - <<EOF
 cd /home/pico/hello8/waiting
-python waiting.py
+nohup python waiting.py  # keep running when close the ssh connection
 EOF
