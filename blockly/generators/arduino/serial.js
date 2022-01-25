@@ -7,7 +7,8 @@ goog.require('Blockly.Arduino');
 Blockly.Arduino.serial_begin = function () {
     var serial_select = this.getFieldValue('serial_select');
     var content = Blockly.Arduino.valueToCode(this, 'CONTENT', Blockly.Arduino.ORDER_ATOMIC) || profile.default.serial;
-    Blockly.Arduino.setups_['setup_serial_' + serial_select ] = serial_select + '.begin(' + content + ');';
+    // Blockly.Arduino.setups_['setup_serial_' + serial_select ] = serial_select + '.begin(' + content + ');';
+    Blockly.Arduino.setups_['setup_serial_' + serial_select ] = 'uart1_init(' + content + ');';
     return '';
 };
 
@@ -18,7 +19,8 @@ Blockly.Arduino.serial_write = function () {
     } else {
         Blockly.Arduino.setups_['setup_serial_' + serial_select ] = serial_select + '.begin(' + profile.default.serial + ');';
     }
-    var code = serial_select + '.write(' + content + ');\n';
+    // var code = serial_select + '.write(' + content + ');\n';
+    var code = 'printf(' + content + ');\n';
     return code;
 };
 
@@ -30,7 +32,9 @@ Blockly.Arduino.serial_print = function () {
     } else {
         Blockly.Arduino.setups_['setup_serial_' + serial_select ] = serial_select + '.begin(' + profile.default.serial + ');';
     }
-    var code = serial_select + '.'+new_line+'(' + content + ');\n';
+    // var code = serial_select + '.'+new_line+'(' + content + ');\n';
+    var code = 'printf(' + content + ');\n';
+    code += 'printf(\"\\r\\n\");\n';
     return code;
 };
 

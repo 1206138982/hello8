@@ -110,7 +110,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         sftp_client.get(getfromPath,gettoPath)
         sftp_client.close()
         client.close()
-        # self.ready_download = 1
+        self.ready_download = 1
         print("get hex file from server")
         my_logging.save_log("get hex file from server")
 
