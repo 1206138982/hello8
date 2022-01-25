@@ -38,3 +38,6 @@ nohup python waiting.py 断开 ssh 连接时，程序依旧可以正常运行
 update state:
 2021-11-07: 实现了在上位机上模块化编程、编译、下载到板子上；可以开发新的模块，来开发新的功能；已经实现的功能有LED、KEY的控制；支持的硬件有F103C8、F103ZE、F406ZG（下载还不是很流畅）；
 需要server端来编译hex文件；
+
+PROBLEMS:
+printf() 没有 \r\n 的话，数据无法成功发送
