@@ -103,7 +103,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("try to get hex file from server")
         my_logging.save_log("try to get hex file from server")
         getfromPath = "/home/user000/upload/make103.hex"
-        gettoPath = os.path.join(os.getcwd(), "make103.hex")
+        gettoPath = os.path.join(os.getcwd(), "Flash_Loader_Demo\make103.hex")
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(hostname=host, port=port, username=username, password=password, timeout=timeout)
