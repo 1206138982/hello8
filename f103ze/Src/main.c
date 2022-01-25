@@ -24,6 +24,7 @@ int main(void)
 // user init functions
 #else
 	uart1_init(115200);
+#endif
 #if defined(REMOTE_TEST) && REMOTE_TEST
 	while(1){
 // user while functions
