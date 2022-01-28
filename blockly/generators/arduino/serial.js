@@ -21,6 +21,7 @@ Blockly.Arduino.serial_write = function () {
     }
     // var code = serial_select + '.write(' + content + ');\n';
     var code = 'printf(' + content + ');\n';
+    code += 'printf(\"\\r\\n\");\n';
     return code;
 };
 
