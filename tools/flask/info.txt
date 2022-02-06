@@ -1,0 +1,6 @@
+flask basic test
+
+flask server hello world:
+1.先在 tp-link 路由器上配置 ddns 应用
+2.配置 虚拟服务器 将外部端口映射到 内部端口上，从而实现外网访问内网上的 flask 服务
+3.内网起 flask 服务，外网即可通过 http://hello654321.tpddns.cn:5006/ 来访问
