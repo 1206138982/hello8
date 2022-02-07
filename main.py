@@ -7,9 +7,10 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 # from ui import Ui_MainWindow      # for test ui main window  
 from ui_new import Ui_MainWindow
 
-# host = "hello654321.tpddns.cn"
+# host = "hello654321.tpddns.cn"    # local server
 # port = 5005
-host = "119.3.7.206"
+# host = "119.3.7.206"    # hua wei server
+host = "180.76.190.194"    # baidu server
 port = 22
 username = "user000"
 password = "123456"
