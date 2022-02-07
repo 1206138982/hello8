@@ -6,6 +6,9 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
  
 # from ui import Ui_MainWindow      # for test ui main window  
 from ui_new import Ui_MainWindow
+import requests
+url_server = "http://180.76.190.194:80/"    # for baidu server
+data_server = {"username":"123","password":"123","data":"post test succeed !!!"}
 
 # host = "hello654321.tpddns.cn"    # local server
 # port = 5005
@@ -73,7 +76,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             f.write(data)  # 自带文件关闭功能，不需要再写f.close()
         print('write code to local txt')
         my_logging.save_log('write code to local txt')
-        self.upload_code()
+        data_server["data"] = data
+        res = requests.post(url=url_server,data=data_server)
+        # self.upload_code()
         time.sleep(0.1)
         self.get_hex()
  

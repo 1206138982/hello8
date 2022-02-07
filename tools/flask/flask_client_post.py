@@ -7,3 +7,7 @@ url = "http://180.76.190.194:80/"    # for baidu server
 data = {"username":"123","password":"123","data":"post test succeed !!!"}
 res = requests.post(url=url,data=data)
 # print(res.text)
+if res.text == '200':
+    print('post request SUCCEED')
+else :
+    print('post request FAIL')
