@@ -32,7 +32,7 @@ Blockly.Arduino.variables_declare = function() {
     else
       Blockly.Arduino.definitions_['var_declare' + varName] = 'volatile ' + dropdown_type + ' ' + varName + ';';
     
-    Blockly.Arduino.setups_['setup_var'+varName] = 'volatile ' + dropdown_type + ' ' + varName + ' = ' + argument0 + ';';
+    Blockly.Arduino.setups_['setup_var'+varName] = dropdown_type + ' ' + varName + ' = ' + argument0 + ';';
   }
   else
   {
