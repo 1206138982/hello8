@@ -6,7 +6,6 @@ String wifi_ssid = "";
 String wifi_password = "";
 int wifi_ssid_is_ready = 0;
 int wifi_password_is_ready = 0;
-int uart_rx_enable = 1;
 
 void get_wifi_info(void)
 {
