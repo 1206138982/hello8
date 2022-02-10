@@ -47,3 +47,7 @@ todo:
 
 .sh 文件中需要输入 password 的 cmd （还没有实际尝试过）
 echo 'passward' |sudo -S cmd 
+
+usart:
+esp8266:TX(GPIO1)
+stm32f103c8:使用arduino串口工具，可以显示esp发来的中文汉字

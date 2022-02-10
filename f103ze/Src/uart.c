@@ -71,13 +71,41 @@ void uart1_init(uint32_t bound_rate)
     USART_Cmd(USART1, ENABLE);
 }
 
+char USART_ReceiveString[50];													//接收PC端发送过来的字符
+int Receive_Flag = 0;															//接收消息标志位
+int Receive_sum = 0;
 void USART1_IRQHandler(void)
 {
     uint8_t Res;
     if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
     {
-        Res =USART_ReceiveData(USART1);
-        USART_SendData(USART1, Res);
+        if(Receive_sum > 49)													//数组能存放50个字节的数据				
+		{
+			USART_ReceiveString[49] = '\0';										//数据字节超过50位时，将最后一位设置为\0	
+			Receive_Flag = 1;													//接收标志位置1，停止接收数据
+			Receive_sum = 0;													//数组下标置0
+		}
+		
+		if(Receive_Flag == 0)													//接收标志位等于0，开始接收数据
+		{
+			USART_ReceiveString[Receive_sum] = USART_ReceiveData(USART1);		//通过USART1串口接收字符
+			Receive_sum++;														//数组下标++
+		}
+		
+		if(Receive_sum >= 2)													//数组下标大于2
+		{
+			if(USART_ReceiveString[Receive_sum-2] == '\r' && USART_ReceiveString[Receive_sum-1] == '\n' )
+			{
+				USART_ReceiveString[Receive_sum-1] = '\0';						
+				USART_ReceiveString[Receive_sum-2] = '\0';
+				// Receive_Flag = 1;												//接收标志位置1，停止接收数据
+				Receive_sum = 0;												//数组下标置0
+                printf("receive data from usart1:\r\n");
+				printf("%s\r\n",USART_ReceiveString);
+            }
+        }
+        // Res =USART_ReceiveData(USART1);
+        // USART_SendData(USART1, Res);
     }
 }
 
