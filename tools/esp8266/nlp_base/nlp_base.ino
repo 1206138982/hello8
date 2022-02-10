@@ -47,7 +47,8 @@ void setup()
     }
     flipper.attach(180, flip);//每隔180秒执行一次回调函数
 }
- 
+
+int client_rece = 0;
 void loop()
 {
     while (Serial.available() > 0)      //检测串口是否有用户数据
@@ -57,8 +58,14 @@ void loop()
     }
     while (client.available() > 0)   //打印服务器返回的数据
     {
+        client_rece = 1;
         char c = client.read();
         Serial.write(c);
+    }
+    if(client_rece){
+      client_rece = 0;
+      Serial.write('\r');
+      Serial.write('\n');
     }
     if (comdata.length() > 0)
     {
@@ -94,6 +101,9 @@ void get_wifi_info(void)
             }
             else if(comdata.compareTo("wifi_password") == 0){
                 wifi_password_is_ready = 1;
+                Serial.print("OK");
+            }
+            else if(comdata.compareTo("AT")==0 || comdata.compareTo("at")==0){
                 Serial.print("OK");
             }
             comdata = "";
