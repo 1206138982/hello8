@@ -4,7 +4,6 @@ BUILD_DIR = build
 C_SOURCES2 =  \
 Src/stm32f10x_it.c \
 Src/system_stm32f10x.c \
-Src/uart.c \
 Src/sys.c \
 Src/main.c \
 Drivers/Src/stm32f10x_gpio.c \
@@ -16,6 +15,8 @@ Drivers/Src/stm32f10x_pwr.c \
 Drivers/Src/stm32f10x_usart.c \
 Drivers/Src/stm32f10x_exti.c \
 Drivers/Src/misc.c \
+hardware/src/usart.c \
+hardware/src/esp8266.c \
 hardware/src/led_c8.c \
 hardware/src/key_c8.c \
 hardware/src/delay.c \
