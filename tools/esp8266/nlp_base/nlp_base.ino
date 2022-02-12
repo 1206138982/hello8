@@ -3,13 +3,16 @@
 #include <WiFiClient.h>
 #include <Ticker.h> 
 
-String Key = "kEy3701a0635063d428";
+// String Key = "kEy3701a0635063d428";
 const char *host = "123.57.38.57";
 String comdata = "";
-String KeyMark = "<key>"+Key+"</key>";
+String KeyMark = "";
+// String KeyMark = "<key>"+Key+"</key>";
 
+String nlp_key = "";
 String wifi_ssid = "";
 String wifi_password = "";
+int nlpkey_is_ready = 0;
 int wifi_ssid_is_ready = 0;
 int wifi_password_is_ready = 0;
  
@@ -85,6 +88,12 @@ void get_wifi_info(void)
             delay(2);
         }
         if (comdata.length() > 0){
+            if(nlpkey_is_ready){
+                nlp_key.concat(comdata);
+                KeyMark = "<key>"+nlp_key+"</key>";
+                nlpkey_is_ready = 0;
+                Serial.print("OK");
+            }
             if(wifi_ssid_is_ready){
                 wifi_ssid.concat(comdata);
                 wifi_ssid_is_ready = 0;
@@ -93,6 +102,10 @@ void get_wifi_info(void)
             else if(wifi_password_is_ready){
                 wifi_password.concat(comdata);
                 wifi_password_is_ready = 0;
+                Serial.print("OK");
+            }
+            if(comdata.compareTo("nlp_key") == 0){
+                nlpkey_is_ready = 1;
                 Serial.print("OK");
             }
             if(comdata.compareTo("wifi_ssid") == 0){
