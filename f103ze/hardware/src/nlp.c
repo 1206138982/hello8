@@ -4,6 +4,7 @@
 #include "usart.h"
 #include "esp8266.h"
 
+unsigned char nlp_key[] = "kEy3701a0635063d428";
 unsigned char wifi_ssid[] = "helloworld123456";
 unsigned char wifi_password[] = "HelloWorld123456";
 
@@ -19,6 +20,21 @@ uint8_t setup_nlp(void)
 	}
 	else{
 		UsartPrintf(USART_DEBUG, "send AT fail\r\n");
+        return 1;
+	}
+/*    send nlp key string    */
+	if(!ESP8266_SendCmd("nlp_key","OK")){
+		UsartPrintf(USART_DEBUG, "ready to send nlp_key\r\n");
+	}
+	else{
+		UsartPrintf(USART_DEBUG, "send nlp_key not ready\r\n");
+        return 1;
+	}
+	if(!ESP8266_SendCmd(nlp_key,"OK")){
+		UsartPrintf(USART_DEBUG, "send nlp_key content success\r\n");
+	}
+	else{
+		UsartPrintf(USART_DEBUG, "send nlp_key content fail\r\n");
         return 1;
 	}
 /*    send wifi ssid string    */
