@@ -12,6 +12,7 @@
 #include "exti.h"
 #include "grey.h"
 #include "a4950.h"
+#include "nlp.h"
 	
 void JTAG_Set(u8 mode);
 u8 RUNNING = 0;

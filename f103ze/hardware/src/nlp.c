@@ -8,7 +8,7 @@ unsigned char nlp_key[] = "kEy3701a0635063d428";
 unsigned char wifi_ssid[] = "helloworld123456";
 unsigned char wifi_password[] = "HelloWorld123456";
 
-uint8_t setup_nlp(void)
+uint8_t setup_nlp(char *nlp_data[3])
 {
 	Usart2_Init(115200);
 	ESP8266_Clear();
@@ -30,7 +30,7 @@ uint8_t setup_nlp(void)
 		UsartPrintf(USART_DEBUG, "send nlp_key not ready\r\n");
         return 1;
 	}
-	if(!ESP8266_SendCmd(nlp_key,"OK")){
+	if(!ESP8266_SendCmd(*nlp_data,"OK")){
 		UsartPrintf(USART_DEBUG, "send nlp_key content success\r\n");
 	}
 	else{
@@ -45,7 +45,7 @@ uint8_t setup_nlp(void)
 		UsartPrintf(USART_DEBUG, "send wifi_ssid not ready\r\n");
         return 1;
 	}
-	if(!ESP8266_SendCmd(wifi_ssid,"OK")){
+	if(!ESP8266_SendCmd(*(nlp_data+1),"OK")){
 		UsartPrintf(USART_DEBUG, "send wifi_ssid content success\r\n");
 	}
 	else{
@@ -60,7 +60,7 @@ uint8_t setup_nlp(void)
 		UsartPrintf(USART_DEBUG, "send wifi_password not ready\r\n");
         return 1;
 	}
-	if(!ESP8266_SendCmd(wifi_password,"OK")){
+	if(!ESP8266_SendCmd(*(nlp_data+2),"OK")){
 		UsartPrintf(USART_DEBUG, "send wifi_password content success\r\n");
 	}
 	else{
