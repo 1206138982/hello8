@@ -53,3 +53,11 @@ usart:
 esp8266:TX(GPIO1),RX(GPIO3)
 stm32f103:UART1_TX(PA9);UART1_RX(PA10);UART2_TX(PA2);UART2_RX(PA3)
 stm32f103c8:使用arduino串口工具，可以显示esp发来的中文汉字
+char *nlp_data[3] = {"kEy3701a0635063d428","helloworld123456","HelloWorld123456"};
+
+LED display:
+leds_init(0);
+delay_lms(500);
+led_set_status(0,1);
+delay_lms(500);
+led_set_status(0,0);

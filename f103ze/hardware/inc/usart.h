@@ -8,7 +8,7 @@
 #define USART_DEBUG		USART1		//调试打印所使用的串口组
 
 
-void Usart1_Init(unsigned int baud);
+void uart1_init(unsigned int baud);
 
 void Usart2_Init(unsigned int baud);
 

@@ -2,7 +2,6 @@
 #include "AllHead.h"
 #include "inout.h"
 #include "servo.h"
-#include "uart.h"
 #include "usart.h"
 #include "delay.h"
 #include "sys.h"

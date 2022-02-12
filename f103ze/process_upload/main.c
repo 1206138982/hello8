@@ -2,7 +2,7 @@
 #include "AllHead.h"
 #include "inout.h"
 #include "servo.h"
-#include "uart.h"
+#include "usart.h"
 #include "delay.h"
 #include "sys.h"
 #include "lcd.h"
@@ -11,6 +11,7 @@
 #include "exti.h"
 #include "grey.h"
 #include "a4950.h"
+#include "nlp.h"
 	
 void JTAG_Set(u8 mode);
 u8 RUNNING = 0;
