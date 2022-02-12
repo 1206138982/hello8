@@ -117,7 +117,7 @@ _Bool ESP8266_SendCmd(char *cmd, char *res)
 {
 	
 	unsigned char timeOut = 200;
-
+	ESP8266_Clear();
 	Usart_SendString(USART2, (unsigned char *)cmd, strlen((const char *)cmd));
 	
 	while(timeOut--)
@@ -127,7 +127,6 @@ _Bool ESP8266_SendCmd(char *cmd, char *res)
 			esp8266_buf[esp8266_cnt] = '\0';
 			if(strstr((const char *)esp8266_buf, res) != NULL)		//如果检索到关键词
 			{
-				Usart_SendString(USART1,esp8266_buf,esp8266_cnt);
 				ESP8266_Clear();									//清空缓存
 				
 				return 0;

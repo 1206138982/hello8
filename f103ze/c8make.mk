@@ -25,6 +25,7 @@ hardware/src/exti.c \
 hardware/src/inout.c \
 hardware/src/servo.c \
 hardware/src/motor.c \
+hardware/src/nlp.c \
 
 # C includes
 C_INCLUDES =  \
