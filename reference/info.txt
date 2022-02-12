@@ -49,5 +49,6 @@ todo:
 echo 'passward' |sudo -S cmd 
 
 usart:
-esp8266:TX(GPIO1)
+esp8266:TX(GPIO1),RX(GPIO3)
+stm32f103:UART1_TX(PA9);UART1_RX(PA10);UART2_TX(PA2);UART2_RX(PA3)
 stm32f103c8:使用arduino串口工具，可以显示esp发来的中文汉字

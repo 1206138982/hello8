@@ -52,7 +52,6 @@
 
 unsigned char esp8266_buf[128];
 unsigned short esp8266_cnt = 0, esp8266_cntPre = 0;
-unsigned short esp8266_get;
 
 
 //==========================================================
@@ -92,10 +91,7 @@ _Bool ESP8266_WaitRecive(void)
 		return REV_WAIT;
 		
 	if(esp8266_cnt == esp8266_cntPre)				//如果上一次的值和这次相同，则说明接收完毕
-	{
-		esp8266_get = esp8266_cnt;
-		esp8266_cnt = 0;							//清0接收计数
-			
+	{			
 		return REV_OK;								//返回接收完成标志
 	}
 		
@@ -130,9 +126,9 @@ _Bool ESP8266_SendCmd(char *cmd, char *res)
 		{
 			// if(strstr((const char *)esp8266_buf, res) != NULL)		//如果检索到关键词
 			{
-				UsartPrintf(USART1,"esp8266_cnt:%d,",esp8266_get);
+				UsartPrintf(USART1,"esp8266_cnt:%d,",esp8266_cnt);
 				Usart_SendString(USART1,"receive from usart2:\r\n",strlen("receive from usart2:\r\n"));
-				Usart_SendString(USART1,esp8266_buf,esp8266_get);
+				Usart_SendString(USART1,esp8266_buf,esp8266_cnt);
 				ESP8266_Clear();									//清空缓存
 				
 				return 0;
