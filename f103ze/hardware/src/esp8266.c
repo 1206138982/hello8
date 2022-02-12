@@ -124,10 +124,9 @@ _Bool ESP8266_SendCmd(char *cmd, char *res)
 	{
 		if(ESP8266_WaitRecive() == REV_OK)							//如果收到数据
 		{
-			// if(strstr((const char *)esp8266_buf, res) != NULL)		//如果检索到关键词
+			esp8266_buf[esp8266_cnt] = '\0';
+			if(strstr((const char *)esp8266_buf, res) != NULL)		//如果检索到关键词
 			{
-				UsartPrintf(USART1,"esp8266_cnt:%d,",esp8266_cnt);
-				Usart_SendString(USART1,"receive from usart2:\r\n",strlen("receive from usart2:\r\n"));
 				Usart_SendString(USART1,esp8266_buf,esp8266_cnt);
 				ESP8266_Clear();									//清空缓存
 				
