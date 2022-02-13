@@ -68,6 +68,7 @@ void loop()
     if(client_rece){
       client_rece = 0;
       Serial.write('\r');
+      Serial.write('\r');
       Serial.write('\n');
     }
     if (comdata.length() > 0)
