@@ -175,12 +175,13 @@ Blockly.Blocks['lists_create_with2'] = {
    init: function() {
     this.setColour(Blockly.Blocks.lists.HUE);
     this.appendDummyInput("")
-    .appendField(new Blockly.FieldDropdown(DATATYPES), "TYPE")
-    .appendField(' ')
-    .appendField(new Blockly.FieldTextInput('mylist'), 'VAR')
-    .appendField('[')
+    // .appendField(new Blockly.FieldDropdown(DATATYPES), "TYPE")
+    // .appendField(' ')
+    // .appendField(new Blockly.FieldTextInput('mylist'), 'VAR')
+    // .appendField('[')
         //.appendField(new Blockly.FieldTextInput('3',Blockly.FieldTextInput.math_number_validator), 'SIZE')
-        .appendField(']');
+        // .appendField(']');
+    .appendField('语音模块初始化')
         this.itemCount_ = 3;
         this.updateShape_();
         this.setPreviousStatement(true);
@@ -291,7 +292,13 @@ Blockly.Blocks['lists_create_with2'] = {
       for (var i = 0; i < this.itemCount_; i++) {
         var input = this.appendValueInput('ADD' + i);
         if (i == 0) {
-          input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH);
+          input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_KEY);
+        }
+        if (i == 1) {
+          input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_SSID);
+        }
+        if (i == 2) {
+          input.appendField(Blockly.Msg.LISTS_CREATE_WITH_INPUT_PASSWORD);
         }
       }
     }

@@ -128,6 +128,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.flag_stop == 1:
                 break
             if self.ready_download == 1:
+                print('start to download hex file')
                 os.system('.\download.bat')
                 self.interact_obj.sig_send_to_js.emit('download')
                 print('FINISH DOWNLOAD')

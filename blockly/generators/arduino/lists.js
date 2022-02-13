@@ -32,16 +32,19 @@ Blockly.Arduino.lists_create_with_text = function() {
 
 Blockly.Arduino.lists_create_with2 = function() {
   // Create a list with any number of elements of any type.
-  var dropdown_type = this.getFieldValue('TYPE');
-  var varName = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),
-    Blockly.Variables.NAME_TYPE);
+  // var dropdown_type = this.getFieldValue('TYPE');
+  // var varName = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),
+  //   Blockly.Variables.NAME_TYPE);
   //var size=window.parseFloat(this.getFieldValue('SIZE'));
   var code = new Array(this.itemCount_);
   for (var n = 0; n < this.itemCount_; n++) {
     code[n] = Blockly.Arduino.valueToCode(this, 'ADD' + n,
       Blockly.Arduino.ORDER_NONE) || '0';
   }
-  Blockly.Arduino.definitions_['var_declare'+varName] = dropdown_type+' '+varName+'[]'+'='+ '{' + code.join(', ') + '};\n';
+  var dropdown_type = 'char';
+  var varName = '*nlp_data';
+  // Blockly.Arduino.definitions_['var_declare'+varName] = dropdown_type+' '+varName+'[]'+'='+ '{' + code.join(', ') + '};\n';
+  Blockly.Arduino.setups_['var_declare'+varName] = dropdown_type+' '+varName+'[]'+'='+ '{' + code.join(', ') + '};\n  setup_nlp(nlp_data);\n';
   return '';
 };
 

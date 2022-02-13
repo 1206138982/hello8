@@ -7,7 +7,7 @@ var MSG = {
 	catControl: "控制",
 	catMath: "数学",
 	catText: "文本",
-	catLists: "数组",
+	catLists: "语音识别",
 	catMicropyLists: "列表",
 	catDicts: "字典",
 	catLogic: "逻辑",
@@ -163,6 +163,9 @@ Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TITLE_ADD = "数组";
 Blockly.Msg.LISTS_CREATE_WITH_CONTAINER_TOOLTIP = "增加、删除或重新排列各部分以此重新配置这个数组块。";
 Blockly.Msg.LISTS_CREATE_WITH_HELPURL = "https://github.com/google/blockly/wiki/Lists#create-list-with";
 Blockly.Msg.LISTS_CREATE_WITH_INPUT_WITH = "初始化数组为";
+Blockly.Msg.LISTS_CREATE_WITH_INPUT_KEY = "输入key值";
+Blockly.Msg.LISTS_CREATE_WITH_INPUT_SSID = "输入WiFi名字";
+Blockly.Msg.LISTS_CREATE_WITH_INPUT_PASSWORD = "输入WiFi密码";
 Blockly.Msg.LISTS_CREATE_WITH_ITEM_TOOLTIP = "将一个项添加到数组中。";
 Blockly.Msg.LISTS_CREATE_WITH_TOOLTIP = "建立一个具有任意数量项目的数组。";
 Blockly.Msg.LISTS_GET_INDEX_FIRST = "第一项";
