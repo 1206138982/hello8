@@ -15,6 +15,7 @@
 	
 void JTAG_Set(u8 mode);
 u8 RUNNING = 0;
+extern uint8_t receive_flag;
 
 int main(void)
 {	 
