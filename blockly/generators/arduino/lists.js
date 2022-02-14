@@ -48,6 +48,69 @@ Blockly.Arduino.lists_create_with2 = function() {
   return '';
 };
 
+Blockly.Arduino.lists_create_with3 = function() {
+  // Create a list with any number of elements of any type.
+  // var dropdown_type = this.getFieldValue('TYPE');
+  // var varName = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),
+  //   Blockly.Variables.NAME_TYPE);
+  //var size=window.parseFloat(this.getFieldValue('SIZE'));
+  var code = new Array(this.itemCount_);
+  for (var n = 0; n < this.itemCount_; n++) {
+    code[n] = Blockly.Arduino.valueToCode(this, 'ADD' + n,
+      Blockly.Arduino.ORDER_NONE) || '0';
+  }
+  var dropdown_type = 'char';
+  var varName = '*nlp_mess';
+  // Blockly.Arduino.definitions_['var_declare'+varName] = dropdown_type+' '+varName+'[]'+'='+ '{' + code.join(', ') + '};\n';
+  Blockly.Arduino.setups_['var_declare'+varName] = dropdown_type+' '+varName+'[]'+'='+ '{' + code.join(', ') + '};\n';
+  return '  if(receive_flag)\n    compare_rece_mess(nlp_mess);';
+};
+
+Blockly.Arduino.controls_if_receive_mess = function () {
+    // If/elseif/else condition.
+    var n = 0;
+    var argument = Blockly.Arduino.valueToCode(this, 'IF' + n,
+        Blockly.Arduino.ORDER_NONE) || 'false';
+    var branch = Blockly.Arduino.statementToCode(this, 'DO' + n);
+    var code = '  if (' + argument + ') {\n    clear_all_mess_rece_flags();\n' + branch + '\n}';
+    for (n = 1; n <= this.elseifCount_; n++) {
+        argument = Blockly.Arduino.valueToCode(this, 'IF' + n,
+          Blockly.Arduino.ORDER_NONE) || 'false';
+        branch = Blockly.Arduino.statementToCode(this, 'DO' + n);
+        code += ' else if (' + argument + ') {\n' + branch + '}';
+    }
+    if (this.elseCount_) {
+        branch = Blockly.Arduino.statementToCode(this, 'ELSE');
+        code += ' else {\n' + branch + '\n}';
+    }
+    return code + '\n';
+};
+
+Blockly.Arduino.lists_mess1 = function() {
+  var code = 'mess1_receive_flag';
+  return [code ,Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino.lists_mess2 = function() {
+  var code = 'mess2_receive_flag';
+  return [code ,Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino.lists_mes3 = function() {
+  var code = 'mess3_receive_flag';
+  return [code ,Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino.lists_mess4 = function() {
+  var code = 'mess4_receive_flag';
+  return [code ,Blockly.Arduino.ORDER_ATOMIC];
+};
+
+Blockly.Arduino.lists_mess5 = function() {
+  var code = 'mess5_receive_flag';
+  return [code ,Blockly.Arduino.ORDER_ATOMIC];
+};
+
 Blockly.Arduino.lists_create_with_text2 = function() {
   var dropdown_type = this.getFieldValue('TYPE');
   var varName = Blockly.Arduino.variableDB_.getName(this.getFieldValue('VAR'),

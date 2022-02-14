@@ -28,7 +28,8 @@ void setup()
     Serial.begin(115200);
     WiFi.mode(WIFI_STA);
     Serial.println();
-    Serial.println("ready to receive data");
+    delay(500);
+    Serial.println("ready to receive data \r\r\n");
     get_wifi_info();
     WiFi.begin(wifi_ssid,wifi_password);
     Serial.println("Connecting...");
@@ -67,9 +68,7 @@ void loop()
     }
     if(client_rece){
       client_rece = 0;
-      Serial.write('\r');
-      Serial.write('\r');
-      Serial.write('\n');
+      Serial.print("\r\r\n");
     }
     if (comdata.length() > 0)
     {
