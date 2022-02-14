@@ -32,9 +32,12 @@
 #include <string.h>
 #include <stdio.h>
 
+#define COMPARE_MESS_SUCCESS    60
+
 unsigned char esp8266_buf[128];
 unsigned short esp8266_cnt = 0, esp8266_cntPre = 0;
 uint8_t receive_flag = 0;
+uint8_t mess1_receive_flag,mess2_receive_flag,mess3_receive_flag,mess4_receive_flag,mess5_receive_flag;
 
 //==========================================================
 //	º¯ÊıÃû³Æ£º	ESP8266_Clear
@@ -51,6 +54,15 @@ void ESP8266_Clear(void)
 {
 	memset(esp8266_buf, 0, sizeof(esp8266_buf));
 	esp8266_cnt = 0;
+}
+
+void clear_all_mess_rece_flags(void)
+{
+	mess1_receive_flag = 0;
+	mess2_receive_flag = 0;
+	mess3_receive_flag = 0;
+	mess4_receive_flag = 0;
+	mess5_receive_flag = 0;
 }
 
 //==========================================================
@@ -120,9 +132,30 @@ _Bool ESP8266_SendCmd(char *cmd, char *res)
 
 }
 
-void print_data_rece(void)
+void compare_rece_mess(char *nlp_mess[])
 {
+	uint8_t i;
 	printf("receive data:%s\r\n",esp8266_buf);
+	clear_all_mess_rece_flags();
+	printf("esp8266_buf:%s\r\n",esp8266_buf);
+	if(Find_Lcs(esp8266_buf,nlp_mess[0]) >= COMPARE_MESS_SUCCESS)
+		mess1_receive_flag = 1;
+	if(Find_Lcs(esp8266_buf,nlp_mess[1]) >= COMPARE_MESS_SUCCESS)
+		mess2_receive_flag = 1;
+	if(Find_Lcs(esp8266_buf,nlp_mess[2]) >= COMPARE_MESS_SUCCESS)
+		mess3_receive_flag = 1;
+	if(Find_Lcs(esp8266_buf,nlp_mess[3]) >= COMPARE_MESS_SUCCESS)
+		mess4_receive_flag = 1;
+	if(Find_Lcs(esp8266_buf,nlp_mess[4]) >= COMPARE_MESS_SUCCESS)
+		mess5_receive_flag = 1;
+	ESP8266_Clear();
+	receive_flag = 0;
+}
+
+void print_rece_mess(void)
+{
+	printf("get a mess:");
+	printf("%s\r\n",esp8266_buf);
 	ESP8266_Clear();
 	receive_flag = 0;
 }
@@ -147,6 +180,8 @@ void USART2_IRQHandler(void)
 		esp8266_buf[esp8266_cnt++] = USART2->DR;
 		if(esp8266_buf[esp8266_cnt-1]=='\n' && esp8266_buf[esp8266_cnt-2]=='\r' && esp8266_buf[esp8266_cnt-3]=='\r'){
 			esp8266_buf[esp8266_cnt-3] = '\0';
+		// if(esp8266_buf[esp8266_cnt-1]=='\n' && esp8266_buf[esp8266_cnt-2]=='\r'){
+		// 	esp8266_buf[esp8266_cnt-2] = '\0';
 			receive_flag = 1;
 		}
 		

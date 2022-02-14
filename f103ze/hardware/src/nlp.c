@@ -4,7 +4,7 @@
 #include "usart.h"
 #include "esp8266.h"
 
-#define PRINT_NLP_INFO    1
+#define PRINT_NLP_INFO    0
 /*    used for same string calcu    */
 #define EQUAL   1   //EQUAL表示c[i][j]是由c[i-1][j-1]+1来的=此时两个序列有相同的字符
 #define UP      2   //UP表示c[i][j]是由c[i-1][j]来的========此时两个序列没有相同的字符

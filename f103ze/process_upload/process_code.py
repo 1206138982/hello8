@@ -16,8 +16,8 @@ if __name__ == '__main__':
   block_index = 0;
   block_sum = 0;
   for i in range(len(full_list)):
-    if ('){' in full_list[i]) or ('}' in full_list[i] and '};' not in full_list[i]):
-      if '){' in full_list[i]:
+    if ('(){' in full_list[i]) or ('}' in full_list[i] and '};' not in full_list[i]):
+      if '(){' in full_list[i]:
         block_sum = block_sum+1
       if '}' in full_list[i] and '};' not in full_list[i]:
         block_sum = block_sum-1
@@ -31,6 +31,7 @@ if __name__ == '__main__':
           setupB = i
         else:
           loopB = i
+  loopB = len(full_list) - 1
   # print("setupA:%d,setupB:%d,loopA:%d,loopB:%d"%(setupA,setupB,loopA,loopB))
   for i in range(setupA+1,setupB):
     list_res_setup.insert(len(list_res_setup),full_list[i])

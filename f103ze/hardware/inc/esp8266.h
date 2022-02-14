@@ -7,6 +7,7 @@
 void ESP8266_Init(void);
 void ESP8266_Clear(void);
 _Bool ESP8266_SendCmd(char *cmd, char *res);
-void print_data_rece(void);
+void compare_rece_mess(char *nlp_mess[]);
+void print_rece_mess(void);
 
 #endif
