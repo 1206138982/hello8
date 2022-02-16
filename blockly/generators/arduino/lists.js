@@ -96,7 +96,7 @@ Blockly.Arduino.lists_mess2 = function() {
   return [code ,Blockly.Arduino.ORDER_ATOMIC];
 };
 
-Blockly.Arduino.lists_mes3 = function() {
+Blockly.Arduino.lists_mess3 = function() {
   var code = 'mess3_receive_flag';
   return [code ,Blockly.Arduino.ORDER_ATOMIC];
 };

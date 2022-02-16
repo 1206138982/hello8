@@ -135,9 +135,8 @@ _Bool ESP8266_SendCmd(char *cmd, char *res)
 void compare_rece_mess(char *nlp_mess[])
 {
 	uint8_t i;
-	printf("receive data:%s\r\n",esp8266_buf);
 	clear_all_mess_rece_flags();
-	printf("esp8266_buf:%s\r\n",esp8266_buf);
+	printf("[%s]esp8266_buf:%s\r\n",__func__,esp8266_buf);
 	if(Find_Lcs(esp8266_buf,nlp_mess[0]) >= COMPARE_MESS_SUCCESS)
 		mess1_receive_flag = 1;
 	if(Find_Lcs(esp8266_buf,nlp_mess[1]) >= COMPARE_MESS_SUCCESS)
