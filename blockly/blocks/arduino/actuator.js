@@ -712,7 +712,7 @@ Blockly.Blocks.AFMotorRun={
     [Blockly.MIXLY_BACKWARD,"BACKWARD"],
     ];
     this.appendDummyInput("")
-    .appendField("AFMotor"+Blockly.MIXLY_MOTOR)
+    .appendField(Blockly.MIXLY_MOTOR)
     .appendField(new Blockly.FieldDropdown(MOTOR), "motor")
     .appendField(Blockly.MIXLY_MICROBIT_Direction)
     .appendField(new Blockly.FieldDropdown(DIRECTION), "direction")
