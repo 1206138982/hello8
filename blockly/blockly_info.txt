@@ -23,5 +23,12 @@ blockly\generators\arduino\procedures.js  会调用Blockly.Arduino.scrub_()来�
 blockly.js
 函数 Blockly.Category_Icon_Add_With_Coordinates() 应该是给每个catetory添加图标、名字，但是没有找到哪个地方有调用该函数
 
+for hello8:
+blockly\apps\mixly\index.html  default 页面展示
+blockly\apps\mixly\index_custom.html    实际使用的页面展示
+blockly\apps\mixly\init.js    应该是和html之间交互用的
+blockly\blocks\arduino\    定义了每个元素长什么样子
+blockly\generators\arduino\    定义了code的产生
+blockly\msg\js\zh-hans.js    定义了显示的文字
 pyqt 与 js之间的交互：
 main.py on_pushButton_clicked()-->blockly\apps\mixly\init.js的pyjs.sig_send_to_js.connect-->send2pyqt()-->pyjs.receive_str_from_js-->main.py receive_str_from_js
