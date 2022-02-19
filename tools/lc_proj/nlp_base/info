@@ -1,0 +1,138 @@
+{
+  "uuid": "b3d1e7c52a2e24225a0f4c63ff82e21d",
+  "path": "Offline/nlp_base",
+  "name": "nlp_base",
+  "content": "",
+  "created_at": "2022-02-16 22:08:22",
+  "updated_at": "2022-02-19 13:50:43",
+  "stick": "",
+  "documents": [
+    {
+      "uuid": "55a3cbe1b705e781eb3b0a93ce1cac7d",
+      "title": "Sheet_1",
+      "description": "",
+      "docType": "1",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "d851786b5c664ff789b13c0741460439": 2,
+        "6b183ead02164764b4179944bf03b053": 2,
+        "f5b1d9403e49471cab43bc5a1bec336f": 2,
+        "a9aa2b14f188405792fa87ac344499a4": 6,
+        "a68dc5e6a9944c46b7604648a43dcd65": 3
+      },
+      "BOM": [
+        [
+          "Value",
+          "Quantity",
+          "Package",
+          "Components",
+          "CustomPara"
+        ],
+        [
+          "HDR-M-2.54_1x15",
+          2,
+          "HDR-M-2.54_1X15",
+          "ESPA,ESPB",
+          {
+            "BOM_Supplier Part": "C124373",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "5c151642f5ca4b219fdefa11da9edb9f",
+            "uuid": "6b183ead02164764b4179944bf03b053"
+          }
+        ],
+        [
+          "HDR-M-2.54_1x2",
+          6,
+          "HDR-M-2.54_1X2",
+          "MOTORA,MOTOROUTA,MOTOROUTB,POWER,POWERCHANGEA,POWERCHANGEB",
+          {
+            "BOM_Supplier Part": "C124375",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "70aa5812f21f4991bf427395d51849f4",
+            "uuid": "a9aa2b14f188405792fa87ac344499a4"
+          }
+        ],
+        [
+          "HDR-M-2.54_1x4",
+          2,
+          "HDR-M-2.54_1X4",
+          "MOTORB,MOTORC",
+          {
+            "BOM_Supplier Part": "C124378",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "282f7786cb6144d097ae00194c3e3fb3",
+            "uuid": "f5b1d9403e49471cab43bc5a1bec336f"
+          }
+        ],
+        [
+          "HDR-M-2.54_1x3",
+          3,
+          "HDR-M-2.54_1X3",
+          "SERVOA,SWITCHA,SWITCHB",
+          {
+            "BOM_Supplier Part": "C180248",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "9f77654394344f25b3de138e0fe05ff6",
+            "uuid": "a68dc5e6a9944c46b7604648a43dcd65"
+          }
+        ],
+        [
+          "HDR-M-2.54_1x20",
+          2,
+          "HDR-M-2.54_1X20",
+          "STM32A,STM32B",
+          {
+            "BOM_Supplier Part": "C50981",
+            "BOM_Supplier": "LCSC",
+            "BOM_Manufacturer": "",
+            "BOM_Manufacturer Part": "",
+            "puuid": "fa8b3531a8854d41bcf2c462cb2bfc07",
+            "uuid": "d851786b5c664ff789b13c0741460439"
+          }
+        ]
+      ],
+      "updateTime": 1645248896,
+      "createTime": 1645020502,
+      "histories": [],
+      "created_at": "2022-02-16 22:08:22",
+      "updated_at": "2022-02-19 13:34:56"
+    },
+    {
+      "uuid": "2af20ffbd89cf4f484454bcb6b62520c",
+      "puuid": "b3d1e7c52a2e24225a0f4c63ff82e21d",
+      "title": "PCB_nlp_base",
+      "filename": "PCB_nlp_base.json",
+      "description": "",
+      "docType": "3",
+      "master": "",
+      "thumb": "/images/thumb-default.png",
+      "components": {
+        "5c151642f5ca4b219fdefa11da9edb9f": 2,
+        "70aa5812f21f4991bf427395d51849f4": 6,
+        "282f7786cb6144d097ae00194c3e3fb3": 2,
+        "9f77654394344f25b3de138e0fe05ff6": 3,
+        "fa8b3531a8854d41bcf2c462cb2bfc07": 2
+      },
+      "BOM": [],
+      "updateTime": 1645249843,
+      "createTime": 1645105762,
+      "histories": [],
+      "created_at": "2022-02-17 21:49:22",
+      "updated_at": "2022-02-19 13:50:43"
+    }
+  ],
+  "sort": [],
+  "title": "nlp_base",
+  "foldername": "nlp_base",
+  "schfilename": "nlp_base.json",
+  "schfilemtime": 1645248896350
+}
