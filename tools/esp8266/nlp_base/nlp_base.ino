@@ -3,6 +3,16 @@
 #include <WiFiClient.h>
 #include <Ticker.h> 
 
+#define USE_SOFTWARE_SERIAL    0   //使用 SoftwareSerial 语音识别出错概率较高，一般前一两个汉字大概率会出错
+
+#if defined(USE_SOFTWARE_SERIAL) && USE_SOFTWARE_SERIAL
+#include <SoftwareSerial.h>
+SoftwareSerial uart1(14,12);//RX=d5,GPIO14,TX=d6,GPIO12
+#define SerialX uart1
+#else
+#define SerialX Serial
+#endif
+
 // String Key = "kEy3701a0635063d428";
 const char *host = "123.57.38.57";
 String comdata = "";
@@ -26,6 +36,9 @@ void flip() { //间隔一段时间发送一次数据用来维持连接
 void setup()
 {
     Serial.begin(115200);
+#if defined(USE_SOFTWARE_SERIAL) && USE_SOFTWARE_SERIAL
+    uart1.begin(115200);
+#endif
     WiFi.mode(WIFI_STA);
     Serial.println();
     delay(500);
@@ -64,11 +77,11 @@ void loop()
     {
         client_rece = 1;
         char c = client.read();
-        Serial.write(c);
+        SerialX.write(c);
     }
     if(client_rece){
       client_rece = 0;
-      Serial.print("\r\r\n");
+      SerialX.print("\r\r\n");
     }
     if (comdata.length() > 0)
     {
@@ -83,8 +96,8 @@ void loop()
 void get_wifi_info(void)
 {
     while(true){
-        while (Serial.available() > 0){
-            comdata += char(Serial.read());  //每次读一个char字符，并相加
+        while (SerialX.available() > 0){
+            comdata += char(SerialX.read());  //每次读一个char字符，并相加
             delay(2);
         }
         if (comdata.length() > 0){
@@ -92,32 +105,32 @@ void get_wifi_info(void)
                 nlp_key.concat(comdata);
                 KeyMark = "<key>"+nlp_key+"</key>";
                 nlpkey_is_ready = 0;
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             if(wifi_ssid_is_ready){
                 wifi_ssid.concat(comdata);
                 wifi_ssid_is_ready = 0;
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             else if(wifi_password_is_ready){
                 wifi_password.concat(comdata);
                 wifi_password_is_ready = 0;
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             if(comdata.compareTo("nlp_key") == 0){
                 nlpkey_is_ready = 1;
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             if(comdata.compareTo("wifi_ssid") == 0){
                 wifi_ssid_is_ready = 1;
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             else if(comdata.compareTo("wifi_password") == 0){
                 wifi_password_is_ready = 1;
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             else if(comdata.compareTo("AT")==0 || comdata.compareTo("at")==0){
-                Serial.print("OK");
+                SerialX.print("OK");
             }
             comdata = "";
         }
