@@ -54,8 +54,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.webview.load(QUrl("file:/home/embed/ebf_dir/pyqt/hello8/blockly/apps/mixly/index.html"))
         # self.webview.load(QUrl("file://"+QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))    # for ubuntu
         # self.webview.load(QUrl(QFileInfo("./blockly/apps/mixly/index.html").absoluteFilePath()))   # for developing on windows mixly
-        # self.webview.load(QUrl(QFileInfo("./blocklyg/app/index.html").absoluteFilePath()))   # for developing on windows google
-        self.webview.load(QUrl(QFileInfo("./blockly/apps/mixly/index_custom.html").absoluteFilePath()))   # for custom on windows
+        # self.webview.load(QUrl(QFileInfo("./gblockly/demos/code/index.html").absoluteFilePath()))   # for developing on windows google
+        self.webview.load(QUrl(QFileInfo("./blockly/apps/mixly/index_custom.html").absoluteFilePath()))   # for custom on windows mixly
         self.init_channel()
         self.showMaximized()    #窗口最大化
         self.ready_download = 0

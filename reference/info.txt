@@ -35,15 +35,10 @@ server 相关：
 查看正在运行的 python 程序：ps -ef | grep python
 nohup python waiting.py 断开 ssh 连接时，程序依旧可以正常运行
 
-update state:
-2021-11-07: 实现了在上位机上模块化编程、编译、下载到板子上；可以开发新的模块，来开发新的功能；已经实现的功能有LED、KEY的控制；支持的硬件有F103C8、F103ZE、F406ZG（下载还不是很流畅）；
-需要server端来编译hex文件；
-
 PROBLEMS:
 printf() 没有 \r\n 的话，数据无法成功发送
 
 todo:
-esp uart2
 
 .sh 文件中需要输入 password 的 cmd （还没有实际尝试过）
 echo 'passward' |sudo -S cmd 
@@ -54,9 +49,34 @@ stm32f103:UART1_TX(PA9);UART1_RX(PA10);UART2_TX(PA2);UART2_RX(PA3)
 stm32f103c8:使用arduino串口工具，可以显示esp发来的中文汉字
 char *nlp_data[3] = {"kEy3701a0635063d428","helloworld123456","HelloWorld123456"};
 
-LED display:
+测试用程序：
+IO func test
 leds_init(0);
 delay_lms(500);
 led_set_status(0,1);
 delay_lms(500);
 led_set_status(0,0);
+esp func test:
+char *nlp_data[]={"kEy3701a0635063d428", "helloworld123456", "HelloWorld123456"};
+setup_nlp(nlp_data);
+char *nlp_mess[]={"新年", "后天是什么天气", "今天想去哪里玩", "你叫什么名字呢", "前方刹车"};
+if(receive_flag)
+    compare_rece_mess(nlp_mess);
+if (mess1_receive_flag) {
+    clear_all_mess_rece_flags();
+printf("receive command1");
+printf("\r\n");
+
+}
+if (mess2_receive_flag) {
+    clear_all_mess_rece_flags();
+printf("receive command2");
+printf("\r\n");
+
+}
+
+gblockly/
+从 Google blockly 拷贝
+
+更换板子时，需要做的改动：
+需要替换为对于的 startup_xxx.s xxx_FLASH.ld 以及makefile 对应文件需要做的改动
