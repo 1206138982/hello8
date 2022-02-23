@@ -39,6 +39,7 @@ PROBLEMS:
 printf() 没有 \r\n 的话，数据无法成功发送
 
 todo:
+reset stm32 后先 reset esp
 
 .sh 文件中需要输入 password 的 cmd （还没有实际尝试过）
 echo 'passward' |sudo -S cmd 

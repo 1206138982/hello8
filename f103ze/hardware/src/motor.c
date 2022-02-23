@@ -4,6 +4,8 @@
 
 #define MAX_ARR     899
 #define MIN_ARR    800
+#define CHANGE_MOTOR_ONE    0    //the right motor
+#define CHANGE_MOTOR_TWO    1    //the left motor
 
 void motor_init(char motor_n)
 {
@@ -25,6 +27,14 @@ void motor_setSpeed(char motor_n,signed char speed)
         printf("error speed input!\r\n");
         return ;
     }
+#if defined(CHANGE_MOTOR_ONE) && CHANGE_MOTOR_ONE
+    if(motor_n == 1)
+        speed = -speed;
+#endif
+#if defined(CHANGE_MOTOR_TWO) && CHANGE_MOTOR_TWO
+    if(motor_n == 2)
+        speed = -speed;
+#endif
     switch(motor_n){
         case 1:
             if(speed == 0){
