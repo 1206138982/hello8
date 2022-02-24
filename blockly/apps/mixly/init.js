@@ -352,8 +352,11 @@ var resetACEFontSize = function(){
         if(str.indexOf('compile') != -1){
           send2pyqt();
         }
-        else if(str.indexOf('download') != -1){
-          alert('download completed');
+        else if(str.indexOf('download_success') != -1){
+          alert('download SUCCESS!');
+        }
+        else if(str.indexOf('download_fail') != -1){
+          alert('FAIL! place reset the hardward and download again');
         }
         // document.getElementById("output").value = str;
     });

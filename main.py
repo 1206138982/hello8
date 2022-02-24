@@ -1,4 +1,4 @@
-import os, sys, paramiko, time, my_logging, threading
+import os, sys, paramiko, time, my_logging, threading, subprocess
 
 from PyQt5.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal,QFileInfo
 from PyQt5.QtWebChannel import QWebChannel
@@ -123,17 +123,53 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         my_logging.save_log("get hex file from server")
 
     def downloadingbat(self):
+        download_success = 0
         while True:
             time.sleep(0.1)
             if self.flag_stop == 1:
                 break
             if self.ready_download == 1:
                 print('start to download hex file')
-                os.system('.\download.bat')
-                self.interact_obj.sig_send_to_js.emit('download')
-                print('FINISH DOWNLOAD')
-                my_logging.save_log('FINISH DOWNLOAD')
+                for i in range(5):
+                    p = subprocess.Popen("cmd.exe /c" + "download.bat", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                    curline = p.stdout.readline()
+                    print(curline)
+                    while (curline != b''):
+                        print(curline)
+                        if curline[0] == 89 and curline[1] == 111 and curline[2] == 117 and curline[3] == 114:
+                            download_success = 1
+                            print('get your code is running so download success')
+                        curline = p.stdout.readline()
+                    p.wait()
+                    print(p.returncode)
+                    if download_success == 1:
+                        break
+                # self.new_download_func()
+                # os.system('.\download.bat')
                 self.ready_download = 0
+                if download_success == 1:
+                    self.interact_obj.sig_send_to_js.emit('download_success')
+                    print('FINISH DOWNLOAD')
+                    my_logging.save_log('FINISH DOWNLOAD')
+                else :
+                    self.interact_obj.sig_send_to_js.emit('download_fail')
+                    print('DOWNLOAD FAILED')
+                    my_logging.save_log('DOWNLOAD FAILED')
+                    
+# reference https://www.cnblogs.com/pathbreaker/articles/13260552.html
+    # def new_download_func(self):
+    #     # cmd = 'cmd.exe d:/start.bat'
+    #     p = subprocess.Popen("cmd.exe /c" + "download.bat", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    #     curline = p.stdout.readline()
+    #     # print(type(curline))
+    #     while (curline != b''):
+    #         # print(curline)
+    #         if curline[0] == 89 and curline[1] == 111 and curline[2] == 117 and curline[3] == 114:
+    #             download_success = 1
+    #             print('download success')
+    #         curline = p.stdout.readline()
+    #     p.wait()
+    #     print(p.returncode)
  
     def closeEvent(self,event):
         self.flag_stop = 1
