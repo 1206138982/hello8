@@ -122,30 +122,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.downloadingbat()
 
     def downloadingbat(self):
-        download_success = 0
         print('start to download hex file')
-        for i in range(5):
-            p = subprocess.Popen("cmd.exe /c" + "download.bat", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            curline = p.stdout.readline()
-            print(curline)
-            while (curline != b''):
-                print(curline)
-                if curline[0] == 89 and curline[1] == 111 and curline[2] == 117 and curline[3] == 114:
-                    download_success = 1
-                    print('get your code is running so download success')
-                curline = p.stdout.readline()
-            p.wait()
-            print(p.returncode)
-            if download_success == 1:
-                break
-        if download_success == 1:
-            self.interact_obj.sig_send_to_js.emit('download_success')
-            print('FINISH DOWNLOAD')
-            my_logging.save_log('FINISH DOWNLOAD')
-        else:
-            self.interact_obj.sig_send_to_js.emit('download_fail')
-            print('DOWNLOAD FAILED')
-            my_logging.save_log('DOWNLOAD FAILED')
+        ret = os.system('start .\download.bat')
+        print(ret)
+        print('FINISH DOWNLOAD')
+        my_logging.save_log('FINISH DOWNLOAD')
+        # self.interact_obj.sig_send_to_js.emit('download_success')
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

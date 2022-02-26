@@ -139,9 +139,9 @@ class Ui_MainWindow(object):
 
     def update_downloadbat(self):
         if self.erase_all == 1:
-            str2write = 'cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str(self.com_info)+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000'
+            str2write = 'cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str(self.com_info)+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000\n@echo    DOWNLOAD SUCCESS!!!\n@echo    DOWNLOAD SUCCESS!!!\n@echo    DOWNLOAD SUCCESS!!!'
         else:
-            str2write = 'cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str(self.com_info)+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000'
+            str2write = 'cd Flash_Loader_Demo\n.\\STMFlashLoader.exe -c --pn '+str(self.com_info)+' --br 115200 -Dtr --Lo -Rts --Hi -Dtr --Hi -i STM32F4_05_07_15_17_1024K -e --all -d --fn make103.hex -r --a 08000000\n@echo    DOWNLOAD SUCCESS!!!\n@echo    DOWNLOAD SUCCESS!!!\n@echo    DOWNLOAD SUCCESS!!!'
         with open("download.bat","w") as f:
             f.write(str2write)  # 自带文件关闭功能，不需要再写f.close()
         print('update download.bat')
