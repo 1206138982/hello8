@@ -86,3 +86,7 @@ gblockly/
 
 更换板子时，需要做的改动：
 需要替换为对于的 startup_xxx.s xxx_FLASH.ld 以及makefile 对应文件需要做的改动
+
+nlp server:
+主要参考：https://github.com/itcastWsy/wx_baidu
+https://github.com/leafmen/wx-baidu-ai
