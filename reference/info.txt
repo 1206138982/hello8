@@ -40,7 +40,7 @@ PROBLEMS:
 printf() 没有 \r\n 的话，数据无法成功发送
 
 todo:
-添加led指示功能
+添加led指示功能,提示esp是否联网成功
 使用最新的 STMFlashLoader Demo.exe 测试
 pcb todo:
 reset stm32 后先 reset esp(rst 引脚接地后再接到3.3v可正常工作)
