@@ -9,9 +9,9 @@ var AipSpeechClient = require("baidu-aip-sdk").speech;
 
 // #region 创建百度授权 
 // 设置APPID/AK/SK
-var APP_ID = "xxx";
-var API_KEY = "xxx";
-var SECRET_KEY = "xxx";
+var APP_ID = "25227011";
+var API_KEY = "Qvzl3LRhhBf2wyTXx7khlxEe";
+var SECRET_KEY = "R2XqIIr8m2biMdqa6Wlv8tsByfxxwz2s";
 
 // 百度请求对象
 var client = new AipSpeechClient(APP_ID, API_KEY, SECRET_KEY);
