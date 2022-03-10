@@ -2,5 +2,10 @@
 
 proj 0.0(nlp_base):
 first version
+
 proj 0.1:
 增加电机输出接口PCB
+
+proj 0.2
+缩小板子尺寸
+增加stm32 reset esp功能
