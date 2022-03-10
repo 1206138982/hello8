@@ -35,3 +35,35 @@ void led_set_status(char led_n,char status)
 			break;
 	}
 }
+
+void rest_esp_init(void)
+{
+    GPIO_InitTypeDef     GPIO_InitStrue;
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
+
+    GPIO_InitStrue.GPIO_Pin=GPIO_Pin_15;
+    GPIO_InitStrue.GPIO_Mode=GPIO_Mode_Out_PP;
+    GPIO_InitStrue.GPIO_Speed=GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC,&GPIO_InitStrue);
+
+	GPIO_SetBits(GPIOC,GPIO_Pin_15);
+}
+
+void set_reset_pin(uint8_t state)
+{
+	if(state){
+		GPIO_SetBits(GPIOC,GPIO_Pin_15);
+	}
+	else{
+		GPIO_ResetBits(GPIOC,GPIO_Pin_15);
+	}
+}
+
+void reset_esp_process(void)
+{
+	rest_esp_init();
+	set_reset_pin(0);
+	delay_lms(1000);
+	set_reset_pin(1);
+}
