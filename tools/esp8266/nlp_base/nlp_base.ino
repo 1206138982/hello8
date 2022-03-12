@@ -4,6 +4,7 @@
 #include <Ticker.h> 
 
 #define USE_SOFTWARE_SERIAL    0   //使用 SoftwareSerial 语音识别出错概率较高，一般前一两个汉字大概率会出错
+#define LED_PIN    2
 
 #if defined(USE_SOFTWARE_SERIAL) && USE_SOFTWARE_SERIAL
 #include <SoftwareSerial.h>
@@ -35,7 +36,10 @@ void flip() { //间隔一段时间发送一次数据用来维持连接
  
 void setup()
 {
+    int led_state = 1,i;
     Serial.begin(115200);
+    pinMode(LED_PIN, OUTPUT);
+    digitalWrite(LED_PIN,led_state);
 #if defined(USE_SOFTWARE_SERIAL) && USE_SOFTWARE_SERIAL
     uart1.begin(115200);
 #endif
@@ -50,9 +54,15 @@ void setup()
     {
         delay(500);
         Serial.print(".");
+        digitalWrite(LED_PIN,led_state);
+        if(led_state)
+            led_state = 0;
+        else
+            led_state = 1;
     }
     Serial.println();
     Serial.println("connect to WIFI success!!");
+    digitalWrite(LED_PIN,0);
     if (!client.connect("123.57.38.57", 443))
     {
         Serial.println("Connection to host failed");
