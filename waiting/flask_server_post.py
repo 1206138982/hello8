@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/",methods=['POST'])
 def hello_world():
-    if request.form['username']=='123' and request.form['password']=='123':
+    if request.form['username']=='user000' and request.form['password']=='123':
         # print(request.form['data'])
         f = open('/home/user000/upload/code.txt','w')
         f.write(request.form['data'])

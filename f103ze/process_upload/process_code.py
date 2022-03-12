@@ -46,7 +46,7 @@ if __name__ == '__main__':
   #print('-------------')
   #print(code_resB)
   
-  f = open('/home/pico/hello8/f103ze/Src/main.c','r')
+  f = open('../Src/main.c','r')
   main_str = f.read()
   f.close()
   str_list = list(main_str)
@@ -64,7 +64,7 @@ if __name__ == '__main__':
   else:
     print('can not find the str:while functions')
 
-  f = open('/home/pico/hello8/f103ze/Src/main.c','w')
+  f = open('../Src/main.c','w')
   f.write(main_str)
   f.close()
   print('end of process code')
