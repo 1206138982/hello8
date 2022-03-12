@@ -9,7 +9,14 @@ def hello_world():
         f = open('/home/user000/upload/code.txt','w')
         f.write(request.form['data'])
         f.close()
-        os.system('./f103c8.sh')
+        os.system('./f103c8_user000.sh')
+        return "200"
+    if request.form['username']=='user100' and request.form['password']=='123':
+        # print(request.form['data'])
+        f = open('/home/user000/upload/code.txt','w')
+        f.write(request.form['data'])
+        f.close()
+        os.system('./f103c8_user100.sh')
         return "200"
     else:
         print('indvel_user')
