@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 # from ui import Ui_MainWindow      # for test ui main window  
 from ui_new import Ui_MainWindow
 import requests
-url_server = "http://180.76.190.194:80/"    # for baidu server
+url_server = "http://180.76.190.194:8090/"    # for baidu server
 data_server = {"username":"123","password":"123","data":"post test succeed !!!"}
 
 # host = "hello654321.tpddns.cn"    # local server
