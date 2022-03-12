@@ -21,7 +21,9 @@ unsigned char wifi_password[] = "HelloWorld123456";
 
 uint8_t setup_nlp(char *nlp_data[3])
 {
+	uart1_init(115200);
 	Usart2_Init(115200);
+	reset_esp_process();
 	ESP8266_Clear();
     ESP8266_SendCmd("AT","OK");
 

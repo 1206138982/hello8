@@ -23,7 +23,6 @@ int main(void)
 	delay_init();
 	NVIC_Configuration(); 	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
 #if defined(REMOTE_TEST) && REMOTE_TEST
-	reset_esp_process();
 // user init functions
 #else
 	uart1_init(115200);
