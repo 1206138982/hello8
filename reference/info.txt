@@ -42,9 +42,6 @@ printf() 没有 \r\n 的话，数据无法成功发送
 todo:
 添加led指示功能,提示esp是否联网成功
 使用最新的 STMFlashLoader Demo.exe 测试
-pcb todo:
-reset stm32 后先 reset esp(rst 引脚接地后再接到3.3v可正常工作)
-六角开关需要重新画
 
 .sh 文件中需要输入 password 的 cmd （还没有实际尝试过）
 echo 'passward' |sudo -S cmd 
@@ -53,7 +50,7 @@ usart:
 esp8266:TX(GPIO1),RX(GPIO3)
 stm32f103:UART1_TX(PA9);UART1_RX(PA10);UART2_TX(PA2);UART2_RX(PA3)
 stm32f103c8:使用arduino串口工具，可以显示esp发来的中文汉字
-char *nlp_data[3] = {"kEy3701a0635063d428","helloworld123456","HelloWorld123456"};
+char *nlp_data[3] = {"kEy3da5c076abb66c5f","helloworld123456","HelloWorld123456"};
 
 测试用程序：
 IO func test
@@ -63,7 +60,7 @@ led_set_status(0,1);
 delay_lms(500);
 led_set_status(0,0);
 esp func test:
-char *nlp_data[]={"kEy3701a0635063d428", "helloworld123456", "HelloWorld123456"};
+char *nlp_data[]={"kEy3da5c076abb66c5f", "helloworld123456", "HelloWorld123456"};
 setup_nlp(nlp_data);
 char *nlp_mess[]={"新年", "后天是什么天气", "今天想去哪里玩", "你叫什么名字呢", "前方刹车"};
 if(receive_flag)
@@ -90,3 +87,6 @@ gblockly/
 nlp server:
 主要参考：https://github.com/itcastWsy/wx_baidu
 https://github.com/leafmen/wx-baidu-ai
+
+电机相关：
+M1：右轮    M2：左轮

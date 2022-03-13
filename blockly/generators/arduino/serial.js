@@ -17,7 +17,7 @@ Blockly.Arduino.serial_write = function () {
     var content = Blockly.Arduino.valueToCode(this, 'CONTENT', Blockly.Arduino.ORDER_ATOMIC) || '\"\"'
     if (Blockly.Arduino.setups_['setup_serial_' + serial_select ]) {
     } else {
-        Blockly.Arduino.setups_['setup_serial_' + serial_select ] = serial_select + '.begin(' + profile.default.serial + ');';
+        // Blockly.Arduino.setups_['setup_serial_' + serial_select ] = serial_select + '.begin(' + profile.default.serial + ');';
     }
     // var code = serial_select + '.write(' + content + ');\n';
     var code = 'printf(' + content + ');\n';
