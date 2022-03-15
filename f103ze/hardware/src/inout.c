@@ -5,19 +5,33 @@
 char KEY0_PUSH = 0;
 char KEY1_PUSH = 0;
 
-void pinMode(char pin_n,char is_out)
+// model:1(output);0(input);2(pwm)
+void pinMode(char pin_n,char module)
 {
-    if(is_out){
-        leds_init(pin_n);
-    }
-    else{
-        keys_init(pin_n);
+    switch(module){
+        case 0:
+            keys_init(pin_n);
+            break;
+        case 1:
+            leds_init(pin_n);
+            break;
+        case 2:
+        // PA1 PWM
+            servo_attach(0);
+            break;
+        default:
+            break;
     }
 }
 
 void digitalWrite(char led_n,char status)
 {
     led_set_status(led_n,status);
+}
+
+void analogWrite(char led_n,char duty_cycle)
+{
+    led_set_pwm(led_n,duty_cycle);
 }
 
 char digitalRead(char key_n)

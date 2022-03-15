@@ -6,9 +6,11 @@ void servo_attach(char servo_n)
 {
     switch(servo_n){
         case 0:
+        // PA1 PWM
             TIM2_CH2_init(200,7199);
             break;
         case 1:
+        // PA2 PWM  also uart2
             TIM2_CH3_init(200,7199);
             break;
         default:
@@ -37,4 +39,9 @@ void servo_1_write(int angle)
     else{
         printf("error angle input in %s\r\n",__func__);
     }
+}
+
+void servo0_set_duty_cycle(char duty_cycle)
+{
+    TIM_SetCompare2(TIM2,duty_cycle*2);
 }

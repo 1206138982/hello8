@@ -36,6 +36,16 @@ void led_set_status(char led_n,char status)
 	}
 }
 
+void led_set_pwm(char led_n,char duty_cycle)
+{
+	if(duty_cycle < 0)
+		duty_cycle = 0;
+	if(duty_cycle > 100)
+		duty_cycle = 100;
+	if(led_n == 3)
+		servo0_set_duty_cycle(duty_cycle);
+}
+
 void rest_esp_init(void)
 {
     GPIO_InitTypeDef     GPIO_InitStrue;
