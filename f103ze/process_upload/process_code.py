@@ -2,10 +2,12 @@ import os
 import time
 
 if __name__ == '__main__':
+  list_res_before_setup = list('\n')
   list_res_setup = list('\n')
   list_res_loop = list('\n')
   code_resA = '\n'
   code_resB = '\n'
+  code_res_bef_setup = '\n'
   print('start to process code')
   time.sleep(0.02)
   f = open('/home/user000/upload/code.txt')
@@ -13,26 +15,24 @@ if __name__ == '__main__':
   f.close()
   full_list = full_str.split('\n')
   setupA = setupB = loopA = loopB = -1
-  block_index = 0;
-  block_sum = 0;
   for i in range(len(full_list)):
-    if ('(){' in full_list[i]) or ('}' in full_list[i] and '};' not in full_list[i]):
-      if '(){' in full_list[i]:
-        block_sum = block_sum+1
-      if '}' in full_list[i] and '};' not in full_list[i]:
-        block_sum = block_sum-1
-      if block_sum == 1:
-        if setupA == -1:
-          setupA = i
-        elif loopA == -1:
-          loopA = i
-      if block_sum == 0:
-        if setupB == -1:
-          setupB = i
-        else:
-          loopB = i
+    if('volatile' in full_list[i]):
+      full_list.remove(full_list[i])
+    if('setup()' in full_list[i]):
+      setupA = i
+      continue
+    if('loop()' in full_list[i]):
+      loopA = i
+      continue
+    if(setupA!=-1 and loopA!=-1):
+      break
+  setupB = loopA -2;
   loopB = len(full_list) - 1
   # print("setupA:%d,setupB:%d,loopA:%d,loopB:%d"%(setupA,setupB,loopA,loopB))
+  if setupA != 0:
+    for i in range(setupA):
+      list_res_before_setup.insert(len(list_res_before_setup),full_list[i])
+    code_res_bef_setup = ''.join(list_res_before_setup)
   for i in range(setupA+1,setupB):
     list_res_setup.insert(len(list_res_setup),full_list[i])
     list_res_setup.insert(len(list_res_setup),'\n')
@@ -50,6 +50,7 @@ if __name__ == '__main__':
   main_str = f.read()
   f.close()
   str_list = list(main_str)
+
   find = main_str.find('init functions')
   if find != -1:
     str_list.insert(find+14,code_resA)
@@ -57,9 +58,18 @@ if __name__ == '__main__':
     str_list = list(main_str)
   else:
     print('can not find the str:init functions')
+
   find = main_str.find('while functions')
   if find != -1:
     str_list.insert(find+15,code_resB)
+    main_str = ''.join(str_list)
+    str_list = list(main_str)
+  else:
+    print('can not find the str:while functions')
+
+  find = main_str.find('pre-def functions')
+  if find != -1:
+    str_list.insert(find+17,code_res_bef_setup)
     main_str = ''.join(str_list)
   else:
     print('can not find the str:while functions')
