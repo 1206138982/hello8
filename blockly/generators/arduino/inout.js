@@ -80,7 +80,7 @@ Blockly.Arduino.inout_analog_write = function () {
     var dropdown_pin = Blockly.Arduino.valueToCode(this, 'PIN', Blockly.Arduino.ORDER_ATOMIC);
     //var dropdown_stat = this.getFieldValue('STAT');
     var value_num = Blockly.Arduino.valueToCode(this, 'NUM', Blockly.Arduino.ORDER_ATOMIC);
-    //Blockly.Arduino.setups_['setup_output'+dropdown_pin] = 'pinMode('+dropdown_pin+', OUTPUT);';
+    Blockly.Arduino.setups_['setup_output'+dropdown_pin] = 'pinMode('+dropdown_pin+', 2);';
     var code = 'analogWrite(' + dropdown_pin + ',' + value_num + ');\n';
     return code;
 };
