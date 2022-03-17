@@ -8,8 +8,8 @@ Blockly.Arduino.servo_move = function () {
   var dropdown_pin = this.getFieldValue('PIN');
   var value_degree = Blockly.Arduino.valueToCode(this, 'DEGREE', Blockly.Arduino.ORDER_ATOMIC);
   var delay_time = Blockly.Arduino.valueToCode(this, 'DELAY_TIME', Blockly.Arduino.ORDER_ATOMIC) || '0'
-  Blockly.Arduino.definitions_['include_Servo'] = '#include <Servo.h>';
-  Blockly.Arduino.definitions_['var_declare_servo' + dropdown_pin] = 'Servo servo_' + dropdown_pin + ';';
+  // Blockly.Arduino.definitions_['include_Servo'] = '#include <Servo.h>';
+  // Blockly.Arduino.definitions_['var_declare_servo' + dropdown_pin] = 'Servo servo_' + dropdown_pin + ';';
   Blockly.Arduino.setups_['setup_servo_' + dropdown_pin] = 'servo_' + 'attach(' + dropdown_pin + ');';
   var code = 'servo_' + dropdown_pin + '_write(' + value_degree + ');\n' + 'delay_lms(' + delay_time + ');\n';
   return code;
